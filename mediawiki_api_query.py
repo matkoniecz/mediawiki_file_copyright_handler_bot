@@ -70,6 +70,26 @@ def uncategorized_images(offset, group_count):
         returned.append(file["title"])
     return returned
 
+def uploads_by_username_generator(user):
+    continue_code = None
+    while True:
+        user = user.replace(" ", "%20")
+        url = "https://wiki.openstreetmap.org/w/api.php?action=query&list=logevents&letype=upload&lelimit=500&leuser=" + user + "&format=json"
+        if continue_code != None:
+            url += "&lecontinue=" + continue_code
+        response = requests.post(url)
+        #print(json.dumps(response.json(), indent=4))
+        #print(url)
+        file_list = response.json()['query']['logevents']
+        returned = []
+        for file in file_list:
+            yield file["title"]
+        if "continue" in response.json():
+            #print(response.json()["continue"])
+            continue_code = response.json()["continue"]["lecontinue"]
+        else:
+            break
+
 def download_page_text_with_revision_data(page_title):
     # https://wiki.openstreetmap.org/w/api.php?action=query&prop=revisions&rvlimit=1&rvprop=content|timestamp|ids&format=json&titles=Sandbox
     url = "https://wiki.openstreetmap.org/w/api.php?action=query&prop=revisions&rvlimit=1&rvprop=content|timestamp|ids&format=json&titles=" + shared.escape_parameter(page_title)
