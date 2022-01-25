@@ -17,6 +17,14 @@ def file_upload_history(file, URL="https://wiki.openstreetmap.org/w/api.php"):
         print(list(upload_history['query']['pages'].keys())[0])
     return upload_history["imageinfo"]
 
+def file_upload_history_without_broken_uploads(file, URL="https://wiki.openstreetmap.org/w/api.php"):
+    data = file_upload_history(file, URL)
+    returned = []
+    for entry in data:
+        if "filemissing" not in entry:
+            returned.append(entry)
+    return returned
+
 def debug_api():
     files = ["File:20170907 172429.jpg", "File:Global Relative Share Pie Chart.png"]
     for file in files:
