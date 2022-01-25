@@ -68,7 +68,7 @@ def generate_table_showing_image_data_for_review(data, break_after=None):
                     row_data += generated_summary_parts[index]
             index += 1 
         output += row_data
-    output += "|}\n"
+    output += "\n|}\n"
     return output
 
 def osm_wiki_diff_link(old_page_id, current_page_id):
