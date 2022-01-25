@@ -56,7 +56,7 @@ Templates are likely to be different - so it would be necessary to also specify 
 # Alternatives
 
 * https://github.com/AntiCompositeNumber/AntiCompositeBot/blob/master/src/nolicense.py - sadly I was unable to figure out how to run it. Seems to require a direct server access to run SQL queries.
-
+* see [Wikimedia Commons recent bot edits](https://commons.wikimedia.org/wiki/Special:RecentChanges?hidehumans=1&translations=filter&hidecategorization=1&hideWikibase=1&hidelog=1&namespace=3&limit=500&days=7&urlversion=2) - maybe you will find something better more fitting for you there
 # Architecture
 
 ## Why not pywikibot?
