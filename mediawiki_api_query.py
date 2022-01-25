@@ -11,6 +11,8 @@ def file_upload_history(file, URL="https://wiki.openstreetmap.org/w/api.php"):
         print(call_url)
         print(json.dumps(response.json(), indent=4))
         print(json.dumps(upload_history, indent=4))
+        if 'query' not in upload_history:
+            raise Exception("unexpected missing query in data")
         print(json.dumps(upload_history['query']['pages'], indent=4))
         print(list(upload_history['query']['pages'].keys())[0])
     return upload_history["imageinfo"]
