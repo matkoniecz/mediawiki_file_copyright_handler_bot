@@ -1,6 +1,7 @@
 import requests
 import shared
 import json
+import datetime
 
 def file_upload_history(file, URL="https://wiki.openstreetmap.org/w/api.php"):
     call_url = URL + "?action=query&titles=" + shared.escape_parameter(file) + "&prop=imageinfo&iilimit=50&format=json"
@@ -155,13 +156,32 @@ def get_uploader(page_title):
     or returns None if different versions were uploaded by a different people
     """
     upload_history = file_upload_history(page_title)
+    return get_uploader_from_file_history(upload_history)
+
+def get_uploader_from_file_history(upload_history):
     #print()
     #print("------------------------")
     #print(upload_history)
     #print(len(upload_history))
     #print("------------------------")
+    #print("----UPLOAD HISTORY------")
+    #print("------------------------")
     #print()
+    
+    user = upload_history[0]['user']
+
+    for entry in upload_history:
+        if user != entry['user']:
+            print("multiple uploads by different people, lets skip for now as complicated")
+            return None
+    return user
+
+def get_upload_date_from_file_history(upload_history):
     if(len(upload_history) > 1):
-        print("multiple uploads, lets skip for now as complicated")
+        print("multiple uploads, lets skip obtaining upload date for now as complicated")
         return None
-    return upload_history[0]['user']
+    upload_timestamp_string = upload_history[0]['timestamp']
+    return parse_mediawiki_time_string(upload_timestamp_string)
+
+def parse_mediawiki_time_string(time_string):
+    return datetime.datetime.strptime(time_string, "%Y-%m-%dT%H:%M:%SZ")
