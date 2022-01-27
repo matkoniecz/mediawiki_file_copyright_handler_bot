@@ -13,11 +13,14 @@ def create_login_session():
     return session
 
 def edit_page_and_show_diff(S, page_title, page_text, edit_summary, rev_id, timestamp):
-    returned = mediawiki_api_login_and_editing.edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp)
+    returned = edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp)
     data = mediawiki_api_query.download_page_text_with_revision_data(page_title)
     difflink = osm_wiki_diff_link(data['parent_id'], data['rev_id'])
     webbrowser.open(difflink, new=2)
     return returned
+
+def edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp):
+     return mediawiki_api_login_and_editing.edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp)
 
 def create_page_and_show_diff(S, page_title, page_text, edit_summary):
     returned = mediawiki_api_login_and_editing.create_page(S, page_title, page_text, edit_summary)
