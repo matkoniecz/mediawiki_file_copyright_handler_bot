@@ -100,6 +100,8 @@ def images_by_date(date_string):
 
 def uploads_by_username_generator(user):
     continue_code = None
+    print("uploads_by_username_generator warning: deleted/moved images will be likely shown under original names")
+    already_shown = []
     while True:
         user = user.replace(" ", "%20")
         url = "https://wiki.openstreetmap.org/w/api.php?action=query&list=logevents&letype=upload&lelimit=500&leuser=" + user + "&format=json"
@@ -111,7 +113,9 @@ def uploads_by_username_generator(user):
         file_list = response.json()['query']['logevents']
         returned = []
         for file in file_list:
-            yield file["title"]
+            if file not in already_shown:
+                already_shown.append(file) # user can upload multiple times to a single file
+                yield file["title"]
         if "continue" in response.json():
             #print(response.json()["continue"])
             continue_code = response.json()["continue"]["lecontinue"]
