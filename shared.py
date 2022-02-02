@@ -12,21 +12,25 @@ def create_login_session():
     session = mediawiki_api_login_and_editing.login_and_create_session(username, password)
     return session
 
-def edit_page_and_show_diff(S, page_title, page_text, edit_summary, rev_id, timestamp):
-    returned = edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp)
+def show_latest_diff_on_page(page_title):
     data = mediawiki_api_query.download_page_text_with_revision_data(page_title)
     difflink = osm_wiki_diff_link(data['parent_id'], data['rev_id'])
     webbrowser.open(difflink, new=2)
+
+def edit_page_and_show_diff(S, page_title, page_text, edit_summary, rev_id, timestamp):
+    returned = edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp)
+    show_latest_diff_on_page(page_title)
     return returned
 
 def edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp):
      return mediawiki_api_login_and_editing.edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp)
 
+def create_page(S, page_title, page_text, edit_summary):
+    return mediawiki_api_login_and_editing.create_page(S, page_title, page_text, edit_summary)
+
 def create_page_and_show_diff(S, page_title, page_text, edit_summary):
     returned = mediawiki_api_login_and_editing.create_page(S, page_title, page_text, edit_summary)
-    data = mediawiki_api_query.download_page_text_with_revision_data(page_title)
-    difflink = osm_wiki_diff_link(data['parent_id'], data['rev_id'])
-    webbrowser.open(difflink, new=2)
+    show_latest_diff_on_page(page_title)
     return returned
 
 def append_to_page(S, page_title, appended, edit_summary):
