@@ -63,6 +63,8 @@ def pages_from_category(category):
     # https://stackoverflow.com/questions/28224312/mediawiki-api-how-do-i-list-all-pages-of-a-category-and-for-each-page-show-all
 
 def uncategorized_images(offset, group_count):
+    # example:
+    # https://wiki.openstreetmap.org/w/api.php?action=query&format=json&list=querypage&utf8=1&qppage=Uncategorizedimages&qplimit=10&qpoffset=0
     url = "https://wiki.openstreetmap.org/w/api.php?action=query&format=json&list=querypage&utf8=1&qppage=Uncategorizedimages&qplimit=" + str(group_count) + "&qpoffset=" + str(offset)
     response = requests.post(url)
     #print(json.dumps(response.json(), indent=4))
