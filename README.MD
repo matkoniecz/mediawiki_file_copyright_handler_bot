@@ -1,6 +1,6 @@
 # Purpose
 
-This scripts were created to handle files at OpenStreetMap Wiki that were without proper licensing and source info.
+This scripts were created to [handle files at OpenStreetMap Wiki that were without proper licensing or with a mising source](https://wiki.openstreetmap.org/wiki/User:Mateusz_Konieczny/notify_uploaders).
 
 It should be relatively easy to adapt it to other Mediawiki sites, but it was not tested.
 
