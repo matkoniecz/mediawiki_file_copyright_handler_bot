@@ -72,6 +72,32 @@ def uncategorized_images(offset, group_count):
         returned.append(file["title"])
     return returned
 
+def images_by_date(date_string):
+    # https://www.mediawiki.org/wiki/API:Allimages#Example_2:_Get_images_by_date
+    S = requests.Session()
+
+    URL = "https://wiki.openstreetmap.org/w/api.php"
+
+    PARAMS = {
+        "action": "query",
+        "format": "json",
+        "list": "allimages",
+        "aisort": "timestamp",
+        "aidir": "newer", # older
+        "aistart": date_string,
+        "ailimit": 500,
+    }
+
+    R = S.get(url=URL, params=PARAMS)
+    DATA = R.json()
+
+    IMAGES = DATA["query"]["allimages"]
+
+    returned = []
+    for img in IMAGES:
+        returned.append(img["title"])
+    return returned
+
 def uploads_by_username_generator(user):
     continue_code = None
     while True:
