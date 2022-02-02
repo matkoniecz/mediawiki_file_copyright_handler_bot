@@ -3,6 +3,10 @@
 import password_data
 import requests
 
+class NoEditPermissionException(Exception):
+   # likely logged out
+   pass
+
 """
     login.py
 
@@ -36,6 +40,12 @@ def login_with_login_token(S, username, password, LOGIN_TOKEN, URL):
     # TODO - handle failure?
     return S
 
+def is_logged_out_error_here(DATA):
+    #{'error': {'code': 'permissiondenied', 'info': 'The action you have requested is limited to users in the group: [[Wiki:Users|Users]].' ...
+    if 'error' in DATA:
+        if DATA['error']['code'] == 'permissiondenied':
+            return True
+
 def create_page(S, page_title, page_text, edit_summary, URL="https://wiki.openstreetmap.org/w/api.php"):
     # Step 4: POST request to edit a page
     PARAMS_3 = {
@@ -52,6 +62,8 @@ def create_page(S, page_title, page_text, edit_summary, URL="https://wiki.openst
     DATA = R.json()
 
     print(DATA)
+    if is_logged_out_error_here(DATA):
+        raise NoEditPermissionException("likely automatically logged out")
 
 def edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, URL="https://wiki.openstreetmap.org/w/api.php"):
     # Step 4: POST request to edit a page
@@ -71,6 +83,8 @@ def edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, URL="ht
     DATA = R.json()
 
     print(DATA)
+    if is_logged_out_error_here(DATA):
+        raise NoEditPermissionException("likely automatically logged out")
 
 def obtain_csrf_token(S, URL):
     # CSRF == Cross Site Request Forgery
