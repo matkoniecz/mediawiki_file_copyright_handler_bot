@@ -97,6 +97,7 @@ def osm_wiki_page_edit_link(page_name):
 
 
 def pause():
+    # wait
     print("press enter (any key?) to continue")
     input()
 
