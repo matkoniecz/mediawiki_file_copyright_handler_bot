@@ -8,8 +8,8 @@ Pull requests making easier to configure it for use with wikis other that OSM Wi
 
 This Mediawiki script can 
 
-* detect files not marked with license templates (to handle copyright violations)
-* detect duplicates of Wikimedia Commons images
+* detect files not marked with license templates (to handle copyright violations) - [edit_about_missing_file_source_or_license.py](edit_about_missing_file_source_or_license.py)
+* detect duplicates of Wikimedia Commons images - [edit_wikimedia_common_duplicates.py](edit_wikimedia_common_duplicates.py)
 
 # Setup
 ## Obtain code
