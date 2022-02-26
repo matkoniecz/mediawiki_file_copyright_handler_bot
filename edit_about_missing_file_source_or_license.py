@@ -364,10 +364,14 @@ def skip_image_based_on_text_on_its_description(page_title, page_text):
     "public information request", "Letter of authorization", "Autorizzazione", # semi-license template
     "Photo for profile", "profile",
     "selbst", "own work",
-    "non-free", "image search",
+    "non-free", "image search", "copied from", "unfree",
+    "Bus.meran.eu", # https://wiki.openstreetmap.org/wiki/File:Bus.meran.eu_real_time_bus_map.png
     "licence", "license", "permission", "flickr", "source", "Openfietsmap",
     "commons", "wikipedia", "0px-", "px-",
-    "Asked for more info at", "github.com"]
+    "Asked for more info at", "github.com",
+    '[[Category:User images]]',
+    "[[Category:Logos]]", # likely {{trademarked}} is missing which would cause skip anyway
+    ]
     # commons, wikipedia, 0px- covers cases like
     # https://wiki.openstreetmap.org/wiki/File:120px-Zusatzzeichen_1020-12.svg.png https://commons.wikimedia.org/w/index.php?title=File:Zusatzzeichen_1020-12.svg&redirect=no
     # where bothering uploader is not needed and matches can be automatically found
@@ -530,7 +534,6 @@ def valid_licencing_templates():
 
         # likely problematic, but at less well defined state
         "{{Bing image}}",
-        "[[Category:Logos]]", # likely {{trademarked}} is missing which would cause skip anyway
 
         # https://wiki.openstreetmap.org/wiki/Category:Media_license_templates
     ]
