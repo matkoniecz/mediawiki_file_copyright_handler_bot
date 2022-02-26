@@ -339,6 +339,8 @@ def skip_image_based_on_text_on_its_description(page_title, page_text):
     if is_marked_with_template_declaring_licensing_status(page_text):
         return True
         #print("has text with licensing template, skipping")
+    if page_text.find("#REDIRECT[[") == 0:
+        return True # it is redirect, not an actual file
     cleaned_text = page_text.lower()
     cleaned_text = cleaned_text.replace("{{template:", "{{") # overly verbose by valid method of template use
     for remove in nonlicensing_wikicode():
