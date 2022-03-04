@@ -10,7 +10,7 @@ This Mediawiki script can
 
 * detect files not marked with license templates (to handle copyright violations) - [edit_about_missing_file_source_or_license.py](edit_about_missing_file_source_or_license.py)
 * detect duplicates of Wikimedia Commons images - [edit_wikimedia_common_duplicates.py](edit_wikimedia_common_duplicates.py)
-
+** writes to `duplicates_for_safe_deletion.txt` file files safe to delete, in addition has some output in stdout
 # Setup
 ## Obtain code
 Clone repository.
