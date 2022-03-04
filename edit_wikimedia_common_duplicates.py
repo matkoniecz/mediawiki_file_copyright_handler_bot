@@ -78,6 +78,7 @@ def process_file_with_duplicates(session, duplication_data):
                     the_file.write('* [[:' + page_title +']] [[:commons:' + filename_of_duplicate + ']]\n')
                 #mark_file_for_deletion_as_commons_duplicate_under_the_same_name(session, page_title, filename_of_duplicate)
             elif mediawiki_api_query.is_file_used_as_image(page_title):
+                print("https://wiki.openstreetmap.org/wiki/" + page_title.replace(" ", "_"))
                 print("commons_duplicate_under_the_different_name_with_use")
                 # TODO
                 # tricky, not done as it is unclear whether it would even result in file deletions
@@ -85,6 +86,7 @@ def process_file_with_duplicates(session, duplication_data):
                 # though maybe marking them is useful?
                 #process_commons_duplicate_under_the_different_name_with_use(session, page_title, filename_of_duplicate)
             else:
+                print("https://wiki.openstreetmap.org/wiki/" + page_title.replace(" ", "_"))
                 print("commons_duplicate_under_the_different_name_not_in_use")
                 # TODO: handle this
                 # tricky, not done as it is unclear whether it would even result in file deletions

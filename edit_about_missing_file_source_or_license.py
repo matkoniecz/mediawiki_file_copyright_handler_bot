@@ -305,6 +305,8 @@ def detect_images_with_missing_licences_process_page(page_title, banned_users):
             return None # TODO: remove root cause of THAT
         uploader = mediawiki_api_query.get_uploader_from_file_history(upload_history)
         if uploader == None:
+            print("Unable to establish uploader")
+            print("https://wiki.openstreetmap.org/wiki/"+page_title.replace(" ", "_"))
             return None
         if uploader in banned_users:
             return None
@@ -377,13 +379,9 @@ def skip_image_based_on_text_on_its_description(page_title, page_text):
     # where bothering uploader is not needed and matches can be automatically found
 
     for keyword in keywords:
-        if keyword.lower() in page_title.lower():
+        if keyword.lower() in page_title.lower() or keyword.lower() in cleaned_text.lower():
             # TODO drop exception
-            print("skipping as likely of historic interest or at least on topic (", keyword, ")")
-            return True
-        if keyword.lower() in cleaned_text.lower():
-            # TODO drop exception
-            print("skipping as likely of historic interest or at least on topic (", keyword, ")")
+            print("skipping as likely of historic interest or at least on topic (", keyword, ")", "https://wiki.openstreetmap.org/wiki/"+page_title.replace(" ", "_"))
             return True
     return False
 
