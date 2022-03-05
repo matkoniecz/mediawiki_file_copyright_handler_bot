@@ -51,6 +51,7 @@ def main():
     "Michael Montani", "SimonPoole", # many charts: https://commons.wikimedia.org/wiki/Commons:Village_pump/Copyright#Is_chart_qualifying_for_PD-shape?
     "Bk", "Nordpfeil", "Mateusz Konieczny", # has chart (search fir chart below)
     "Skippern", #PD-shape spam, some more complex (posted on the talk page 2022-01-30)
+    "Gkai", # https://wiki.openstreetmap.org/wiki/User:Mateusz_Konieczny/notify_uploaders/Gkai OSM Carto icons ("should be replaced with")
     ]
     refresh_users = [
     "PanierAvide", "Segubi", # got link with their file listing, lets keep it updates
