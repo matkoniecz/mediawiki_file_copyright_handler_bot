@@ -334,6 +334,8 @@ def detect_images_with_missing_licences_process_page(page_title, banned_users):
         upload_time = mediawiki_api_query.get_upload_date_from_file_history(upload_history)
         if upload_time != None:
             returned['upload_time'] = upload_time
+        else:
+            print("https://wiki.openstreetmap.org/wiki/"+page_title.replace(" ", "_"))
         return returned
 
 def nonlicensing_wikicode():
