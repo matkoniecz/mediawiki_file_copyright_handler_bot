@@ -349,6 +349,7 @@ def nonlicensing_wikicode():
     "{{bing image portions}}", # not a license by itself I think
     "{{featured date", "{{featured_date",
     "{{openstreetmap trademark}}",
+    "== License ==", "== Licence ==", # often used above "unknown" template
     ]
 
 def skip_image_based_on_text_on_its_description(page_title, page_text):
