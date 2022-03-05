@@ -253,17 +253,17 @@ def detect_images_with_missing_licences(files_to_find, files_for_processing, ban
         returned = detect_images_with_missing_licences_process_page(page_title, banned_users)
         if returned == None:
             continue
-        if notify_recently_notified==False:
-            if is_uploader_eligible_for_new_complaints(returned['uploader']):
-                generated_data.append(returned)
-                if notify_uploaders_once:
-                    banned_users.append(returned['uploader'])
-                reported_remaining_count -= 1
-                if reported_remaining_count <= 0:
-                    break
-            else:
+        if notify_recently_notified == False:
+            if is_uploader_eligible_for_new_complaints(returned['uploader']) == False:
                 print("Skip", returned['uploader'], "as they are ineligible for new complaints")
                 banned_users.append(returned['uploader'])
+                continue
+        generated_data.append(returned)
+        if notify_uploaders_once:
+            banned_users.append(returned['uploader'])
+        reported_remaining_count -= 1
+        if reported_remaining_count <= 0:
+            break
     return generated_data
 
 def is_uploader_eligible_for_new_complaints(uploader):
