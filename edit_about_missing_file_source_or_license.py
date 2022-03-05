@@ -4,6 +4,7 @@ import mediawiki_api_login_and_editing
 
 import datetime
 import random
+import time
 
 # TODO: scan recently uploaded
 # TODO: scan all problematic from specific user
