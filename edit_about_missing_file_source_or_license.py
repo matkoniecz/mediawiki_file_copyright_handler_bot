@@ -75,12 +75,13 @@ def main():
     #shared.pause()
     
     sources = []
-    sources.append(mediawiki_api_query.pages_from_category("Category:Media without a license - without subcategory"))
-    sources.append(uncategorized_images())
-    sources.append(mediawiki_api_query.images_by_date("2010-01-01T18:05:46Z"))
+    sources.append({"description": "has {{unknown}}", "files": mediawiki_api_query.pages_from_category("Category:Media without a license - without subcategory")})
+    sources.append({"description": "without any category", "files": uncategorized_images()})
+    sources.append({"description": "by date", "files": mediawiki_api_query.images_by_date("2010-01-01T18:05:46Z")})
     random.shuffle(sources)
     for source in sources:
-        complain_about_missing_file_source_or_license(files_to_find=77, extra_files_to_preview=88, files_for_processing=source, banned_users=skipped_users)
+        print(source["description"])
+        complain_about_missing_file_source_or_license(files_to_find=77, extra_files_to_preview=88, files_for_processing=source["files"], banned_users=skipped_users)
     for user in skipped_users + refresh_users:
         make_page_listing_problematic_uploads_by_user(session, user)
     show_retaggable_images(session)
