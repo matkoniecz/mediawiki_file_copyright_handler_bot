@@ -1,7 +1,9 @@
 import mediawiki_api_query
 import shared
-import datetime
 import mediawiki_api_login_and_editing
+
+import datetime
+import random
 
 # TODO: scan recently uploaded
 # TODO: scan all problematic from specific user
@@ -74,6 +76,7 @@ def main():
     sources.append(mediawiki_api_query.pages_from_category("Category:Media without a license - without subcategory"))
     sources.append(uncategorized_images())
     sources.append(mediawiki_api_query.images_by_date("2010-01-01T18:05:46Z"))
+    random.shuffle(sources)
     for source in sources:
         complain_about_missing_file_source_or_license(files_to_find=77, extra_files_to_preview=88, files_for_processing=source, banned_users=skipped_users)
     for user in skipped_users + refresh_users:
