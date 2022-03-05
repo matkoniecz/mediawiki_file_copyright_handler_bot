@@ -71,9 +71,9 @@ def main():
     shared.show_latest_diff_on_page(returned['page_name'])
 
     """
+    #shared.pause()
     
     sources = []
-    
     sources.append(mediawiki_api_query.pages_from_category("Category:Media without a license - without subcategory"))
     sources.append(uncategorized_images())
     sources.append(mediawiki_api_query.images_by_date("2010-01-01T18:05:46Z"))
