@@ -60,6 +60,13 @@ def main():
     shared.show_latest_diff_on_page(returned['page_name'])
 
     complain_about_missing_file_source_or_license(files_to_find=77, extra_files_to_preview=88, files_for_processing=['File:Rotwein.png'], banned_users=skipped_users)
+
+    returned = make_page_listing_problematic_uploads_by_user(session, "Kam") #OSM carto screens
+    shared.show_latest_diff_on_page(returned['page_name'])
+
+    returned = make_page_listing_problematic_uploads_by_user(session, "Jcollie") #OSM carto screens
+    shared.show_latest_diff_on_page(returned['page_name'])
+
     """
     
     sources = []
