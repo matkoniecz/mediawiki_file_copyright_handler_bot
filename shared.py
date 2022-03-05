@@ -13,6 +13,8 @@ def create_login_session():
     return session
 
 def show_latest_diff_on_page(page_title):
+    if page_title == None:
+        raise Exception("None passed as a title")
     data = mediawiki_api_query.download_page_text_with_revision_data(page_title)
     difflink = osm_wiki_diff_link(data['parent_id'], data['rev_id'])
     webbrowser.open(difflink, new=2)

@@ -125,6 +125,8 @@ def uploads_by_username_generator(user):
             break
 
 def download_page_text_with_revision_data(page_title):
+    if page_title == None:
+        raise Exception("None passed as a title")
     # https://wiki.openstreetmap.org/w/api.php?action=query&prop=revisions&rvlimit=1&rvprop=content|timestamp|ids&format=json&titles=Sandbox
     url = "https://wiki.openstreetmap.org/w/api.php?action=query&prop=revisions&rvlimit=1&rvprop=content|timestamp|ids&format=json&titles=" + shared.escape_parameter(page_title)
     response = requests.post(url)
