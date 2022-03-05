@@ -69,7 +69,8 @@ def process_file_with_duplicates(session, duplication_data):
             may_be_copied_to_commons = commons_history[-1]['timestamp'] > osm_wiki_history[0]['timestamp']
             print(may_be_copied_to_commons, " - may_be_copied_to_commons")
             if may_be_copied_to_commons:
-                print("skipping as it could be copied to Commons")
+                print("https://wiki.openstreetmap.org/wiki/" + page_title.replace(" ", "_"))
+                print("skipping as it could be copied to Commons from OSM Wiki")
                 return
 
             if filename_of_duplicate.replace(" ", "_") == page_title.replace(" ", "_"):
