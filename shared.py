@@ -97,6 +97,10 @@ def osm_wiki_page_edit_link(page_name):
     url = url.replace(" ", "_")
     return url
 
+def null_edit(session, page_title):
+    test_page = mediawiki_api_query.download_page_text_with_revision_data(page_title)
+    text = test_page['page_text']
+    edit_page(session, page_title, text, "NULL EDIT", test_page['rev_id'], test_page['timestamp'])
 
 def pause():
     # wait
