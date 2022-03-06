@@ -71,6 +71,10 @@ def main():
     returned = make_page_listing_problematic_uploads_by_user(session, "Jcollie") #OSM carto screens
     shared.show_latest_diff_on_page(returned['page_name'])
 
+    returned = make_page_listing_problematic_uploads_by_user(session, "Verdy p") #banned
+    print(returned)
+    shared.show_latest_diff_on_page(returned['page_name'])
+   
     """
     #shared.pause()
     
