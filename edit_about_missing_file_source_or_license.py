@@ -376,27 +376,38 @@ def skip_image_based_on_text_on_its_description(page_title, page_text):
         #print("<" + cleaned_text + ">")
         #print()
         return True
-    keywords = ["mapping", "SoTM", #"OSM", "OpenStreetMap", "HOT",
+    keywords = ["SoTM", #"mapping", "OSM", "OpenStreetMap", "HOT",
     "taghistory", "chart",
     "StreetComplete", # solve this!
-    "public information request", "Letter of authorization", "Autorizzazione", # semi-license template
-    "Photo for profile", "profile", "self photo",
-    "selbst", "own work",
+    "public information request", "Letter of authorization", "Autorizzazione", "Authorization", # semi-license template
+    "Photo for profile", "profile picture", "profile", "self photo",
+    "selbst", "own work", "taken by me",
     "non-free", "image search", "copied from", "unfree",
+    "CC-BY-SA",
     "Bus.meran.eu", # https://wiki.openstreetmap.org/wiki/File:Bus.meran.eu_real_time_bus_map.png
     "AEP - Captage eau.JPG", # asked on https://wiki.openstreetmap.org/wiki/User_talk:Penegal for now
     "licence", "license", "permission", "flickr", "source", "Openfietsmap", "OSM contributors",
+    "slippy map",
     "commons", "wikipedia", "0px-", "px-",
+    # commons, wikipedia, 0px- covers cases like
+    # https://wiki.openstreetmap.org/wiki/File:120px-Zusatzzeichen_1020-12.svg.png https://commons.wikimedia.org/w/index.php?title=File:Zusatzzeichen_1020-12.svg&redirect=no
+    # where bothering uploader is not needed and matches can be automatically found
+
     "Screenshot", # long backlog of weird cases
     "should be replaced with",
     "Asked for more info at", "github.com",
     '[[Category:User images]]',
     "[[Category:Logos]]", # likely {{trademarked}} is missing which would cause skip anyway
     "JOSM", # likely {{JOSM screenshot without imagery}} or one for with imagery
+
+    "Artikel in", "article in", "article about", "News published in local paper", "News published", # fair use?
+    # https://wiki.openstreetmap.org/wiki/File:HSR_OSM_FazilkaPratapKesri.png
+
+    "OSM Coverage",
+    # https://wiki.openstreetmap.org/wiki/Talk:Drafts/Media_file_license_chart#More_likely_layers%3A_CyclOSM
+    "mapquest", "osmarender", "Render cycle", "Render transport", "CyclOSM", "OpenCycleMap", # arghhhhhhhhhh, licensing of one more thingy https://wiki.openstreetmap.org/wiki/File:Render_cycle_leisure_playground_node.png https://wiki.openstreetmap.org/wiki/File:Render_transport_leisure_playground_area.png https://wiki.openstreetmap.org/wiki/File:Render_mapquest_leisure_playground_area.png 
+    "http",
     ]
-    # commons, wikipedia, 0px- covers cases like
-    # https://wiki.openstreetmap.org/wiki/File:120px-Zusatzzeichen_1020-12.svg.png https://commons.wikimedia.org/w/index.php?title=File:Zusatzzeichen_1020-12.svg&redirect=no
-    # where bothering uploader is not needed and matches can be automatically found
 
     for keyword in keywords:
         if keyword.lower() in page_title.lower() or keyword.lower() in cleaned_text.lower():
