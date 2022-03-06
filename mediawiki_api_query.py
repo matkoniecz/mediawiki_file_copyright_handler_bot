@@ -102,25 +102,22 @@ def images_by_date(date_string):
 
 def uploads_by_username_generator(user):
     continue_code = None
-    print("uploads_by_username_generator warning: deleted/moved images will be likely shown under original names")
-    already_shown = []
+    # https://wiki.openstreetmap.org/w/api.php?action=query&list=allimages&aisort=timestamp&aiuser=Mateusz%20Konieczny
     while True:
         user = user.replace(" ", "%20")
-        url = "https://wiki.openstreetmap.org/w/api.php?action=query&list=logevents&letype=upload&lelimit=500&leuser=" + user + "&format=json"
+        url = "https://wiki.openstreetmap.org/w/api.php?action=query&list=allimages&aisort=timestamp&aiuser=" + user + "&format=json"
         if continue_code != None:
-            url += "&lecontinue=" + continue_code
+            url += "&aicontinue=" + continue_code
         response = requests.post(url)
         #print(json.dumps(response.json(), indent=4))
         #print(url)
-        file_list = response.json()['query']['logevents']
+        file_list = response.json()['query']['allimages']
         returned = []
         for file in file_list:
-            if file not in already_shown:
-                already_shown.append(file) # user can upload multiple times to a single file
-                yield file["title"]
+            yield file["title"]
         if "continue" in response.json():
             #print(response.json()["continue"])
-            continue_code = response.json()["continue"]["lecontinue"]
+            continue_code = response.json()["continue"]["aicontinue"]
         else:
             break
 
@@ -155,21 +152,26 @@ def download_page_text(page_title):
     return page_text
 
 def pages_where_file_is_used_as_image(page_title):
-    url = "https://wiki.openstreetmap.org/w/api.php?action=query&titles=" + shared.escape_parameter(page_title) + "&prop=fileusage&format=json"
-    response = requests.post(url)
-    #print(json.dumps(response.json(), indent=4))
-    key = list(response.json()['query']['pages'].keys())[0]
-    entry = response.json()['query']['pages'][key]
-    if "fileusage" not in entry:
-        return []
-    else:
-        returned = []
-        for use in entry["fileusage"]:
-            returned.append(use["title"])
-        #print("-=--------------")
-        #print(json.dumps(entry["fileusage"], indent=4))
-        #print("-=--------------")
-        return returned
+    continue_code = None
+    # https://wiki.openstreetmap.org/w/api.php?action=query&list=allimages&aisort=timestamp&aiuser=Mateusz%20Konieczny
+    while True:
+        # https://wiki.openstreetmap.org/w/api.php?action=query&titles=File:Canopy-action.jpg&prop=fileusage&format=json
+        url = "https://wiki.openstreetmap.org/w/api.php?action=query&titles=" + shared.escape_parameter(page_title) + "&prop=fileusage&format=json"
+        if continue_code != None:
+            url += "&fucontinue=" + continue_code
+        response = requests.post(url)
+        key = list(response.json()['query']['pages'].keys())[0]
+        entry = response.json()['query']['pages'][key]
+        if "fileusage" not in entry:
+            break
+        else:
+            for use in entry["fileusage"]:
+                yield use["title"]
+        if "continue" in response.json():
+            #print(response.json()["continue"])
+            continue_code = response.json()["continue"]["fucontinue"]
+        else:
+            break
 
 def is_file_used_as_image(page_title):
     url = "https://wiki.openstreetmap.org/w/api.php?action=query&titles=" + shared.escape_parameter(page_title) + "&prop=fileusage&format=json"
