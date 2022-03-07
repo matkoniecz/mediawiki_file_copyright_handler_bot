@@ -12,11 +12,20 @@ def selftest():
 
 def main():
     selftest()
-    session = shared.create_login_session()
     # https://wiki.openstreetmap.org/wiki/File:Canopy-action.jpg is not working well...
-    old_file = "File:Canopy-action.jpg"
-    new_file = "File:Trolley in PandaPark.JPG"
-    edit_summary = "replace file wih one that has more clear legal situation, is on Wikimedia commons and is of a better quality"
+
+    copyvio = "has more clear legal situation"
+
+    migrate_file("File:Symbol E10.png", "File:Balken-gruen.png", [])
+    migrate_file("File:Blue bar.png", "File:Balken-blau.png", []) # lowercasing MESS
+    
+
+def migrate_file(old_file, new_file, reasons_list):
+    session = shared.create_login_session()
+    edit_summary = "file replacement ( " + old_file + " -> " + new_file + " ). It is on Wikimedia commons"
+    edit_summary = (", ").join([edit_summary] + reasons_list)
+    edit_summary += "."
+    print(edit_summary)
     old_file = old_file.replace("_", " ")
     new_file = new_file.replace("_", " ")
     for page_title in mediawiki_api_query.pages_where_file_is_used_as_image(old_file):
