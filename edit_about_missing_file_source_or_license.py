@@ -381,11 +381,11 @@ def skip_image_based_on_text_on_its_description(page_title, page_text):
         #print()
         return True
     keywords = ["SoTM", #"mapping", "OSM", "OpenStreetMap", "HOT",
-    "taghistory", "chart",
+    "taghistory", "chart", "graph", 
     "StreetComplete", # solve this!
     "public information request", "Letter of authorization", "Autorizzazione", "Authorization", # semi-license template
     "Photo for profile", "profile picture", "profile", "self photo",
-    "selbst", "own work", "taken by me",
+    "selbst", "own work", "taken by me", "self made", "self-made",
     "non-free", "image search", "copied from", "unfree",
     "CC-BY-SA",
     "Bus.meran.eu", # https://wiki.openstreetmap.org/wiki/File:Bus.meran.eu_real_time_bus_map.png
@@ -410,6 +410,7 @@ def skip_image_based_on_text_on_its_description(page_title, page_text):
     "OSM Coverage",
     # https://wiki.openstreetmap.org/wiki/Talk:Drafts/Media_file_license_chart#More_likely_layers%3A_CyclOSM
     "mapquest", "osmarender", "Render cycle", "Render transport", "CyclOSM", "OpenCycleMap", # arghhhhhhhhhh, licensing of one more thingy https://wiki.openstreetmap.org/wiki/File:Render_cycle_leisure_playground_node.png https://wiki.openstreetmap.org/wiki/File:Render_transport_leisure_playground_area.png https://wiki.openstreetmap.org/wiki/File:Render_mapquest_leisure_playground_area.png 
+    "Potlatch", # licensing of https://wiki.openstreetmap.org/wiki/File:Connected_Ways_in_Potlatch.png
     "http",
     ]
 
