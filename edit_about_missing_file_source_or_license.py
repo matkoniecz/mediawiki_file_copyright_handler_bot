@@ -63,7 +63,7 @@ def main():
     returned = make_page_listing_problematic_uploads_by_user(session, "Lalali") #PD-shape spam
     shared.show_latest_diff_on_page(returned['page_name'])
 
-    complain_about_missing_file_source_or_license(files_to_find=77, extra_files_to_preview=88, files_for_processing=['File:Rotwein.png'], banned_users=skipped_users)
+    complain_about_missing_file_source_or_license(files_to_find=77, extra_files_to_preview=88, files_for_processing=['File:Rotwein.png'], banned_users=skipped_users, source_description="single file")
 
     returned = make_page_listing_problematic_uploads_by_user(session, "Kam") #OSM carto screens
     shared.show_latest_diff_on_page(returned['page_name'])
@@ -85,7 +85,7 @@ def main():
     random.shuffle(sources)
     for source in sources:
         print(source["description"])
-        complain_about_missing_file_source_or_license(files_to_find=77, extra_files_to_preview=88, files_for_processing=source["files"], banned_users=skipped_users)
+        complain_about_missing_file_source_or_license(files_to_find=77, extra_files_to_preview=88, files_for_processing=source["files"], banned_users=skipped_users, source_description=source["description"])
     for user in skipped_users + refresh_users:
         make_page_listing_problematic_uploads_by_user(session, user)
     show_retaggable_images(session)
@@ -130,7 +130,7 @@ def show_overview_page(session, generated_data, show_page, break_after, hint):
     elif test_page['page_text'] != text:
         shared.edit_page(session, show_page, text, edit_summary, test_page['rev_id'], test_page['timestamp'])
 
-def complain_about_missing_file_source_or_license(files_to_find, extra_files_to_preview, files_for_processing, banned_users):
+def complain_about_missing_file_source_or_license(files_to_find, extra_files_to_preview, files_for_processing, banned_users, source_description):
     session = shared.create_login_session()
     generated_data = detect_images_with_missing_licences(files_to_find + extra_files_to_preview, files_for_processing, banned_users, notify_uploaders_once=True)
     create_category_for_the_current_month_if_missing(session)
@@ -143,7 +143,7 @@ def complain_about_missing_file_source_or_license(files_to_find, extra_files_to_
     show_page = "User:" + mediawiki_api_login_and_editing.password_data.username() + "/test"
 
     # datetime.datetime.strptime('2021-04-19T18:22:40Z', "%Y-%m-%dT%H:%M:%SZ")
-    hint = "For help with dealing with unlicensed media, see https://wiki.openstreetmap.org/wiki/Category:Media_without_a_license <nowiki>{{JOSM screenshot without imagery}}   {{OSM Carto screenshot}}     {{OSM Carto screenshot||old_license}} (uploaded before September 12, 2012)</nowiki>\n\n"
+    hint = "For help with dealing with unlicensed media, see https://wiki.openstreetmap.org/wiki/Category:Media_without_a_license <nowiki>{{JOSM screenshot without imagery}}   {{OSM Carto screenshot}}     {{OSM Carto screenshot||old_license}} (uploaded before September 12, 2012)</nowiki>\n\nsource of files: " + source_description + "\n\n"
     try:
         show_overview_page(session, generated_data, show_page, files_to_find, hint)
         shared.show_latest_diff_on_page(show_page)
