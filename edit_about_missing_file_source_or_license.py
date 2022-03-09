@@ -68,7 +68,7 @@ def main():
     
     sources = []
     sources.append({"description": "has {{unknown}}", "files": mediawiki_api_query.pages_from_category("Category:Media without a license - without subcategory")})
-    sources.append({"description": "without any category", "files": uncategorized_images()})
+    sources.append({"description": "without any category", "files": uncategorized_images_skipping_some_initial_ones()})
     sources.append({"description": "by date", "files": mediawiki_api_query.images_by_date("2010-01-01T18:05:46Z")})
     random.shuffle(sources)
     for source in sources:
@@ -81,6 +81,18 @@ def main():
 
     # for 6+month old and marked as waiting for action for uploader
     # {{delete|unused image, no evidence of free licensing, unused so not qualifying for fair use}}
+
+def uncategorized_images_skipping_some_initial_ones():
+    skip = random.randrange(0, 10000)
+    print("skipping", skip)
+    skipped = []
+    for file in uncategorized_images():
+        if len(skipped) < skip:
+            skipped.append(file)
+        else:
+            yield file
+    for file in skipped:
+        yield file
 
 def mark_all_unmarked_files_by_user(session, username, marker):
     files_for_processing = mediawiki_api_query.uploads_by_username_generator(username)
