@@ -45,21 +45,34 @@ def debug_api():
         print()
 
 def pages_from_category(category):
-    # maybe will limit and not return all... to investigate...
-    returned = []
     """
     category should be something like Category:name
     """
-    url = "https://wiki.openstreetmap.org/w/api.php?action=query&generator=categorymembers&gcmtitle=" + shared.escape_parameter(category) + "&prop=categories&cllimit=max&gcmlimit=max&format=json"
-    response = requests.post(url)
-    #print(json.dumps(response.json(), indent=4))
-    #print(json.dumps(response.json()["query"]["pages"], indent=4))
-    data = response.json()["query"]["pages"]
-    keys = response.json()["query"]["pages"].keys()
-    for key in keys:
-        returned.append(data[key]["title"])
-    #print(returned)
-    return returned
+    continue_code = None
+    continue_parameter = "clcontinue"
+    # https://wiki.openstreetmap.org/w/api.php?action=query&generator=categorymembers&gcmtitle=Category:Media%20without%20a%20license&prop=categories&cllimit=max&gcmlimit=max&format=json
+    while True:
+        url = "https://wiki.openstreetmap.org/w/api.php?action=query&generator=categorymembers&gcmtitle=" + shared.escape_parameter(category) + "&prop=categories&cllimit=max&gcmlimit=max&format=json"
+        if continue_code != None:
+            url += "&" + continue_parameter + "=" + continue_code
+        response = requests.post(url)
+
+        data = response.json()["query"]["pages"]
+        keys = response.json()["query"]["pages"].keys()
+        for key in keys:
+            yield data[key]["title"]
+        if "continue" in response.json():
+            print(response.json()["continue"])
+
+            if 'gcmcontinue' in response.json()["continue"]:
+                print(url)
+                url = "https://wiki.openstreetmap.org/w/api.php?action=query&generator=categorymembers&gcmtitle=" + shared.escape_parameter(category) + "&prop=categories&cllimit=max&gcmlimit=max&format=json"
+                url += "&" + 'gcmcontinue' + "=" + response.json()["continue"]['gcmcontinue']
+                print(url)
+
+            continue_code = response.json()["continue"][continue_parameter]
+        else:
+            break
     # https://stackoverflow.com/questions/28224312/mediawiki-api-how-do-i-list-all-pages-of-a-category-and-for-each-page-show-all
 
 def uncategorized_images(offset, group_count):
@@ -76,29 +89,37 @@ def uncategorized_images(offset, group_count):
 
 def images_by_date(date_string):
     # https://www.mediawiki.org/wiki/API:Allimages#Example_2:_Get_images_by_date
+    # "aistart The timestamp to start enumerating from. Can only be used with aisort=timestamp. "
     S = requests.Session()
+    continue_code = None
+    continue_parameter = "aicontinue"
+    while True:
+        URL = "https://wiki.openstreetmap.org/w/api.php"
 
-    URL = "https://wiki.openstreetmap.org/w/api.php"
+        params = {
+            "action": "query",
+            "format": "json",
+            "list": "allimages",
+            "aisort": "timestamp",
+            "aidir": "newer", # older
+            "aistart": date_string,
+            "ailimit": 500,
+        }
+        if continue_code != None:
+            params[continue_parameter] = continue_code
+        R = S.get(url=URL, params=PARAMS)
+        DATA = R.json()
 
-    PARAMS = {
-        "action": "query",
-        "format": "json",
-        "list": "allimages",
-        "aisort": "timestamp",
-        "aidir": "newer", # older
-        "aistart": date_string,
-        "ailimit": 500,
-    }
+        IMAGES = DATA["query"]["allimages"]
 
-    R = S.get(url=URL, params=PARAMS)
-    DATA = R.json()
+        returned = []
+        for img in IMAGES:
+            yield img["title"]
+        if "continue" in DATA:
+            continue_code = response.json()["continue"][continue_parameter]
+        else:
+            break
 
-    IMAGES = DATA["query"]["allimages"]
-
-    returned = []
-    for img in IMAGES:
-        returned.append(img["title"])
-    return returned
 
 def uploads_by_username_generator(user):
     continue_code = None
