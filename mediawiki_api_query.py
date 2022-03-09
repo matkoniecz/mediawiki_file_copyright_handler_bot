@@ -123,12 +123,13 @@ def images_by_date(date_string):
 
 def uploads_by_username_generator(user):
     continue_code = None
+    continue_parameter = "aicontinue"
     # https://wiki.openstreetmap.org/w/api.php?action=query&list=allimages&aisort=timestamp&aiuser=Mateusz%20Konieczny
     while True:
         user = user.replace(" ", "%20")
         url = "https://wiki.openstreetmap.org/w/api.php?action=query&list=allimages&aisort=timestamp&aiuser=" + user + "&format=json"
         if continue_code != None:
-            url += "&aicontinue=" + continue_code
+            url += "&" + continue_parameter + "=" + continue_code
         response = requests.post(url)
         #print(json.dumps(response.json(), indent=4))
         #print(url)
@@ -138,7 +139,7 @@ def uploads_by_username_generator(user):
             yield file["title"]
         if "continue" in response.json():
             #print(response.json()["continue"])
-            continue_code = response.json()["continue"]["aicontinue"]
+            continue_code = response.json()["continue"][continue_parameter]
         else:
             break
 
@@ -174,12 +175,13 @@ def download_page_text(page_title):
 
 def pages_where_file_is_used_as_image(page_title):
     continue_code = None
+    continue_parameter = "fucontinue"
     # https://wiki.openstreetmap.org/w/api.php?action=query&list=allimages&aisort=timestamp&aiuser=Mateusz%20Konieczny
     while True:
         # https://wiki.openstreetmap.org/w/api.php?action=query&titles=File:Canopy-action.jpg&prop=fileusage&format=json
         url = "https://wiki.openstreetmap.org/w/api.php?action=query&titles=" + shared.escape_parameter(page_title) + "&prop=fileusage&format=json"
         if continue_code != None:
-            url += "&fucontinue=" + continue_code
+            url += "&" + continue_parameter + "=" + continue_code
         response = requests.post(url)
         key = list(response.json()['query']['pages'].keys())[0]
         entry = response.json()['query']['pages'][key]
@@ -190,7 +192,7 @@ def pages_where_file_is_used_as_image(page_title):
                 yield use["title"]
         if "continue" in response.json():
             #print(response.json()["continue"])
-            continue_code = response.json()["continue"]["fucontinue"]
+            continue_code = response.json()["continue"][continue_parameter]
         else:
             break
 
