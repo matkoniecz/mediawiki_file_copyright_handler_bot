@@ -97,9 +97,6 @@ def mark_all_unmarked_files_by_user(session, username, marker):
             shared.edit_page_and_show_diff(session, page_title, text, edit_summary, test_page['rev_id'], test_page['timestamp'])
 
 def make_page_listing_problematic_uploads_by_user(session, username, limit=10000, minimum=2):
-    #files_for_processing = mediawiki_api_query.uploads_by_username_generator(username)
-    #for file in files_for_processing:
-    #    print(file)
     files_for_processing = mediawiki_api_query.uploads_by_username_generator(username)
     generated_data = detect_images_with_missing_licences(limit, files_for_processing, notify_uploaders_once=False, notify_recently_notified=True)
     if len(generated_data) < minimum:
@@ -348,25 +345,14 @@ def nonlicensing_wikicode():
 def skip_image_based_on_text_on_its_description(page_title, page_text):
     if is_marked_with_template_declaring_licensing_status(page_text):
         return True
-        #print("has text with licensing template, skipping")
     if page_text.find("#REDIRECT[[") == 0:
         return True # it is redirect, not an actual file
     cleaned_text = page_text.lower()
     cleaned_text = cleaned_text.replace("{{template:", "{{") # overly verbose by valid method of template use
     for remove in nonlicensing_wikicode():
-        #print(remove.lower(), remove.lower() in cleaned_text)
         cleaned_text = cleaned_text.replace(remove.lower(), "")
     if "{" in cleaned_text.strip() != "":
-        #print("---------------")
-        #print(page_text)
-        #print("---------------")
-        #print(cleaned_text)
-        #print("---------------")
         #TODO stop skipping here
-        #print()
-        #print(page_title, "has text with templates, skipping")
-        #print("<" + cleaned_text + ">")
-        #print()
         return True
     keywords = ["SoTM", #"mapping", "OSM", "OpenStreetMap", "HOT",
     "taghistory", "chart", "graph", 
