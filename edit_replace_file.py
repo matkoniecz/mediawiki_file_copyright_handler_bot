@@ -6,15 +6,75 @@ import datetime
 import random
 import time
 import webbrowser
+import re
 
 def selftest():
     pass
 
 def main():
     selftest()
+
+    #migrate_file("File:SafeWaterBuoy.png", "File:The Fairway Buoy, Tremadog Bay - geograph.org.uk - 120195 - cropped to buoy.png", ["higher quality", "proper licensing info"])
+
+    
     # https://wiki.openstreetmap.org/wiki/File:Canopy-action.jpg is not working well...
 
-    copyvio = "has more clear legal situation"
+    session = shared.create_login_session()
+    index = 0
+    for page_title in mediawiki_api_query.pages_from_category("Category:Image superseded by Wikimedia Commons"):
+        index += 1
+        print(page_title, index)
+        try_to_migrate_as_superseded_by_commons_template_indicated(session, page_title)
+        mark_file_as_migrated(session, page_title)
+    run_hardcoded_file_migrations()
+
+def mark_file_as_migrated(session, page_title):
+    not_used = True
+    for used in mediawiki_api_query.pages_where_file_is_used_as_image(page_title):
+        not_used = False
+        print("still used on", used)
+        break
+    if not_used:
+        print(page_title, "is not used")
+        test_page = mediawiki_api_query.download_page_text_with_revision_data(page_title)
+
+        if has_tricky_templating_situation(test_page['page_text']):
+            return
+
+        text = test_page['page_text'] + "\n" + "{{delete|unused duplicate of Wikimedia Commons file}}"
+        shared.edit_page_and_show_diff(session, page_title, text, "request deletion of duplicate", test_page['rev_id'], test_page['timestamp'])
+
+def has_tricky_templating_situation(page_text):
+    if page_text.count("{") != 2 or page_text.count("}") != 2:
+        print("complex situation, skipping")
+        return True
+    if page_text.count("|") != 1:
+        print("complex situation, skipping")
+        return True
+    return False
+
+def try_to_migrate_as_superseded_by_commons_template_indicated(session, page_title):
+    for used in mediawiki_api_query.pages_where_file_is_used_as_image(page_title):
+        print("IN USE!")
+        return
+    test_page = mediawiki_api_query.download_page_text_with_revision_data(page_title)
+
+    if has_tricky_templating_situation(test_page['page_text']):
+        return
+
+    p = re.compile('\{\{Superseded by Commons\|([^\}]+)\}\}')
+    m = p.match(test_page['page_text'])
+    replacement = m.group(1)
+
+    webbrowser.open("https://wiki.openstreetmap.org/wiki/"+page_title.replace(" ", "_"), new=2)
+    webbrowser.open("https://commons.wikimedia.org/wiki/"+replacement.replace(" ", "_"), new=2)
+    shared.pause()
+    migrate_file(page_title, replacement, [])
+
+
+def run_hardcoded_file_migrations():
+    migrate_file("File:800px-Luge Schlucht.jpg", "File:Luge Schlucht.jpg", ["higher quality", "proper licensing info"])
+    migrate_file("File:120px-Zeichen 250.svg.png", "File:Zeichen 250 - Verbot für Fahrzeuge aller Art, StVO 1970.svg", ["higher quality", "proper licensing info"])
 
     migrate_file("File:Symbol E10.png", "File:Balken-gruen.png", [])
     migrate_file("File:Blue bar.png", "File:Balken-blau.png", []) # lowercasing MESS
