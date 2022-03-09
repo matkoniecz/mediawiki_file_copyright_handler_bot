@@ -91,6 +91,9 @@ def migrate_file(old_file, new_file, reasons_list):
     for page_title in mediawiki_api_query.pages_where_file_is_used_as_image(old_file):
         if "User:Mateusz Konieczny/" in page_title:
             continue
+        if "talk" in page_title:
+            print("skipping", page_title, "as talk page")
+            continue
         print("https://wiki.openstreetmap.org/wiki/"+page_title.replace(" ", "_"))
         data = mediawiki_api_query.download_page_text_with_revision_data(page_title)
         text = data["page_text"]
