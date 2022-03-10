@@ -66,20 +66,24 @@ def generate_table_showing_image_data_for_review(data, break_after=None):
     columns = 3
     output = '{| class="wikitable"\n'
     index = 0
+    table_index = 0
+    row_data = ""
     while index < len(generated_summary_parts):
-        output += "|-\n"
-        output += "| "
-        row_data = ""
-        for i in range(columns):
-            if row_data != "":
-                row_data += " || "
-            if index == break_after:
-                row_data += "BREAK requested after " + str(break_after) + " images"
-            else:
-                if index < len(generated_summary_parts):
-                    row_data += generated_summary_parts[index]
-            index += 1 
-        output += row_data
+        if (table_index % columns) == 0:
+            output += row_data
+            output += "|-\n"
+            output += "| "
+            row_data = ""
+        if row_data != "":
+            row_data += " || "
+        if index == break_after and index == table_index:
+            row_data += "BREAK requested after " + str(break_after) + " images\n"
+            table_index += 1
+        else:
+            if index < len(generated_summary_parts):
+                row_data += generated_summary_parts[index]
+            index += 1
+            table_index += 1
     output += "\n|}\n"
     return output
 
