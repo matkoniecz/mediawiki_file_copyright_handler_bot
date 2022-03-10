@@ -118,6 +118,8 @@ def migrate_file(old_file, new_file, reasons_list):
         if text != data["page_text"]:
             shared.edit_page_and_show_diff(session, page_title, text, edit_summary, data['rev_id'], data['timestamp'])
             time.sleep(random.randrange(30, 60))
+        else:
+            print("Failed to find this file within " + page_title + " - length of page was", len(text))
     for page_title in mediawiki_api_query.pages_where_file_is_used_as_image(old_file):
         shared.null_edit(session, page_title)
 
