@@ -182,8 +182,6 @@ def create_overview_pages_for_users_with_more_problematic_uploads(session, gener
         except mediawiki_api_login_and_editing.NoEditPermissionException:
             # Recreate session, may be needed after long processing
             session = shared.create_login_session()
-            show_overview_page(session, generated_data, show_page, files_to_find, hint)
-            shared.show_latest_diff_on_page(show_page)
         if len(info["problematic_image_data"]) > 1:
             print("user", entry["uploader"], "has more problematic images")
     return session
