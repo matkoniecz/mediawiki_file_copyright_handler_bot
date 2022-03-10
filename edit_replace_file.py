@@ -56,7 +56,6 @@ def has_tricky_templating_situation(page_text):
 def try_to_migrate_as_superseded_by_commons_template_indicated(session, page_title):
     for used in mediawiki_api_query.pages_where_file_is_used_as_image(page_title):
         print("IN USE!")
-        return
     test_page = mediawiki_api_query.download_page_text_with_revision_data(page_title)
 
     if has_tricky_templating_situation(test_page['page_text']):
