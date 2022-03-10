@@ -150,11 +150,7 @@ def complain_about_missing_file_source_or_license(files_to_find, extra_files_to_
     generated_data = detect_images_with_missing_licences(files_to_find + extra_files_to_preview, files_for_processing, banned_users, notify_uploaders_once=True)
     create_category_for_the_current_month_if_missing(session)
 
-    for entry in generated_data:
-        info = make_page_listing_problematic_uploads_by_user(session, entry["uploader"], limit=10000, minimum=2)
-        if len(info["problematic_image_data"]) > 1:
-            print("user", entry["uploader"], "has more problematic images")
-
+    session = create_overview_pages_for_users_with_more_problematic_uploads(session, generated_data)
     show_page = "User:" + mediawiki_api_login_and_editing.password_data.username() + "/test"
 
     # datetime.datetime.strptime('2021-04-19T18:22:40Z', "%Y-%m-%dT%H:%M:%SZ")
@@ -176,6 +172,21 @@ def complain_about_missing_file_source_or_license(files_to_find, extra_files_to_
         session = mark_file_as_without_copyright_info_and_notify_user(session, data, edit_summary)
         
         #shared.pause()
+
+# use returned session, it could be renewed
+def create_overview_pages_for_users_with_more_problematic_uploads(session, generated_data):
+    for entry in generated_data:
+        print("listing requested for", entry["uploader"])
+        try:
+            info = make_page_listing_problematic_uploads_by_user(session, entry["uploader"], limit=10000, minimum=2)
+        except mediawiki_api_login_and_editing.NoEditPermissionException:
+            # Recreate session, may be needed after long processing
+            session = shared.create_login_session()
+            show_overview_page(session, generated_data, show_page, files_to_find, hint)
+            shared.show_latest_diff_on_page(show_page)
+        if len(info["problematic_image_data"]) > 1:
+            print("user", entry["uploader"], "has more problematic images")
+    return session
 
 # use returned session, it could be renewed
 def mark_file_as_without_copyright_info_and_notify_user(session, data_about_affected_page, edit_summary):
