@@ -536,6 +536,8 @@ Please ask there if you are not sure what is the proper next step. Especially wh
 
 If you are interested in wider discussion about handling licencing at OSM Wiki, see [https://wiki.openstreetmap.org/wiki/Talk:Wiki#Designing_policy_for_handling_files_without_clear_license this thread].
 
+(sorry if I missed something that already states license and source: I am looking through over 20 000 files and fixing obvious cases on my own, in other I ask people who upladed files, but it is possible that I missed something - in such case also please answer)
+
 --~~~~
 
 """
