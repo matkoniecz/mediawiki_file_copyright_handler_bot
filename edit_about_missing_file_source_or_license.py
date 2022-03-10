@@ -380,6 +380,7 @@ def nonlicensing_wikicode():
     "{{bing image portions}}", # not a license by itself I think
     "{{featured date", "{{featured_date",
     "{{openstreetmap trademark}}",
+    "http://wiki.openstreetmap.org/wiki/Category:Life_Long_Learning_Mapping_Project",
     "== License ==", "== Licence ==", # often used above "unknown" template
     ]
 
@@ -398,7 +399,13 @@ def skip_image_based_on_text_on_its_description(page_title, page_text):
     keywords = ["SoTM", #"mapping", "OSM", "OpenStreetMap", "HOT",
     "taghistory", "chart", "graph", 
     "StreetComplete", # solve this!
-    "public information request", "Letter of authorization", "Autorizzazione", "Authorization", # semi-license template
+
+    # https://wiki.openstreetmap.org/wiki/Category:Images_of_data_use_permissions,_rejections_or_requests
+    "Category:Images of data use permissions, rejections or requests",
+    # subcategories:
+    # https://wiki.openstreetmap.org/wiki/Category:ES:Autorizaciones_para_usar_fuentes_de_datos_de_Espa%C3%B1a
+    "Category:ES:Autorizaciones para usar fuentes de datos de España",
+    "Letter of authorization", "Autorizzazione", "Authorization", # TODO: just use category from above
     "Photo for profile", "profile picture", "profile", "self photo",
     "selbst", "own work", "taken by me", "self made", "self-made",
     "non-free", "image search", "copied from", "unfree",
@@ -419,8 +426,9 @@ def skip_image_based_on_text_on_its_description(page_title, page_text):
     "[[Category:Logos]]", # likely {{trademarked}} is missing which would cause skip anyway
     "JOSM", # likely {{JOSM screenshot without imagery}} or one for with imagery
 
+    # https://wiki.openstreetmap.org/wiki/Category:Images_of_published_materials_related_to_OpenStreetMap
+    "Category:Images of published materials related to OpenStreetMap",
     "Artikel in", "article in", "article about", "News published in local paper", "News published", # fair use?
-    # https://wiki.openstreetmap.org/wiki/File:HSR_OSM_FazilkaPratapKesri.png
 
     "OSM Coverage",
     # https://wiki.openstreetmap.org/wiki/Talk:Drafts/Media_file_license_chart#More_likely_layers%3A_CyclOSM
