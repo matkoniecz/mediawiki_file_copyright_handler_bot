@@ -107,7 +107,7 @@ def images_by_date(date_string):
         }
         if continue_code != None:
             params[continue_parameter] = continue_code
-        R = S.get(url=URL, params=PARAMS)
+        R = S.get(url=URL, params=params)
         DATA = R.json()
 
         IMAGES = DATA["query"]["allimages"]
