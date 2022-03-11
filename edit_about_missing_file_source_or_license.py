@@ -201,14 +201,17 @@ def complain_about_missing_file_source_or_license(files_to_find, extra_files_to_
 def create_overview_pages_for_users_with_more_problematic_uploads(session, generated_data):
     for entry in generated_data:
         print("listing requested for", entry["uploader"])
-        try:
-            info = make_page_listing_problematic_uploads_by_user(session, entry["uploader"], limit=10000, minimum=2)
-        except mediawiki_api_login_and_editing.NoEditPermissionException:
-            # Recreate session, may be needed after long processing
-            session = shared.create_login_session()
-        if len(info["problematic_image_data"]) > 1:
-            print("user", entry["uploader"], "has more problematic images")
-    return session
+        while True:
+            try:
+                info = make_page_listing_problematic_uploads_by_user(session, entry["uploader"], limit=10000, minimum=2)
+                if len(info["problematic_image_data"]) > 1:
+                    print("user", entry["uploader"], "has more problematic images")
+                entry['more_problematic_images'] = info["problematic_image_data"]
+                break
+            except mediawiki_api_login_and_editing.NoEditPermissionException:
+                # Recreate session, may be needed after long processing
+                session = shared.create_login_session()
+    return session, generated_data
 
 # use returned session, it could be renewed
 def mark_file_as_without_copyright_info_and_notify_user(session, data_about_affected_page, edit_summary):
