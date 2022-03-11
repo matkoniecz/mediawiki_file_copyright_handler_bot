@@ -421,7 +421,7 @@ def skip_image_based_on_text_on_its_description(page_title, page_text):
     if "{" in cleaned_text.strip() != "":
         #TODO stop skipping here
         return True
-    keywords = ["SoTM", #"mapping", "OSM", "OpenStreetMap", "HOT",
+    keywords = screeshot_categories() + ["SoTM", #"mapping", "OSM", "OpenStreetMap", "HOT",
     "taghistory", "chart", "graph", 
     "StreetComplete", # solve this!
 
