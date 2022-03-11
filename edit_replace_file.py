@@ -14,10 +14,8 @@ def selftest():
 def main():
     selftest()
 
-    #migrate_file("File:SafeWaterBuoy.png", "File:The Fairway Buoy, Tremadog Bay - geograph.org.uk - 120195 - cropped to buoy.png", ["higher quality", "proper licensing info"])
-
-    
-    # https://wiki.openstreetmap.org/wiki/File:Canopy-action.jpg is not working well...
+    migrate_file("File:Isolated Danger Buoy.png", "File:Buoy marking the wreck of HMS Natal - geograph.org.uk - 1280172.jpg", ["higher quality", "proper licensing info"])
+    # https://wiki.openstreetmap.org/wiki/Category:Media_without_a_license_-_author_notified_October_2021
 
     session = shared.create_login_session()
     index = 0
