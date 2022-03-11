@@ -49,12 +49,15 @@ def pages_from_category(category):
     category should be something like Category:name
     """
     continue_code = None
-    continue_parameter = "clcontinue"
+    continue_parameter = "gcmcontinue"
     # https://wiki.openstreetmap.org/w/api.php?action=query&generator=categorymembers&gcmtitle=Category:Media%20without%20a%20license&prop=categories&cllimit=max&gcmlimit=max&format=json
+    # https://wiki.openstreetmap.org/wiki/Category:Media_without_a_license_-_without_subcategory
     while True:
-        url = "https://wiki.openstreetmap.org/w/api.php?action=query&generator=categorymembers&gcmtitle=" + shared.escape_parameter(category) + "&prop=categories&cllimit=max&gcmlimit=max&format=json"
+        url = "https://wiki.openstreetmap.org/w/api.php?action=query&generator=categorymembers&gcmtitle=" + shared.escape_parameter(category) + "&gcmlimit=max&format=json"
         if continue_code != None:
             url += "&" + continue_parameter + "=" + continue_code
+        print(url)
+        print()
         response = requests.post(url)
 
         data = response.json()["query"]["pages"]
@@ -62,14 +65,6 @@ def pages_from_category(category):
         for key in keys:
             yield data[key]["title"]
         if "continue" in response.json():
-            print(response.json()["continue"])
-
-            if 'gcmcontinue' in response.json()["continue"]:
-                print(url)
-                url = "https://wiki.openstreetmap.org/w/api.php?action=query&generator=categorymembers&gcmtitle=" + shared.escape_parameter(category) + "&prop=categories&cllimit=max&gcmlimit=max&format=json"
-                url += "&" + 'gcmcontinue' + "=" + response.json()["continue"]['gcmcontinue']
-                print(url)
-
             continue_code = response.json()["continue"][continue_parameter]
         else:
             break
@@ -116,7 +111,7 @@ def images_by_date(date_string):
         for img in IMAGES:
             yield img["title"]
         if "continue" in DATA:
-            continue_code = response.json()["continue"][continue_parameter]
+            continue_code = DATA["continue"][continue_parameter]
         else:
             break
 
