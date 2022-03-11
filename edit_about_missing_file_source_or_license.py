@@ -83,22 +83,46 @@ def main():
     # for 6+month old and marked as waiting for action for uploader
     # {{delete|unused image, no evidence of free licensing, unused so not qualifying for fair use}}
 
+def screeshot_categories():
+    return [
+        "Category:Screenshots",
+        "Category:Images of Osmand",
+        "Category:GPSMapEdit screenshots",
+        "Category:GPSMapEdit screenshots",
+        "Category:Images of ID",
+        "Category:Images of Osmand",
+        "Category:Images of OSMTracker (Android)",
+        "Category:Images of Vespucci",
+        "Category:Ito OSM Mapper screenshots",
+        "Category:Images of Java Applet",
+        "Category:Mapillary screenshots",
+        "Category:MapSource screenshots",
+        "Category:Images of Potlatch2",
+        "Category:Images of OSM Garmin maps",
+        #"Category:Images of JOSM", # Many are {{JOSM screenshot without imagery}} - TODO: recheck
+        "Category:Screenshots of notification mails",
+    ]
+
 def mark_screenshots_as_also_needing_attention(session):
-    for page_title in mediawiki_api_query.pages_from_category("Category:Screenshots"):
-        test_page = mediawiki_api_query.download_page_text_with_revision_data(page_title)
-        if "{" in test_page['page_text']:
-            continue
-        if "Category:" in page_title:
-            print("Skipping", page_title, "as category")
-            # TODO: run on subcategories?
-            continue
-        if "File:" not in page_title:
-            print("Skipping", page_title, "as without File: in the title")
-            continue
-        print(page_title)
-        time.sleep(1)
-        text = test_page['page_text'] + "\n" + "{{Unknown}}"
-        shared.edit_page_and_show_diff(session, page_title, text, "what is the license here? (I have no idea what is the answer to that)", test_page['rev_id'], test_page['timestamp'])
+    for category in screeshot_categories():
+        for page_title in mediawiki_api_query.pages_from_category(category):
+            if page_title in screeshot_categories():
+                continue
+            if "Category:" in page_title:
+                print("Skipping", page_title, "as category")
+                print("        \"" + page_title + "\",")
+                # TODO: run on subcategories?
+                continue
+            if "File:" not in page_title:
+                print("Skipping", page_title, "as without File: in the title")
+                continue
+            test_page = mediawiki_api_query.download_page_text_with_revision_data(page_title)
+            if "{" in test_page['page_text']:
+                continue
+            print(page_title)
+            time.sleep(1)
+            text = test_page['page_text'] + "\n" + "{{Unknown}}"
+            shared.edit_page_and_show_diff(session, page_title, text, "what is the license here? (I have no idea what is the answer to that)", test_page['rev_id'], test_page['timestamp'])
 
 def uncategorized_images_skipping_some_initial_ones():
     skip = random.randrange(0, 10000)
