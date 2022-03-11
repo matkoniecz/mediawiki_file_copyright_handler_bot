@@ -432,9 +432,9 @@ def skip_image_based_on_text_on_its_description(page_title, page_text):
     "Category:ES:Autorizaciones para usar fuentes de datos de España",
     "Letter of authorization", "Autorizzazione", "Authorization", # TODO: just use category from above
     "Photo for profile", "profile picture", "profile", "self photo",
-    "selbst", "own work", "taken by me", "self made", "self-made",
+    "selbst", "own work", "taken by me", "self made", "self-made", "I made", "by author", 
     "non-free", "image search", "copied from", "unfree",
-    "CC-BY-SA",
+    "CC-BY-SA", "public domain",
     "Bus.meran.eu", # https://wiki.openstreetmap.org/wiki/File:Bus.meran.eu_real_time_bus_map.png
     "AEP - Captage eau.JPG", # asked on https://wiki.openstreetmap.org/wiki/User_talk:Penegal for now
     "licence", "license", "permission", "flickr", "source", "Openfietsmap", "OSM contributors",
@@ -637,6 +637,7 @@ def users_dropped_from_regular_processing():
     "Skippern", #PD-shape spam, some more complex (posted on the talk page 2022-01-30)
     "Gkai", # https://wiki.openstreetmap.org/wiki/User:Mateusz_Konieczny/notify_uploaders/Gkai OSM Carto icons ("should be replaced with")
     "Fkv", # mark their image for deletion on or after 2022-09-08 https://wiki.openstreetmap.org/w/index.php?title=File:Kremszwickel_signpost.jpg&oldid=prev&diff=2279417 https://wiki.openstreetmap.org/w/index.php?title=User_talk:Fkv&curid=112308&diff=2279452&oldid=2279273 https://wiki.openstreetmap.org/w/index.php?title=User_talk:Fkv&diff=2279476&oldid=2279452 https://wiki.openstreetmap.org/w/index.php?title=File:Kremszwickel_signpost.jpg&diff=prev&oldid=2279473
+    "Ulfm", "Abunai" # murdered - https://wiki.openstreetmap.org/w/index.php?title=User_talk%3AMateusz_Konieczny&type=revision&diff=2282967&oldid=2282571
     ]
 
 main()
