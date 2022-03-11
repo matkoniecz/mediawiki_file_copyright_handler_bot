@@ -2,6 +2,7 @@
 
 import password_data
 import requests
+import time
 
 class NoEditPermissionException(Exception):
    # likely logged out
@@ -87,21 +88,27 @@ def edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, URL="ht
         raise NoEditPermissionException("likely automatically logged out")
 
 def obtain_csrf_token(S, URL):
-    # CSRF == Cross Site Request Forgery
-    # AKA, additional complexity because some people are evil
+    try:
+        # CSRF == Cross Site Request Forgery
+        # AKA, additional complexity because some people are evil
 
-    # GET request to fetch CSRF token
-    PARAMS_2 = {
-        "action": "query",
-        "meta": "tokens",
-        "format": "json"
-    }
+        # GET request to fetch CSRF token
+        PARAMS_2 = {
+            "action": "query",
+            "meta": "tokens",
+            "format": "json"
+        }
 
-    R = S.get(url=URL, params=PARAMS_2)
-    DATA = R.json()
+        R = S.get(url=URL, params=PARAMS_2)
+        DATA = R.json()
 
-    CSRF_TOKEN = DATA['query']['tokens']['csrftoken']
-    return CSRF_TOKEN
+        CSRF_TOKEN = DATA['query']['tokens']['csrftoken']
+        return CSRF_TOKEN
+    except requests.exceptions.ConnectionError as e:
+        print("ERROR HAPPENED")
+        print(e)
+        time.sleep(120)
+        return obtain_csrf_token(S, URL)
 
 def obtain_login_token(S, URL):
     # Retrieve login token first
