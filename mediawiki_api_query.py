@@ -225,6 +225,15 @@ def get_uploader_from_file_history(upload_history):
     user = upload_history[0]['user']
 
     for entry in upload_history:
+        # upload_history:
+        # [{'timestamp': '2011-02-15T11:26:49Z', 'user': 'Say-no'}, {'filemissing': ''}]
+        # entry:
+        # {'filemissing': ''}
+        if 'filemissing' in entry:
+            continue
+        if "user" not in entry:
+            print("upload_history:", upload_history)
+            print("len(upload_history):", len(upload_history))
         if user != entry['user']:
             print("multiple uploads by different people, lets skip for now as complicated")
             return None
