@@ -69,7 +69,8 @@ def main():
     sources = []
     sources.append({"description": "has {{unknown}}", "files": mediawiki_api_query.pages_from_category("Category:Media without a license - without subcategory")})
     sources.append({"description": "without any category", "files": uncategorized_images_skipping_some_initial_ones()})
-    sources.append({"description": "by date", "files": mediawiki_api_query.images_by_date("2010-01-01T18:05:46Z")})
+    sources.append({"description": "by date", "files": mediawiki_api_query.images_by_date("2008-01-01T18:05:46Z")})
+    sources.append({"description": "by date, from 2022", "files": mediawiki_api_query.images_by_date("2022-01-01T00:00:00Z")})
     random.shuffle(sources)
     for source in sources:
         print(source["description"])
