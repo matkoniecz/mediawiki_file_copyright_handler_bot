@@ -49,20 +49,10 @@ def main():
     mark_all_unmarked_files_by_user(session, "R0uzic", "{{PD-shape}}")
 
     returned = make_page_listing_problematic_uploads_by_user(session, "Lalali") #PD-shape spam
+    returned = returned['session']
     shared.show_latest_diff_on_page(returned['page_name'])
 
-    complain_about_missing_file_source_or_license(files_to_find=77, extra_files_to_preview=88, files_for_processing=['File:Rotwein.png'], banned_users=skipped_users, source_description="single file")
-
-    returned = make_page_listing_problematic_uploads_by_user(session, "Kam") #OSM carto screens
-    shared.show_latest_diff_on_page(returned['page_name'])
-
-    returned = make_page_listing_problematic_uploads_by_user(session, "Jcollie") #OSM carto screens
-    shared.show_latest_diff_on_page(returned['page_name'])
-
-    returned = make_page_listing_problematic_uploads_by_user(session, "Verdy p") #banned
-    print(returned)
-    shared.show_latest_diff_on_page(returned['page_name'])
-   
+    complain_about_missing_file_source_or_license(files_to_find=77, extra_files_to_preview=88, files_for_processing=['File:Rotwein.png'], banned_users=skipped_users, source_description="single file")  
     """
     #shared.pause()
     
@@ -76,7 +66,8 @@ def main():
         print(source["description"])
         complain_about_missing_file_source_or_license(files_to_find=51, extra_files_to_preview=53, files_for_processing=source["files"], banned_users=skipped_users, source_description=source["description"])
     for user in skipped_users + refresh_users:
-        make_page_listing_problematic_uploads_by_user(session, user)
+        returned = make_page_listing_problematic_uploads_by_user(session, user)
+        session = returned['session']
     show_retaggable_images(session)
 
     mark_screenshots_as_also_needing_attention(session)
@@ -154,21 +145,27 @@ def mark_all_unmarked_files_by_user(session, username, marker):
 def make_page_listing_problematic_uploads_by_user(session, username, limit=10000, minimum=2):
     files_for_processing = mediawiki_api_query.uploads_by_username_generator(username)
     generated_data = detect_images_with_missing_licences(limit, files_for_processing, notify_uploaders_once=False, notify_recently_notified=True)
-    if len(generated_data) < minimum:
-        return {"page_name": None, "problematic_image_data": generated_data}
     page_name = "User:" + mediawiki_api_login_and_editing.password_data.username() + "/notify uploaders/" + username
-    show_overview_page(session, generated_data, page_name, limit, username + " [[Drafts/Media file license chart]]")
-    return {"page_name": page_name, "problematic_image_data": generated_data}
+    if len(generated_data) >= minimum:
+        session = show_overview_page(session, generated_data, page_name, limit, username + " [[Drafts/Media file license chart]]")
+    return {"page_name": page_name, "problematic_image_data": generated_data, 'session': session}
 
 def show_overview_page(session, generated_data, show_page, break_after, hint):
     test_page = mediawiki_api_query.download_page_text_with_revision_data(show_page)
     table_for_confirmation = shared.generate_table_showing_image_data_for_review(generated_data, break_after=break_after)
     text = hint + "\n" + table_for_confirmation
     edit_summary = "copyright review"
-    if test_page == None:
-        shared.create_page(session, show_page, text, edit_summary)
-    elif test_page['page_text'] != text:
-        shared.edit_page(session, show_page, text, edit_summary, test_page['rev_id'], test_page['timestamp'])
+    while True:
+        try:
+            if test_page == None:
+                shared.create_page(session, show_page, text, edit_summary)
+                return session
+            elif test_page['page_text'] != text:
+                shared.edit_page(session, show_page, text, edit_summary, test_page['rev_id'], test_page['timestamp'])
+                return session
+        except mediawiki_api_login_and_editing.NoEditPermissionException:
+            # Recreate session, may be needed after long processing
+            session = shared.create_login_session()
 
 def complain_about_missing_file_source_or_license(files_to_find, extra_files_to_preview, files_for_processing, banned_users, source_description):
     session = shared.create_login_session()
@@ -180,12 +177,7 @@ def complain_about_missing_file_source_or_license(files_to_find, extra_files_to_
 
     # datetime.datetime.strptime('2021-04-19T18:22:40Z', "%Y-%m-%dT%H:%M:%SZ")
     hint = "For help with dealing with unlicensed media, see https://wiki.openstreetmap.org/wiki/Category:Media_without_a_license <nowiki>{{JOSM screenshot without imagery}}   {{OSM Carto screenshot}}     {{OSM Carto screenshot||old_license}} (uploaded before September 12, 2012)</nowiki>\n\nsource of files: " + source_description + "\n\n"
-    try:
-        show_overview_page(session, generated_data, show_page, files_to_find, hint)
-    except mediawiki_api_login_and_editing.NoEditPermissionException:
-        # Recreate session, may be needed after long processing
-        session = shared.create_login_session()
-        show_overview_page(session, generated_data, show_page, files_to_find, hint)
+    session = show_overview_page(session, generated_data, show_page, files_to_find, hint)
 
     if len(generated_data) == 0:
         return
@@ -202,16 +194,11 @@ def complain_about_missing_file_source_or_license(files_to_find, extra_files_to_
 def create_overview_pages_for_users_with_more_problematic_uploads(session, generated_data):
     for entry in generated_data:
         print("listing requested for", entry["uploader"])
-        while True:
-            try:
-                info = make_page_listing_problematic_uploads_by_user(session, entry["uploader"], limit=10000, minimum=2)
-                if len(info["problematic_image_data"]) > 1:
-                    print("user", entry["uploader"], "has more problematic images")
-                entry['more_problematic_images'] = info["problematic_image_data"]
-                break
-            except mediawiki_api_login_and_editing.NoEditPermissionException:
-                # Recreate session, may be needed after long processing
-                session = shared.create_login_session()
+        info = make_page_listing_problematic_uploads_by_user(session, entry["uploader"], limit=10000, minimum=2)
+        session = info['session']
+        if len(info["problematic_image_data"]) > 1:
+            print("user", entry["uploader"], "has more problematic images")
+        entry['more_problematic_images'] = info["problematic_image_data"]
     return session, generated_data
 
 # use returned session, it could be renewed
