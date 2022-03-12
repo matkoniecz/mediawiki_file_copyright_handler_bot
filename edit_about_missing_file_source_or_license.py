@@ -522,7 +522,7 @@ Are you the author of image [[:""" + image_name + """]] ?
 
 Or is it copied from some other place (which one?)?
 
-Please, add this info to the file page - something like "I took this photo" or "downloaded from -website link-" or "I took this screeshot of program XYZ".
+Please, add this info to the file page - something like "I took this photo" or "downloaded from -website link-" or "I took this screeshot of program XYZ" or "this is map generated from OpenStreetMap data and SRTM data" or "map generated from OSM data and only OSM data".
 
 Doing this would be already very useful.
 
