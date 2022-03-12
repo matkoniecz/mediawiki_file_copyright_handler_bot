@@ -181,13 +181,15 @@ def complain_about_missing_file_source_or_license(files_to_find, extra_files_to_
     hint = "For help with dealing with unlicensed media, see https://wiki.openstreetmap.org/wiki/Category:Media_without_a_license <nowiki>{{JOSM screenshot without imagery}}   {{OSM Carto screenshot}}     {{OSM Carto screenshot||old_license}} (uploaded before September 12, 2012)</nowiki>\n\nsource of files: " + source_description + "\n\n"
     try:
         show_overview_page(session, generated_data, show_page, files_to_find, hint)
-        shared.show_latest_diff_on_page(show_page)
     except mediawiki_api_login_and_editing.NoEditPermissionException:
         # Recreate session, may be needed after long processing
         session = shared.create_login_session()
         show_overview_page(session, generated_data, show_page, files_to_find, hint)
-        shared.show_latest_diff_on_page(show_page)
 
+    if len(generated_data) == 0:
+        return
+
+    shared.show_latest_diff_on_page(show_page)
     shared.pause()
     for data in generated_data[:files_to_find]:
         page_title = data['page_title']
