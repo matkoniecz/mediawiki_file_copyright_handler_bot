@@ -197,8 +197,6 @@ def complain_about_missing_file_source_or_license(files_to_find, extra_files_to_
         edit_summary = "please, specify missing information about file that would allow keeping it on OSM Wiki"
         session = mark_file_as_without_copyright_info_and_notify_user(session, data, edit_summary)
         
-        #shared.pause()
-
 # use returned session, it could be renewed
 def create_overview_pages_for_users_with_more_problematic_uploads(session, generated_data):
     for entry in generated_data:
