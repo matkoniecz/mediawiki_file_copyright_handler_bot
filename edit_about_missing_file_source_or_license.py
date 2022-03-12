@@ -174,7 +174,7 @@ def complain_about_missing_file_source_or_license(files_to_find, extra_files_to_
     generated_data = detect_images_with_missing_licences(files_to_find + extra_files_to_preview, files_for_processing, banned_users, notify_uploaders_once=True)
     create_category_for_the_current_month_if_missing(session)
 
-    session = create_overview_pages_for_users_with_more_problematic_uploads(session, generated_data)
+    session, generated_data = create_overview_pages_for_users_with_more_problematic_uploads(session, generated_data)
     show_page = "User:" + mediawiki_api_login_and_editing.password_data.username() + "/test"
 
     # datetime.datetime.strptime('2021-04-19T18:22:40Z', "%Y-%m-%dT%H:%M:%SZ")
