@@ -84,6 +84,9 @@ def generate_table_showing_image_data_for_review(data, break_after=None):
                 row_data += generated_summary_parts[index]
             index += 1
             table_index += 1
+    if row_data != "":
+        output += row_data
+        row_data = ""
     output += "\n|}\n"
     return output
 
