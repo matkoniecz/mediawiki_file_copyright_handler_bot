@@ -462,7 +462,7 @@ def skip_image_based_on_text_on_its_description(page_title, page_text):
     "mapquest", "osmarender", "Render cycle", "Render transport", "CyclOSM", "OpenCycleMap", # arghhhhhhhhhh, licensing of one more thingy https://wiki.openstreetmap.org/wiki/File:Render_cycle_leisure_playground_node.png https://wiki.openstreetmap.org/wiki/File:Render_transport_leisure_playground_area.png https://wiki.openstreetmap.org/wiki/File:Render_mapquest_leisure_playground_area.png 
     "Potlatch", # licensing of https://wiki.openstreetmap.org/wiki/File:Connected_Ways_in_Potlatch.png
     "http",
-    "freemap", # https://github.com/FreemapSlovakia/freemap-mapnik/issues/237 https://wiki.openstreetmap.org/wiki/File:OSM-Bratislava-2014-08-18.png
+    "freemap", # https://github.com/FreemapSlovakia/freemap-mapnik/issues/237 https://wiki.openstreetmap.org/wiki/File:OSM-Bratislava-2014-08-18.png https://github.com/matkoniecz/mediawiki_file_copyright_handler_bot/commit/d2cf743317a6c7878c5f3c71141b47d28e19d035
     ]
 
     for keyword in keywords:
