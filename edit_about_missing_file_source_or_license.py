@@ -73,7 +73,7 @@ def main():
     random.shuffle(sources)
     for source in sources:
         print(source["description"])
-        complain_about_missing_file_source_or_license(files_to_find=77, extra_files_to_preview=88, files_for_processing=source["files"], banned_users=skipped_users, source_description=source["description"])
+        complain_about_missing_file_source_or_license(files_to_find=50, extra_files_to_preview=50, files_for_processing=source["files"], banned_users=skipped_users, source_description=source["description"])
     for user in skipped_users + refresh_users:
         make_page_listing_problematic_uploads_by_user(session, user)
     show_retaggable_images(session)
