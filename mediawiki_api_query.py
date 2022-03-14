@@ -3,20 +3,22 @@ import shared
 import json
 import datetime
 
-def file_upload_history(file, URL="https://wiki.openstreetmap.org/w/api.php"):
+def file_upload_history(file, URL="https://wiki.openstreetmap.org/w/api.php", debug=False):
     call_url = URL + "?action=query&titles=" + shared.escape_parameter(file) + "&prop=imageinfo&iilimit=50&format=json"
     response = requests.post(call_url, headers={'Content-type': 'text'})
     key = list(response.json()['query']['pages'].keys())[0]
     upload_history = response.json()['query']['pages'][key]
     if "imageinfo" not in upload_history:
-        print(call_url)
-        print(json.dumps(response.json(), indent=4))
-        print(json.dumps(upload_history, indent=4))
+        if debug:
+            print(call_url)
+            print(json.dumps(response.json(), indent=4))
+            print(json.dumps(upload_history, indent=4))
         if 'query' not in upload_history:
             return None # https://wiki.openstreetmap.org/wiki/Talk:Wiki#Ghost_file - what is going on?
             raise Exception("unexpected missing query in data")
-        print(json.dumps(upload_history['query']['pages'], indent=4))
-        print(list(upload_history['query']['pages'].keys())[0])
+        if debug:
+            print(json.dumps(upload_history['query']['pages'], indent=4))
+            print(list(upload_history['query']['pages'].keys())[0])
     return upload_history["imageinfo"]
 
 def file_upload_history_without_broken_uploads(file, URL="https://wiki.openstreetmap.org/w/api.php"):
