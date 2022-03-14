@@ -411,19 +411,23 @@ def skip_image_based_on_text_on_its_description(page_title, page_text):
         #TODO stop skipping here
         return True
     keywords = screeshot_categories() + ["SoTM", #"mapping", "OSM", "OpenStreetMap", "HOT",
+    "OSM picture", "Rendered OSM data", "Category:Maps of places", "Map of",
     "taghistory", "chart", "graph", 
     "StreetComplete", # solve this!
 
+    # https://wiki.openstreetmap.org/wiki/Category:Documents
+    "Category:Documents",
     # https://wiki.openstreetmap.org/wiki/Category:Images_of_data_use_permissions,_rejections_or_requests
     "Category:Images of data use permissions, rejections or requests",
     # subcategories:
     # https://wiki.openstreetmap.org/wiki/Category:ES:Autorizaciones_para_usar_fuentes_de_datos_de_Espa%C3%B1a
     "Category:ES:Autorizaciones para usar fuentes de datos de España",
     "Letter of authorization", "Autorizzazione", "Authorization", # TODO: just use category from above
-    "Photo for profile", "profile picture", "profile", "self photo",
+    "Photo for profile", "profile picture", "profile", "self photo", "taken by", 
     "selbst", "own work", "taken by me", "self made", "self-made", "I made", "by author", 
     "non-free", "image search", "copied from", "unfree",
     "CC-BY-SA", "public domain",
+    "copyright",
     "Bus.meran.eu", # https://wiki.openstreetmap.org/wiki/File:Bus.meran.eu_real_time_bus_map.png
     "AEP - Captage eau.JPG", # asked on https://wiki.openstreetmap.org/wiki/User_talk:Penegal for now
     "licence", "license", "permission", "flickr", "source", "Openfietsmap", "OSM contributors",
