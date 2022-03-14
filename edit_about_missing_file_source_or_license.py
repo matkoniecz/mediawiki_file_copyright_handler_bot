@@ -46,6 +46,7 @@ def main():
     ]
 
     """
+    mark_all_unmarked_files_by_user(session, "Berteun", "[[Category:Screenshots]]{{unknown}}")
     mark_all_unmarked_files_by_user(session, "R0uzic", "{{PD-shape}}")
 
     returned = make_page_listing_problematic_uploads_by_user(session, "Lalali") #PD-shape spam
