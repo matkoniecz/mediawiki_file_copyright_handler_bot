@@ -177,7 +177,7 @@ def complain_about_missing_file_source_or_license(files_to_find, extra_files_to_
     show_page = "User:" + mediawiki_api_login_and_editing.password_data.username() + "/test"
 
     # datetime.datetime.strptime('2021-04-19T18:22:40Z', "%Y-%m-%dT%H:%M:%SZ")
-    hint = "For help with dealing with unlicensed media, see https://wiki.openstreetmap.org/wiki/Category:Media_without_a_license <nowiki>{{JOSM screenshot without imagery}}   {{OSM Carto screenshot}}     {{OSM Carto screenshot||old_license}} (uploaded before September 12, 2012)</nowiki>\n\nsource of files: " + source_description + "\n\n"
+    hint = "For help with dealing with unlicensed media, see https://wiki.openstreetmap.org/wiki/Category:Media_without_a_license <nowiki>{{JOSM screenshot without imagery}}   {{OSM Carto screenshot}}     {{OSM Carto screenshot||old_license}} {{CC-BY-SA-2.0 OpenStreetMap}} (uploaded before September 12, 2012)</nowiki>\n\nsource of files: " + source_description + "\n\n"
     session = show_overview_page(session, generated_data, show_page, files_to_find, hint)
 
     if len(generated_data) == 0:
