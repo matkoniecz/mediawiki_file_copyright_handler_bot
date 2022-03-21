@@ -512,11 +512,11 @@ Hello! And thanks for your upload - but some extra info is necessary.
 
 Sorry for bothering you about this, but it is important to know source of the uploaded files.
 
-Are you the author of image [[:""" + image_name + """]] ?
+Are you the creator of image [[:""" + image_name + """]] ?
 
 Or is it copied from some other place (which one?)?
 
-Please, add this info to the file page - something like "I took this photo" or "downloaded from -website link-" or "I took this screeshot of program XYZ" or "this is map generated from OpenStreetMap data and SRTM data" or "map generated from OSM data and only OSM data".
+Please, add this info to the file page - something like "I took this photo" or "downloaded from -website link-" or "I took this screeshot of program XYZ" or "this is map generated from OpenStreetMap data and SRTM data" or "map generated from OSM data and only OSM data" or "This is my work based on file -link-to-page-with-that-file-and-its-licensing-info-" or "used file downloaded from internet to create it, no idea which one".
 
 Doing this would be already very useful.
 
