@@ -97,6 +97,22 @@ def run_hardcoded_file_migrations():
     migrate_file("File:Symbol E10.png", "File:Balken-gruen.png", [])
     migrate_file("File:Blue bar.png", "File:Balken-blau.png", []) # lowercasing MESS
     
+def skip_editing_on_this_page(page_title):
+    if "User:Mateusz Konieczny/" in page_title:
+        return True
+    if "talk" in page_title.lower():
+        print("skipping", page_title, "as talk page")
+        return True
+    return False
+
+def file_used_and_only_on_pages_where_no_editing_allowed(page_title):
+    used = False
+    for page_title in mediawiki_api_query.pages_where_file_is_used_as_image(page_title):
+        used = True
+        if skip_editing_on_this_page(page_title):
+            continue
+        return False
+    return used
 
 def migrate_file(old_file, new_file, reasons_list):
     session = shared.create_login_session()
@@ -106,11 +122,13 @@ def migrate_file(old_file, new_file, reasons_list):
     print(edit_summary)
     old_file = old_file.replace("_", " ")
     new_file = new_file.replace("_", " ")
+
+    if file_used_and_only_on_pages_where_no_editing_allowed(old_file):
+        print("In use only on pages skipped from editing")
+        return
+
     for page_title in mediawiki_api_query.pages_where_file_is_used_as_image(old_file):
-        if "User:Mateusz Konieczny/" in page_title:
-            continue
-        if "talk" in page_title:
-            print("skipping", page_title, "as talk page")
+        if skip_editing_on_this_page(page_title):
             continue
         print("https://wiki.openstreetmap.org/wiki/"+page_title.replace(" ", "_"))
         data = mediawiki_api_query.download_page_text_with_revision_data(page_title)
