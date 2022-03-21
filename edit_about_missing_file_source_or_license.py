@@ -632,7 +632,8 @@ def users_dropped_from_regular_processing():
     "Skippern", #PD-shape spam, some more complex (posted on the talk page 2022-01-30)
     "Gkai", # https://wiki.openstreetmap.org/wiki/User:Mateusz_Konieczny/notify_uploaders/Gkai OSM Carto icons ("should be replaced with")
     "Fkv", # mark their image for deletion on or after 2022-09-08 https://wiki.openstreetmap.org/w/index.php?title=File:Kremszwickel_signpost.jpg&oldid=prev&diff=2279417 https://wiki.openstreetmap.org/w/index.php?title=User_talk:Fkv&curid=112308&diff=2279452&oldid=2279273 https://wiki.openstreetmap.org/w/index.php?title=User_talk:Fkv&diff=2279476&oldid=2279452 https://wiki.openstreetmap.org/w/index.php?title=File:Kremszwickel_signpost.jpg&diff=prev&oldid=2279473
-    "Ulfm", "Abunai" # murdered - https://wiki.openstreetmap.org/w/index.php?title=User_talk%3AMateusz_Konieczny&type=revision&diff=2282967&oldid=2282571
+    "Ulfm", "Abunai", # murdered - https://wiki.openstreetmap.org/w/index.php?title=User_talk%3AMateusz_Konieczny&type=revision&diff=2282967&oldid=2282571
+    "Malenki", # dead - https://wiki.openstreetmap.org/wiki/User_talk:Malenki
     ]
 
 main()
