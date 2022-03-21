@@ -9,7 +9,17 @@ import webbrowser
 import re
 
 def selftest():
-    pass
+    if extract_replacement_filename_from_templated_page("{{Superseded by Commons|File:Baghdad International Airport (October 2003).jpg}}", "test") != "File:Baghdad International Airport (October 2003).jpg":
+        raise
+    page = """This work is in the public domain in the United States because it is a work of the United States Federal Government under the terms of Title 17, Chapter 1, Section 105 of the US Code. See Copyright.
+
+Note: This only applies to works of the Federal Government and not to the work of any individual U.S. state, territory, commonwealth, county, municipality, or any other subdivision.
+
+[[Category:Outdoor OSM data Example]]
+{{Superseded by Commons|File:Baghdad International Airport (October 2003).jpg}}
+"""
+    if extract_replacement_filename_from_templated_page(page, "test") != "File:Baghdad International Airport (October 2003).jpg":
+        raise
 
 def main():
     selftest()
@@ -51,6 +61,14 @@ def has_tricky_templating_situation(page_text):
         return True
     return False
 
+def extract_replacement_filename_from_templated_page(text, page_title):
+    p = re.compile('\{\{Superseded by Commons\|([^\}]+)\}\}')
+    m = p.search(text)
+    if m == None:
+        print("failed on", page_title)
+        print(text)
+    return m.group(1)
+
 def try_to_migrate_as_superseded_by_commons_template_indicated(session, page_title):
     for used in mediawiki_api_query.pages_where_file_is_used_as_image(page_title):
         print("IN USE!")
@@ -59,9 +77,12 @@ def try_to_migrate_as_superseded_by_commons_template_indicated(session, page_tit
     if has_tricky_templating_situation(test_page['page_text']):
         return
 
-    p = re.compile('\{\{Superseded by Commons\|([^\}]+)\}\}')
-    m = p.match(test_page['page_text'])
-    replacement = m.group(1)
+    replacement = extract_replacement_filename_from_templated_page(test_page['page_text'], page_title)
+
+    if file_used_and_only_on_pages_where_no_editing_allowed(page_title):
+        print("used only on pages exempt from editing like talk pages")
+        print()
+        return
 
     webbrowser.open("https://wiki.openstreetmap.org/wiki/"+page_title.replace(" ", "_"), new=2)
     webbrowser.open("https://commons.wikimedia.org/wiki/"+replacement.replace(" ", "_"), new=2)
