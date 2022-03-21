@@ -85,8 +85,8 @@ def pages_from_category(category):
     """
     category should be something like Category:name
     """
-    continue_code = None
     continue_parameter = "gcmcontinue"
+    continue_code = None
     # https://wiki.openstreetmap.org/w/api.php?action=query&generator=categorymembers&gcmtitle=Category:Media%20without%20a%20license&prop=categories&cllimit=max&gcmlimit=max&format=json
     # https://wiki.openstreetmap.org/wiki/Category:Media_without_a_license_-_without_subcategory
     while True:
