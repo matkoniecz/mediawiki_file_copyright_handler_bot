@@ -58,6 +58,29 @@ def debug_api():
         print("00000000000000000000000000")
         print()
 
+def all_pages():
+    # https://www.mediawiki.org/wiki/API:Allpages
+    # https://www.mediawiki.org/w/api.php?action=query&list=allpages
+    continue_parameter = "apcontinue"
+    continue_code = None
+    # https://wiki.openstreetmap.org/w/api.php?action=query&generator=categorymembers&gcmtitle=Category:Media%20without%20a%20license&prop=categories&cllimit=max&gcmlimit=max&format=json
+    # https://wiki.openstreetmap.org/wiki/Category:Media_without_a_license_-_without_subcategory
+    while True:
+        url = "https://wiki.openstreetmap.org/w/api.php?action=query&list=allpages&format=json"
+        if continue_code != None:
+            url += "&" + continue_parameter + "=" + continue_code
+        print(url)
+        print()
+        response = requests.post(url)
+
+        data = response.json()["query"]["allpages"]
+        for entry in data:
+            yield entry["title"]
+        if "continue" in response.json():
+            continue_code = response.json()["continue"][continue_parameter]
+        else:
+            break
+
 def pages_from_category(category):
     """
     category should be something like Category:name
