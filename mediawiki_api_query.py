@@ -3,6 +3,18 @@ import shared
 import json
 import datetime
 
+def deletion_history(file, URL="https://wiki.openstreetmap.org/w/api.php"):
+    # https://wiki.openstreetmap.org/w/api.php?action=query&list=logevents&lelimit=3&format=json&leaction=delete/delete&letitle=File:Wanderwegsymbol_Naturpark_Vorderer_Bayerischer_Wald.PNG
+    # https://wiki.openstreetmap.org/w/api.php?action=query&list=logevents&lelimit=3&format=json&leaction=delete/delete&letitle=File:Wandearwegsymbol_Naturpark_Vorderer_Bayerischer_Wald.PNG
+    call_url = URL + "?action=query&list=logevents&lelimit=3&format=json&leaction=delete/delete&letitle=" + shared.escape_parameter(file) + "&prop=imageinfo&iilimit=50&format=json"
+    response = requests.post(call_url, headers={'Content-type': 'text'})
+    if "query" not in response.json():
+        print(response.json())
+    if 'error' in response.json():
+        return None
+    return response.json()["query"]["logevents"]
+
+
 def file_upload_history(file, URL="https://wiki.openstreetmap.org/w/api.php", debug=False):
     call_url = URL + "?action=query&titles=" + shared.escape_parameter(file) + "&prop=imageinfo&iilimit=50&format=json"
     response = requests.post(call_url, headers={'Content-type': 'text'})
