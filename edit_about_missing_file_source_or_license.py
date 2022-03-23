@@ -40,7 +40,7 @@ def main():
     # https://wiki.openstreetmap.org/wiki/File:MarekdDoubleXjunctionWithGrassInTheMiddle.jpg
     # see more https://wiki.openstreetmap.org/w/index.php?title=Special:ListFiles&offset=20150817161600%7CMarekMockupHamburgBurgstrasse.jpg&user=Marek+kleciak
 
-    skipped_users = users_dropped_from_regular_processing() 
+    skipped_users = shared.users_dropped_from_regular_processing()
     refresh_users = [
     "PanierAvide", "Segubi", # got link with their file listing, lets keep it updates
     ]
@@ -616,25 +616,6 @@ def valid_licencing_templates():
         "{{Bing image}}",
 
         # https://wiki.openstreetmap.org/wiki/Category:Media_license_templates
-    ]
-
-def users_dropped_from_regular_processing():
-    return [
-    "Malcolmh", # many PD-shape images and basically only that - see https://wiki.openstreetmap.org/wiki/User:Mateusz_Konieczny/notify_uploaders/Malcolmh
-    "Hoream telenav", # received PM from them
-    "!i!", "Bwurst", # many PD-shape/Carto/possibly PD-shape images
-    "Marek kleciak", # lost computer access
-    "VIPINDAS K", # problematic: copyvios related to OSM
-    "Dmgroom", # handle https://wiki.openstreetmap.org/wiki/File:Baghdad-210207.png first
-    "Emmanuel BAMA", # handle PD-text like from https://wiki.openstreetmap.org/wiki/User:Mateusz_Konieczny/notify_uploaders/Emmanuel_BAMA
-    "Michael Montani", "SimonPoole", # many charts: https://commons.wikimedia.org/wiki/Commons:Village_pump/Copyright#Is_chart_qualifying_for_PD-shape?
-    "Bk", "Nordpfeil", "Mateusz Konieczny", # has chart (search fir chart below)
-    "Skippern", #PD-shape spam, some more complex (posted on the talk page 2022-01-30)
-    "Gkai", # https://wiki.openstreetmap.org/wiki/User:Mateusz_Konieczny/notify_uploaders/Gkai OSM Carto icons ("should be replaced with")
-    "Fkv", # mark their image for deletion on or after 2022-09-08 https://wiki.openstreetmap.org/w/index.php?title=File:Kremszwickel_signpost.jpg&oldid=prev&diff=2279417 https://wiki.openstreetmap.org/w/index.php?title=User_talk:Fkv&curid=112308&diff=2279452&oldid=2279273 https://wiki.openstreetmap.org/w/index.php?title=User_talk:Fkv&diff=2279476&oldid=2279452 https://wiki.openstreetmap.org/w/index.php?title=File:Kremszwickel_signpost.jpg&diff=prev&oldid=2279473
-    "Ulfm", "Abunai", # murdered - https://wiki.openstreetmap.org/w/index.php?title=User_talk%3AMateusz_Konieczny&type=revision&diff=2282967&oldid=2282571
-    "Malenki", # dead - https://wiki.openstreetmap.org/wiki/User_talk:Malenki
-    "Bmwiedemann", # tricky https://wiki.openstreetmap.org/wiki/File:Luftbild-2-originalprojektion-unscaled.png
     ]
 
 main()
