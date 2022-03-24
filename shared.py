@@ -2,7 +2,6 @@ import mediawiki_api_login_and_editing
 import mediawiki_api_query
 import urllib.parse
 import webbrowser
-
 import password_data
 import time
 import random
