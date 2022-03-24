@@ -119,7 +119,7 @@ def mark_screenshots_as_also_needing_attention(session):
                 print("Skipping", page_title, "as without File: in the title")
                 continue
             test_page = mediawiki_api_query.download_page_text_with_revision_data(page_title)
-            if "{" in test_page['page_text']:
+            if "{{unknown" in test_page['page_text'].lower():
                 continue
             print(page_title)
             time.sleep(1)
