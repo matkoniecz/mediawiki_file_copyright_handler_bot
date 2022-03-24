@@ -168,8 +168,14 @@ def migrate_file(old_file, new_file, reasons_list):
 
     data = mediawiki_api_query.download_page_text_with_revision_data(old_file)
     text = data["page_text"]
-    if "{{delete|" in text or still_used:
+    if "{{delete|" in text and still_used:
         webbrowser.open(shared.osm_wiki_page_link(old_file), new=2)
+        print(page_title, "has deletion requested but is in use")
+        shared.pause()
+    elif still_used:
+        webbrowser.open(shared.osm_wiki_page_link(old_file), new=2)
+    elif "{{delete|" in text:
+        pass
     else:
         if text.strip() != "":
             text += "\n"
