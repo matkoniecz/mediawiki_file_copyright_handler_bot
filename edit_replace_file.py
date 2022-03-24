@@ -98,12 +98,18 @@ def try_to_migrate_as_superseded_by_commons_template_indicated(session, page_tit
 
 
 def run_hardcoded_file_migrations(only_safe):
-    migrate_file("File:5843873292 81e16dea1f z d.jpg", "File:Roundhouse Park August 2017 01.jpg", ["proper license - 'NonCommercial-NoDerivs 2.0' is not acceptable for OSM Wiki"], only_safe)
-    migrate_file("File:800px-Luge Schlucht.jpg", "File:Luge Schlucht.jpg", ["higher quality", "proper licensing info"], only_safe)
-    migrate_file("File:120px-Zeichen 250.svg.png", "File:Zeichen 250 - Verbot für Fahrzeuge aller Art, StVO 1970.svg", ["higher quality", "proper licensing info"], only_safe)
+    #highway=living_street locked page
+    # https://wiki.openstreetmap.org/wiki/Talk:Tag:highway%3Dliving_street#Conflict_about_.22info_boxes.22
+    """
+    migrate_file("File:800px-Luge Schlucht.jpg", "File:Luge Schlucht.jpg", ["higher quality", "proper licensing info"], only_safe, got_migration_permission=True)
+    migrate_file("File:120px-Zeichen 250.svg.png", "File:Zeichen 250 - Verbot für Fahrzeuge aller Art, StVO 1970.svg", ["higher quality", "proper licensing info"], only_safe, got_migration_permission=True)
+    """
 
-    migrate_file("File:Symbol E10.png", "File:Balken-gruen.png", [], only_safe)
-    migrate_file("File:Blue bar.png", "File:Balken-blau.png", [], only_safe) # lowercasing MESS
+    # first I need to tag used ones...
+    """
+    migrate_file("File:Symbol E10.png", "File:Balken-gruen.png", [], only_safe, got_migration_permission=True)
+    migrate_file("File:Blue bar.png", "File:Balken-blau.png", [], only_safe, got_migration_permission=True) # lowercasing MESS
+    """
     
 def skip_editing_on_this_page(page_title):
     if "User:Mateusz Konieczny/" in page_title:
