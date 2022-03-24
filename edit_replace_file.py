@@ -41,7 +41,6 @@ def main():
         print(page_title, index)
         try_to_migrate_as_superseded_by_commons_template_indicated(session, page_title, only_safe)
         mark_file_as_migrated(session, page_title)
-    run_hardcoded_file_migrations()
 
 def mark_file_as_migrated(session, page_title):
     not_used = True
