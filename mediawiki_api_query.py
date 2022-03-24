@@ -96,7 +96,14 @@ def pages_from_category(category):
         print(url)
         print()
         response = requests.post(url)
-
+        if 'error' in response.json():
+            print(response.json())
+            raise
+        if "query" not in response.json():
+            # empty
+            # see for example
+            # https://wiki.openstreetmap.org/w/api.php?action=query&generator=categorymembers&gcmtitle=Category%3AMaps%20of%20places%20in%20Antarctica&gcmlimit=max&format=json
+            return []
         data = response.json()["query"]["pages"]
         keys = response.json()["query"]["pages"].keys()
         for key in keys:
