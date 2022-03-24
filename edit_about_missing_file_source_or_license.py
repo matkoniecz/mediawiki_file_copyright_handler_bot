@@ -237,7 +237,7 @@ def notify_user_about_missing_copyright_data(session, uploader_name, page_title,
     if user_talk_data != None:
         user_talk_page_text = user_talk_data['page_text']
 
-    user_talk_page_text = user_talk_page_text + notification_on_user_talk(page_title)
+    user_talk_page_text = user_talk_page_text + notification_on_user_talk(page_title, uploader_name)
 
     if user_talk_data != None:
         shared.edit_page_and_show_diff(session, user_talk, user_talk_page_text, edit_summary, user_talk_data['rev_id'], user_talk_data['timestamp'])
@@ -538,7 +538,7 @@ Or do you prefer to require attribution and some other things using CC-BY-SA-4.0
 
 If you are the author: Please add <nowiki>{{CC0-self}}</nowiki> to the file page to publish the image under CC0 license.
 
-You can also use <nowiki>{{CC-BY-SA-4.0-self}}</nowiki> to publish under CC-BY-SA-4.0 license.
+You can also use <nowiki>{{CC-BY-SA-4.0-self|""" + uploader_name + """}}</nowiki> to publish under CC-BY-SA-4.0 license.
 
 Once you add missing data - please remove <nowiki>""" + file_template_about_missing_license() + """</nowiki> from the file page.
 
