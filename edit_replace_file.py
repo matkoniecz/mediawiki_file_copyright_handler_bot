@@ -196,8 +196,17 @@ def valid_image_transforms(main_form, new_file):
         for post in range(0, 3):
             # infoboxes with varying space count
             returned.append(
-                {'from': main_form.replace("image" + (" " * pre) + "=" + (" " * post) + "File:", ""),
-                'to': new_file.replace("image = File:", ""),
+                {'from': "image" + (" " * pre) + "=" + (" " * post) + main_form,
+                'to': "image = " + new_file,
+                'description': 'used in template (quite safe)',
+                'safe': True,
+                }
+            )
+
+            # https://wiki.openstreetmap.org/w/index.php?title=IT:Aeroways&diff=2294021&oldid=2216766
+            returned.append(
+                {'from': "image" + (" " * pre) + "=" + (" " * post) + main_form.replace("File:", ""),
+                'to': "image = " + new_file.replace("File:", ""),
                 'description': 'used in template (quite safe)',
                 'safe': True,
                 }
