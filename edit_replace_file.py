@@ -24,15 +24,22 @@ Note: This only applies to works of the Federal Government and not to the work o
 def main():
     selftest()
 
-    migrate_file("File:Isolated Danger Buoy.png", "File:Buoy marking the wreck of HMS Natal - geograph.org.uk - 1280172.jpg", ["higher quality", "proper licensing info"])
+    only_safe = True
+    run_hardcoded_file_migrations(only_safe)
+    only_safe = False
+    run_hardcoded_file_migrations(only_safe)
+
+    #done!
+    #migrate_file("File:Isolated Danger Buoy.png", "File:Buoy marking the wreck of HMS Natal - geograph.org.uk - 1280172.jpg", ["higher quality", "proper licensing info"])
     # https://wiki.openstreetmap.org/wiki/Category:Media_without_a_license_-_author_notified_October_2021
 
+    only_safe = True
     session = shared.create_login_session()
     index = 0
     for page_title in mediawiki_api_query.pages_from_category("Category:Image superseded by Wikimedia Commons"):
         index += 1
         print(page_title, index)
-        try_to_migrate_as_superseded_by_commons_template_indicated(session, page_title)
+        try_to_migrate_as_superseded_by_commons_template_indicated(session, page_title, only_safe)
         mark_file_as_migrated(session, page_title)
     run_hardcoded_file_migrations()
 
@@ -69,7 +76,7 @@ def extract_replacement_filename_from_templated_page(text, page_title):
         print(text)
     return m.group(1)
 
-def try_to_migrate_as_superseded_by_commons_template_indicated(session, page_title):
+def try_to_migrate_as_superseded_by_commons_template_indicated(session, page_title, only_safe):
     for used in mediawiki_api_query.pages_where_file_is_used_as_image(page_title):
         print("IN USE!")
     test_page = mediawiki_api_query.download_page_text_with_revision_data(page_title)
@@ -88,15 +95,16 @@ def try_to_migrate_as_superseded_by_commons_template_indicated(session, page_tit
     webbrowser.open("https://wiki.openstreetmap.org/wiki/"+page_title.replace(" ", "_"), new=2)
     webbrowser.open("https://commons.wikimedia.org/wiki/"+replacement.replace(" ", "_"), new=2)
     shared.pause()
-    migrate_file(page_title, replacement, [])
+    migrate_file(page_title, replacement, [], only_safe)
 
 
-def run_hardcoded_file_migrations():
-    migrate_file("File:800px-Luge Schlucht.jpg", "File:Luge Schlucht.jpg", ["higher quality", "proper licensing info"])
-    migrate_file("File:120px-Zeichen 250.svg.png", "File:Zeichen 250 - Verbot für Fahrzeuge aller Art, StVO 1970.svg", ["higher quality", "proper licensing info"])
+def run_hardcoded_file_migrations(only_safe):
+    migrate_file("File:5843873292 81e16dea1f z d.jpg", "File:Roundhouse Park August 2017 01.jpg", ["proper license - 'NonCommercial-NoDerivs 2.0' is not acceptable for OSM Wiki"], only_safe)
+    migrate_file("File:800px-Luge Schlucht.jpg", "File:Luge Schlucht.jpg", ["higher quality", "proper licensing info"], only_safe)
+    migrate_file("File:120px-Zeichen 250.svg.png", "File:Zeichen 250 - Verbot für Fahrzeuge aller Art, StVO 1970.svg", ["higher quality", "proper licensing info"], only_safe)
 
-    migrate_file("File:Symbol E10.png", "File:Balken-gruen.png", [])
-    migrate_file("File:Blue bar.png", "File:Balken-blau.png", []) # lowercasing MESS
+    migrate_file("File:Symbol E10.png", "File:Balken-gruen.png", [], only_safe)
+    migrate_file("File:Blue bar.png", "File:Balken-blau.png", [], only_safe) # lowercasing MESS
     
 def skip_editing_on_this_page(page_title):
     if "User:Mateusz Konieczny/" in page_title:
@@ -115,7 +123,7 @@ def file_used_and_only_on_pages_where_no_editing_allowed(page_title):
         return False
     return used
 
-def migrate_file(old_file, new_file, reasons_list):
+def migrate_file(old_file, new_file, reasons_list, only_safe):
     session = shared.create_login_session()
     edit_summary = "file replacement ( " + old_file + " -> " + new_file + " ). It is on Wikimedia commons"
     edit_summary = (", ").join([edit_summary] + reasons_list)
@@ -137,6 +145,9 @@ def migrate_file(old_file, new_file, reasons_list):
         unsafe_changes = False
         for main_form in [old_file, old_file.replace(" ", "_")]:
             for form in valid_image_transforms(main_form, new_file):
+                if only_safe:
+                    if form['safe'] == False:
+                        continue
                 if form['from'] in text:
                     print("FOUND, as", form['description'], "-", form['from'])
                     text = text.replace(form['from'], form['to'])
