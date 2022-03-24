@@ -91,9 +91,6 @@ def try_to_migrate_as_superseded_by_commons_template_indicated(session, page_tit
         print()
         return
 
-    webbrowser.open("https://wiki.openstreetmap.org/wiki/"+page_title.replace(" ", "_"), new=2)
-    webbrowser.open("https://commons.wikimedia.org/wiki/"+replacement.replace(" ", "_"), new=2)
-    shared.pause()
     migrate_file(page_title, replacement, [], only_safe)
 
 
@@ -128,7 +125,14 @@ def file_used_and_only_on_pages_where_no_editing_allowed(page_title):
         return False
     return used
 
-def migrate_file(old_file, new_file, reasons_list, only_safe):
+def check_is_replacement_ok(old_file, new_file):
+    webbrowser.open("https://wiki.openstreetmap.org/wiki/"+old_file.replace(" ", "_"), new=2)
+    webbrowser.open("https://commons.wikimedia.org/wiki/"+new_file.replace(" ", "_"), new=2)
+    print("replace that image?")
+    shared.pause()
+    return True
+
+def migrate_file(old_file, new_file, reasons_list, only_safe, got_migration_permission=False):
     session = shared.create_login_session()
     edit_summary = "file replacement ( " + old_file + " -> " + new_file + " ). It is on Wikimedia commons"
     edit_summary = (", ").join([edit_summary] + reasons_list)
@@ -167,6 +171,10 @@ def migrate_file(old_file, new_file, reasons_list, only_safe):
                         unsafe_changes = True
                         
         if text != data["page_text"]:
+            if got_migration_permission == False:
+                if check_is_replacement_ok(old_file, new_file) == False:
+                    return
+                got_migration_permission = True
             shared.edit_page_and_show_diff(session, page_title, text, edit_summary, data['rev_id'], data['timestamp'])
             shared.make_delay_after_edit()
             if unsafe_changes:
@@ -189,10 +197,14 @@ def migrate_file(old_file, new_file, reasons_list, only_safe):
         print(page_title, "has deletion requested but is in use")
         shared.pause()
     elif still_used:
-        webbrowser.open(shared.osm_wiki_page_link(old_file), new=2)
+        print("still used")
     elif "{{delete|" in text:
         pass
     else:
+        if got_migration_permission == False:
+            if check_is_replacement_ok(old_file, new_file) == False:
+                return
+            got_migration_permission = True
         if text.strip() != "":
             text += "\n"
         delete_request = "{{delete|uses replaced with Wikimedia commons alternative, this file is not needed anymore. And it has licensing issues.}}"
