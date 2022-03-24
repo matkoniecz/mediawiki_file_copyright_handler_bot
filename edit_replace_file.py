@@ -152,7 +152,7 @@ def migrate_file(old_file, new_file, reasons_list):
                         
         if text != data["page_text"]:
             shared.edit_page_and_show_diff(session, page_title, text, edit_summary, data['rev_id'], data['timestamp'])
-            time.sleep(random.randrange(30, 60))
+            shared.make_delay_after_edit()
             if unsafe_changes:
                 print("EDIT COULD BE UNSAFE, VERIFY PLS")
                 shared.pause()

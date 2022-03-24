@@ -367,12 +367,8 @@ def detect_images_with_missing_licences_process_page(page_title, banned_users):
             return None
 
         upload_history = mediawiki_api_query.file_upload_history(page_title)
-        if upload_history == None:
-            return None # TODO: remove root cause of THAT
-        uploader = mediawiki_api_query.get_uploader_from_file_history(upload_history)
+        uploader = shared.get_uploader_from_upload_history_or_none_if_not_clear(upload_history, page_title)
         if uploader == None:
-            print("Unable to establish uploader")
-            print("https://wiki.openstreetmap.org/wiki/"+page_title.replace(" ", "_"))
             return None
         if uploader in banned_users:
             return None

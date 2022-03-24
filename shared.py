@@ -4,6 +4,8 @@ import urllib.parse
 import webbrowser
 
 import password_data
+import time
+import random
 
 def users_dropped_from_regular_processing():
     return [
@@ -132,4 +134,23 @@ def pause():
     # wait
     print("press enter (any key?) to continue")
     input()
+
+def make_delay_after_edit():
+    time.sleep(random.randrange(1, 6))
+    if random.randrange(1, 100) > 90:
+        time.sleep(random.randrange(400, 600))
+
+def get_uploader_of_file_or_none_if_not_clear(page_title):
+    upload_history = mediawiki_api_query.file_upload_history(page_title)
+    return get_uploader_from_upload_history_or_none_if_not_clear(upload_history, page_title)
+
+def get_uploader_from_upload_history_or_none_if_not_clear(upload_history, page_title):
+    if upload_history == None:
+        return None # TODO: remove root cause of THAT
+    uploader = mediawiki_api_query.get_uploader_from_file_history(upload_history)
+    if uploader == None:
+        print("Unable to establish uploader")
+        print("https://wiki.openstreetmap.org/wiki/"+page_title.replace(" ", "_"))
+        return None
+    return uploader
 
