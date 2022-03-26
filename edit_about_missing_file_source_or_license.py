@@ -69,7 +69,7 @@ def main():
     sources.append({"description": "without any category", "files": uncategorized_images_skipping_some_initial_ones()})
     sources.append({"description": "by date, from 2009", "files": mediawiki_api_query.images_by_date("2009-01-01T18:05:46Z")})
     sources.append({"description": "by date, from start", "files": mediawiki_api_query.images_by_date("1900-01-01T18:05:46Z")})
-    sources.append({"description": "by date, from 2015", "files": mediawiki_api_query.images_by_date("2015-01-01T18:05:46Z")})
+    sources.append({"description": "by date, from 2016", "files": mediawiki_api_query.images_by_date("2016-01-01T18:05:46Z")})
     sources.append({
         "description": "by date, from 2022",
         "files": mediawiki_api_query.images_by_date("2022-01-01T00:00:00Z"),
