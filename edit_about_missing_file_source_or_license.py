@@ -58,7 +58,8 @@ def main():
     returned = returned['session']
     shared.show_latest_diff_on_page(returned['page_name'])
 
-    complain_about_missing_file_source_or_license(files_to_find=77, extra_files_to_preview=88, files_for_processing=['File:Rotwein.png'], banned_users=skipped_users, source_description="single file")  
+    days_of_inactive_talk_page = 40
+    complain_about_missing_file_source_or_license(files_to_find=77, extra_files_to_preview=88, files_for_processing=['File:Rotwein.png'], banned_users=skipped_users, source_description="single file", days_of_inactive_talk_page=0)
     """
     #shared.pause()
     
@@ -71,11 +72,15 @@ def main():
     sources.append({
         "description": "by date, from 2022",
         "files": mediawiki_api_query.images_by_date("2022-01-01T00:00:00Z"),
+        "days_of_inactive_talk_page": 0,
         })
     random.shuffle(sources)
     for source in sources:
         print(source["description"])
-        complain_about_missing_file_source_or_license(files_to_find=51, extra_files_to_preview=53, files_for_processing=source["files"], banned_users=skipped_users, source_description=source["description"])
+        days_of_inactive_talk_page = 40
+        if 'days_of_inactive_talk_page' in source:
+            days_of_inactive_talk_page = source['days_of_inactive_talk_page']
+        complain_about_missing_file_source_or_license(files_to_find=51, extra_files_to_preview=53, files_for_processing=source["files"], banned_users=skipped_users, source_description=source["description"], days_of_inactive_talk_page=days_of_inactive_talk_page)
     for user in skipped_users + refresh_users:
         returned = make_page_listing_problematic_uploads_by_user(session, user)
         session = returned['session']
@@ -269,9 +274,9 @@ def show_overview_page(session, generated_data, show_page, break_after, hint):
             # Recreate session, may be needed after long processing
             session = shared.create_login_session()
 
-def complain_about_missing_file_source_or_license(files_to_find, extra_files_to_preview, files_for_processing, banned_users, source_description):
+def complain_about_missing_file_source_or_license(files_to_find, extra_files_to_preview, files_for_processing, banned_users, source_description, days_of_inactive_talk_page):
     session = shared.create_login_session()
-    generated_data = detect_images_with_missing_licences(files_to_find + extra_files_to_preview, files_for_processing, banned_users, notify_uploaders_once=True)
+    generated_data = detect_images_with_missing_licences(files_to_find + extra_files_to_preview, files_for_processing, banned_users, notify_uploaders_once=True, days_of_inactive_talk_page=days_of_inactive_talk_page)
     create_category_for_the_current_month_if_missing(session)
 
     session, generated_data = create_overview_pages_for_users_with_more_problematic_uploads(session, generated_data)
@@ -387,7 +392,7 @@ def show_retaggable_images(session):
         print(table_for_confimation)
         shared.pause()
 
-def detect_images_with_missing_licences(files_to_find, files_for_processing, banned_users=[], notify_uploaders_once=True, notify_recently_notified=False):
+def detect_images_with_missing_licences(files_to_find, files_for_processing, banned_users=[], notify_uploaders_once=True, notify_recently_notified=False, days_of_inactive_talk_page=40):
     generated_data = []
 
     reported_remaining_count = files_to_find
@@ -401,7 +406,7 @@ def detect_images_with_missing_licences(files_to_find, files_for_processing, ban
         if returned == None:
             continue
         if notify_recently_notified == False:
-            if is_uploader_eligible_for_new_complaints(returned['uploader']) == False:
+            if is_uploader_eligible_for_new_complaints(returned['uploader'], days_of_inactive_talk_page) == False:
                 print("Skip", returned['uploader'], "as they are ineligible for new complaints")
                 banned_users.append(returned['uploader'])
                 continue
@@ -413,7 +418,7 @@ def detect_images_with_missing_licences(files_to_find, files_for_processing, ban
             break
     return generated_data
 
-def is_uploader_eligible_for_new_complaints(uploader):
+def is_uploader_eligible_for_new_complaints(uploader, days_of_inactive_talk_page):
     user_talk_data = mediawiki_api_query.download_page_text_with_revision_data("User talk:"+uploader)
     if user_talk_data != None:
         person_badgering = mediawiki_api_login_and_editing.password_data.username()
@@ -421,7 +426,7 @@ def is_uploader_eligible_for_new_complaints(uploader):
             timestamp = mediawiki_api_query.parse_mediawiki_time_string(user_talk_data['timestamp'])
             now = datetime.datetime.now()
             days_since_last = (now - timestamp).days
-            if days_since_last <= 60:
+            if days_since_last < days_of_inactive_talk_page:
                 print("------------------")
                 print("uploader (" + uploader + ") received comments, from " + person_badgering + " - and their talk page was edited within last", days_since_last, "days")
                 # prefer broad range of notifications in initial stage
