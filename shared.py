@@ -25,8 +25,8 @@ def users_dropped_from_regular_processing():
     "Bmwiedemann", # tricky https://wiki.openstreetmap.org/wiki/File:Luftbild-2-originalprojektion-unscaled.png
     ]
 
-def create_login_session():
-    login_data = password_data.api_login_data()
+def create_login_session(index = 'api_password'):
+    login_data = password_data.api_login_data(index)
     password = login_data['password']
     username = login_data['user']
     session = mediawiki_api_login_and_editing.login_and_create_session(username, password)
