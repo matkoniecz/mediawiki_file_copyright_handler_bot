@@ -50,6 +50,7 @@ def main():
     for user in screenshot_only_uploads_remaining:
         mark_all_unmarked_files_by_user(session, user, "{{unknown}}\n[[Category:Screenshots]]")
     """
+    mark_all_unmarked_files_by_user(session, "ThomasKlosa", "{{Unknown|subcategory=uploader notified March 2022}}")
     mark_all_unmarked_files_by_user(session, "Berteun", "[[Category:Screenshots]]{{unknown}}")
     mark_all_unmarked_files_by_user(session, "R0uzic", "{{PD-shape}}")
 
