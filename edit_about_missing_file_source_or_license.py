@@ -529,7 +529,7 @@ def skip_image_based_on_text_on_its_description(page_title, page_text):
     "{{OpenStreetMap trademark}}", "trademark", "logo", # unlikely to be photos
     "[[Category:Logos]]", # likely {{trademarked}} is missing which would cause skip anyway
     "JOSM", # likely {{JOSM screenshot without imagery}} or one for with imagery
-    "OSM picture", "Rendered OSM data", "Category:Maps of places", "Map of",
+    "OSM picture", "Rendered OSM data", "Category:Maps of places", "Map of", "OSM-Daten",
     "taghistory", "chart", "graph",
     "slippy map", "map",
 
@@ -730,6 +730,7 @@ def valid_licencing_templates():
         "{{PD-PRC-Road Traffic Signs}}",
         "{{WTFPL}}",
         "{{WTFPL-self}}",
+        "{{Licence Ouverte 2}}",
 
         # This can be a crayon license :(
         "{{Attribution}}",
