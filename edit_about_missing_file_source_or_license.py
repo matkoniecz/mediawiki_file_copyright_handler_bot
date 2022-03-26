@@ -623,7 +623,7 @@ def is_marked_with_template_declaring_licensing_status(page_text):
                 return True
     return False
 
-def notification_on_user_talk(image_name):
+def notification_on_user_talk(image_name, uploader_name):
     # https://wiki.openstreetmap.org/wiki/Category:Media_without_a_license#Writing_to_an_uploader
     # NOTE! one layer of nopwiki should be removed!
     # NOTE! line
