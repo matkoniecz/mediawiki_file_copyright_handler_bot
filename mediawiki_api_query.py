@@ -63,7 +63,7 @@ def debug_api():
         print("00000000000000000000000000")
         print()
 
-def all_pages():
+def all_pages(URL="https://wiki.openstreetmap.org/w/api.php"):
     # https://www.mediawiki.org/wiki/API:Allpages
     # https://www.mediawiki.org/w/api.php?action=query&list=allpages
     continue_parameter = "apcontinue"
@@ -71,7 +71,7 @@ def all_pages():
     # https://wiki.openstreetmap.org/w/api.php?action=query&generator=categorymembers&gcmtitle=Category:Media%20without%20a%20license&prop=categories&cllimit=max&gcmlimit=max&format=json
     # https://wiki.openstreetmap.org/wiki/Category:Media_without_a_license_-_without_subcategory
     while True:
-        url = "https://wiki.openstreetmap.org/w/api.php?action=query&list=allpages&format=json"
+        url = URL + "?action=query&list=allpages&format=json"
         if continue_code != None:
             url += "&" + continue_parameter + "=" + continue_code
         print(url)
@@ -86,7 +86,7 @@ def all_pages():
         else:
             break
 
-def pages_from_category(category):
+def pages_from_category(category, URL="https://wiki.openstreetmap.org/w/api.php"):
     """
     category should be something like Category:name
     """
@@ -95,7 +95,7 @@ def pages_from_category(category):
     # https://wiki.openstreetmap.org/w/api.php?action=query&generator=categorymembers&gcmtitle=Category:Media%20without%20a%20license&prop=categories&cllimit=max&gcmlimit=max&format=json
     # https://wiki.openstreetmap.org/wiki/Category:Media_without_a_license_-_without_subcategory
     while True:
-        url = "https://wiki.openstreetmap.org/w/api.php?action=query&generator=categorymembers&gcmtitle=" + shared.escape_parameter(category) + "&gcmlimit=max&format=json"
+        url = URL + "?action=query&generator=categorymembers&gcmtitle=" + shared.escape_parameter(category) + "&gcmlimit=max&format=json"
         if continue_code != None:
             url += "&" + continue_parameter + "=" + continue_code
         print(url)
@@ -119,10 +119,10 @@ def pages_from_category(category):
             break
     # https://stackoverflow.com/questions/28224312/mediawiki-api-how-do-i-list-all-pages-of-a-category-and-for-each-page-show-all
 
-def uncategorized_images(offset, group_count):
+def uncategorized_images(offset, group_count, URL="https://wiki.openstreetmap.org/w/api.php"):
     # example:
     # https://wiki.openstreetmap.org/w/api.php?action=query&format=json&list=querypage&utf8=1&qppage=Uncategorizedimages&qplimit=10&qpoffset=0
-    url = "https://wiki.openstreetmap.org/w/api.php?action=query&format=json&list=querypage&utf8=1&qppage=Uncategorizedimages&qplimit=" + str(group_count) + "&qpoffset=" + str(offset)
+    url = URL + "?action=query&format=json&list=querypage&utf8=1&qppage=Uncategorizedimages&qplimit=" + str(group_count) + "&qpoffset=" + str(offset)
     response = requests.post(url)
     #print(json.dumps(response.json(), indent=4))
     file_list = response.json()['query']['querypage']['results']
@@ -165,13 +165,13 @@ def images_by_date(date_string):
             break
 
 
-def uploads_by_username_generator(user):
+def uploads_by_username_generator(user, URL="https://wiki.openstreetmap.org/w/api.php"):
     continue_code = None
     continue_parameter = "aicontinue"
     # https://wiki.openstreetmap.org/w/api.php?action=query&list=allimages&aisort=timestamp&aiuser=Mateusz%20Konieczny
     while True:
         user = user.replace(" ", "%20")
-        url = "https://wiki.openstreetmap.org/w/api.php?action=query&list=allimages&aisort=timestamp&aiuser=" + user + "&format=json"
+        url = URL + "?action=query&list=allimages&aisort=timestamp&aiuser=" + user + "&format=json"
         if continue_code != None:
             url += "&" + continue_parameter + "=" + continue_code
         response = requests.post(url)
@@ -192,11 +192,11 @@ def uploads_by_username_generator(user):
         else:
             break
 
-def download_page_text_with_revision_data(page_title):
+def download_page_text_with_revision_data(page_title, URL="https://wiki.openstreetmap.org/w/api.php"):
     if page_title == None:
         raise Exception("None passed as a title")
     # https://wiki.openstreetmap.org/w/api.php?action=query&prop=revisions&rvlimit=1&rvprop=content|timestamp|ids&format=json&titles=Sandbox
-    url = "https://wiki.openstreetmap.org/w/api.php?action=query&prop=revisions&rvlimit=1&rvprop=content|timestamp|ids&format=json&titles=" + shared.escape_parameter(page_title)
+    url = URL + "?action=query&prop=revisions&rvlimit=1&rvprop=content|timestamp|ids&format=json&titles=" + shared.escape_parameter(page_title)
     response = requests.post(url)
     if 'error' in response.json():
         print(response.json())
@@ -214,8 +214,8 @@ def download_page_text_with_revision_data(page_title):
     timestamp = versions['revisions'][0]['timestamp']
     return {'page_title': page_title, 'page_text': page_text, 'rev_id': rev_id, 'parent_id': parent_id, 'timestamp': timestamp}
 
-def download_page_text(page_title):
-    url = "https://wiki.openstreetmap.org/w/api.php?action=query&prop=revisions&rvlimit=1&rvprop=content&format=json&titles=" + shared.escape_parameter(page_title)
+def download_page_text(page_title, URL="https://wiki.openstreetmap.org/w/api.php"):
+    url = URL + "?action=query&prop=revisions&rvlimit=1&rvprop=content&format=json&titles=" + shared.escape_parameter(page_title)
     response = requests.post(url)
     #print(json.dumps(response.json(), indent=4))
     if 'error' in response.json():
@@ -232,13 +232,13 @@ def download_page_text(page_title):
     #print(page_text)
     return page_text
 
-def pages_where_file_is_used_as_image(page_title):
+def pages_where_file_is_used_as_image(page_title, URL="https://wiki.openstreetmap.org/w/api.php"):
     continue_code = None
     continue_parameter = "fucontinue"
     # https://wiki.openstreetmap.org/w/api.php?action=query&list=allimages&aisort=timestamp&aiuser=Mateusz%20Konieczny
     while True:
         # https://wiki.openstreetmap.org/w/api.php?action=query&titles=File:Canopy-action.jpg&prop=fileusage&format=json
-        url = "https://wiki.openstreetmap.org/w/api.php?action=query&titles=" + shared.escape_parameter(page_title) + "&prop=fileusage&format=json"
+        url = URL + "?action=query&titles=" + shared.escape_parameter(page_title) + "&prop=fileusage&format=json"
         if continue_code != None:
             url += "&" + continue_parameter + "=" + continue_code
         response = requests.post(url)
@@ -260,8 +260,8 @@ def pages_where_file_is_used_as_image(page_title):
         else:
             break
 
-def is_file_used_as_image(page_title):
-    url = "https://wiki.openstreetmap.org/w/api.php?action=query&titles=" + shared.escape_parameter(page_title) + "&prop=fileusage&format=json"
+def is_file_used_as_image(page_title, URL="https://wiki.openstreetmap.org/w/api.php"):
+    url = URL + "?action=query&titles=" + shared.escape_parameter(page_title) + "&prop=fileusage&format=json"
     response = requests.post(url)
     #print(json.dumps(response.json(), indent=4))
     if 'error' in response.json():
