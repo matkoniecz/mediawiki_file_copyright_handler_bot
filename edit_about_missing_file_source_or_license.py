@@ -522,10 +522,32 @@ def skip_image_based_on_text_on_its_description(page_title, page_text):
     if "{" in cleaned_text.strip() != "":
         #TODO stop skipping here
         return True
-    keywords = screeshot_categories() + ["SoTM", #"mapping", "OSM", "OpenStreetMap", "HOT",
+    keywords = screeshot_categories() + [
+    # unlikely to be photos
+    "SoTM", #"mapping", "OSM", "OpenStreetMap", "HOT",
+    "{{OpenStreetMap trademark}}", "trademark", "logo", # unlikely to be photos
+    "[[Category:Logos]]", # likely {{trademarked}} is missing which would cause skip anyway
+    "JOSM", # likely {{JOSM screenshot without imagery}} or one for with imagery
     "OSM picture", "Rendered OSM data", "Category:Maps of places", "Map of",
-    "taghistory", "chart", "graph", 
+    "taghistory", "chart", "graph",
+    "slippy map", "map",
+
+    # partially explains the source
+    "http",
+    "selbst", "own work", "taken by me", "self made", "self-made", "I made", "by author", 
+    "non-free", "image search", "copied from", "unfree",
+    "CC-BY-SA", "public domain",
+    "copyright",
+    "Based on OSM data", "Based on", "OSM data",
+    "licence", "license", "permission", "flickr", "source", "Openfietsmap", "OSM contributors",
+    "commons", "wikipedia", "0px-", "px-",
+    # commons, wikipedia, 0px- covers cases like
+    # https://wiki.openstreetmap.org/wiki/File:120px-Zusatzzeichen_1020-12.svg.png https://commons.wikimedia.org/w/index.php?title=File:Zusatzzeichen_1020-12.svg&redirect=no
+    # where bothering uploader is not needed and matches can be automatically found
+
+    # unlikely to be photos and complex
     "StreetComplete", # solve this!
+    "Screenshot", # long backlog of weird cases
 
     # https://wiki.openstreetmap.org/wiki/Category:Documents
     "Category:Documents",
@@ -535,40 +557,24 @@ def skip_image_based_on_text_on_its_description(page_title, page_text):
     # https://wiki.openstreetmap.org/wiki/Category:ES:Autorizaciones_para_usar_fuentes_de_datos_de_Espa%C3%B1a
     "Category:ES:Autorizaciones para usar fuentes de datos de España",
     "Letter of authorization", "Autorizzazione", "Authorization", # TODO: just use category from above
-    "Photo for profile", "profile picture", "profile", "self photo", "taken by", 
-    "selbst", "own work", "taken by me", "self made", "self-made", "I made", "by author", 
-    "non-free", "image search", "copied from", "unfree",
-    "CC-BY-SA", "public domain",
-    "copyright",
+    "Photo for profile", "profile picture", "profile", "self photo", "taken by", '[[Category:User images]]',
     "Bus.meran.eu", # https://wiki.openstreetmap.org/wiki/File:Bus.meran.eu_real_time_bus_map.png
     "AEP - Captage eau.JPG", # asked on https://wiki.openstreetmap.org/wiki/User_talk:Penegal for now
-    "licence", "license", "permission", "flickr", "source", "Openfietsmap", "OSM contributors",
-    "slippy map",
-    "commons", "wikipedia", "0px-", "px-",
-    # commons, wikipedia, 0px- covers cases like
-    # https://wiki.openstreetmap.org/wiki/File:120px-Zusatzzeichen_1020-12.svg.png https://commons.wikimedia.org/w/index.php?title=File:Zusatzzeichen_1020-12.svg&redirect=no
-    # where bothering uploader is not needed and matches can be automatically found
-
-    "Screenshot", # long backlog of weird cases
-    "should be replaced with",
     "Asked for more info at", "github.com",
-    '[[Category:User images]]',
-    "[[Category:Logos]]", # likely {{trademarked}} is missing which would cause skip anyway
-    "JOSM", # likely {{JOSM screenshot without imagery}} or one for with imagery
-
     # https://wiki.openstreetmap.org/wiki/Category:Images_of_published_materials_related_to_OpenStreetMap
     "Category:Images of published materials related to OpenStreetMap",
     "Artikel in", "article in", "article about", "News published in local paper", "News published", # fair use?
-
     "OSM Coverage",
+
     # https://wiki.openstreetmap.org/wiki/Talk:Drafts/Media_file_license_chart#More_likely_layers%3A_CyclOSM
     "mapquest", "osmarender", "Render cycle", "Render transport", "CyclOSM", "OpenCycleMap", # arghhhhhhhhhh, licensing of one more thingy https://wiki.openstreetmap.org/wiki/File:Render_cycle_leisure_playground_node.png https://wiki.openstreetmap.org/wiki/File:Render_transport_leisure_playground_area.png https://wiki.openstreetmap.org/wiki/File:Render_mapquest_leisure_playground_area.png 
     "Potlatch", # licensing of https://wiki.openstreetmap.org/wiki/File:Connected_Ways_in_Potlatch.png
-    "http",
     "freemap", # https://github.com/FreemapSlovakia/freemap-mapnik/issues/237 https://wiki.openstreetmap.org/wiki/File:OSM-Bratislava-2014-08-18.png https://github.com/matkoniecz/mediawiki_file_copyright_handler_bot/commit/d2cf743317a6c7878c5f3c71141b47d28e19d035
-    "collage", # handle in the second wave after other images are processed TODO
-
+    "collage", "Comparing", # handle in the second wave after other images are processed TODO
     "osmfr", "openstreetmap.fr", "french-style", "french style", # https://github.com/cquest/osmfr-cartocss https://wiki.openstreetmap.org/wiki/File:Mont-Blanc-french-style.png https://wiki.openstreetmap.org/wiki/Drafts/Media_file_license_chart
+
+    # sheduled for deletion
+    "should be replaced with",
     ]
 
     for keyword in keywords:
