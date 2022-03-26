@@ -81,7 +81,10 @@ def main():
         session = returned['session']
     show_retaggable_images(session)
 
-    mark_screenshots_as_also_needing_attention(session)
+    mark_categories_as_also_needing_attention(session, screeshot_categories(), limit=3)
+    mark_categories_as_also_needing_attention(session, map_categories(), limit=3)
+    #for cat in all_subcategories(session, "Category:Maps of places by continent"):
+    #    print("        \"" + cat + "\",")
 
     # for 6+month old and marked as waiting for action for uploader
     # {{delete|unused image, no evidence of free licensing, unused so not qualifying for fair use}}
@@ -106,8 +109,87 @@ def screeshot_categories():
         "Category:Screenshots of notification mails",
     ]
 
-def mark_screenshots_as_also_needing_attention(session):
-    for category in screeshot_categories():
+def map_categories():
+    return [
+        "Category:Maps of places by continent",
+        "Category:Maps of places in Africa",
+        "Category:Maps of places in Antarctica",
+        "Category:Maps of places in Asia",
+        "Category:Maps of places in Europe",
+        "Category:Maps of places in North America",
+        "Category:Maps of places in Oceania",
+        "Category:Maps of places in South America",
+        "Category:Maps of places in the United States",
+        "Category:Maps of places in Austria",
+        "Category:Maps of places in Belgium",
+        "Category:Maps of places in Bulgaria",
+        "Category:Maps of places in Denmark",
+        "Category:Maps of places in Finland",
+        "Category:Maps of places in France",
+        "Category:Maps of places in Germany",
+        "Category:Maps of places in Iceland",
+        "Category:Maps of places in Italy",
+        "Category:Maps of places in the Netherlands",
+        "Category:Maps of places in Norway",
+        "Category:Maps of places in Poland",
+        "Category:Maps of places in Portugal",
+        "Category:Maps of places in Sweden",
+        "Category:Maps of places in Switzerland",
+        "Category:Maps of places in Turkey",
+        "Category:Maps of places in the United Kingdom",
+        "Category:Maps of places in Baden-Württemberg",
+        "Category:Maps of places in Bayern",
+        "Category:Maps of places in Berlin",
+        "Category:Maps of places in Nordrhein-Westfalen",
+        "Category:Maps of places in Sachsen",
+        "Category:Maps of places in Sachsen-Anhalt",
+        "Category:Maps of Turku",
+        "Category:Map exports of Turku",
+        "Category:Map sources of Turku",
+        "Category:Maps of Brussels Capital Region",
+        "Category:Maps of Flanders",
+        "Category:Maps of Wallonia",
+        "Category:Maps of places in Brussels Capital Region",
+        "Category:Maps of places in Flanders",
+        "Category:Maps of places in Wallonia",
+        "Category:Maps of Brabant wallon",
+        "Category:Maps of Hainaut",
+        "Category:Maps of Province de Liège",
+        "Category:Maps of Province de Luxembourg",
+        "Category:Maps of Province de Namur",
+        "Category:Maps of places in Brabant wallon",
+        "Category:Maps of places in Hainaut",
+        "Category:Maps of places in Province de Liège",
+        "Category:Maps of places in Province de Luxembourg",
+        "Category:Maps of places in Province de Namur",
+        "Category:Maps of Provincie Antwerpen",
+        "Category:Maps of Limburg (België)",
+        "Category:Maps of Oost-Vlaanderen",
+        "Category:Maps of Vlaams-Brabant",
+        "Category:Maps of West-Vlaanderen",
+        "Category:Maps of places in Provincie Antwerpen",
+        "Category:Maps of places in Limburg (België)",
+        "Category:Maps of places in Oost-Vlaanderen",
+        "Category:Maps of places in Vlaams-Brabant",
+        "Category:Maps of places in West-Vlaanderen",
+        "Category:Maps of places in Lebanon",
+        "Category:Maps of places in Pakistan",        
+    ]
+
+def all_subcategories(session, root_category, found=None):
+    found = [root_category]
+    remaining = [root_category]
+    while len(remaining) > 0:
+        category = remaining.pop()
+        for page_title in mediawiki_api_query.pages_from_category(category):
+            if "Category:" in page_title:
+                if page_title not in found:
+                    found.append(page_title)
+                    remaining.append(page_title)
+    return found
+
+def mark_categories_as_also_needing_attention(session, processed_categories, limit=10):
+    for category in processed_categories:
         for page_title in mediawiki_api_query.pages_from_category(category):
             if page_title in screeshot_categories():
                 continue
@@ -122,10 +204,19 @@ def mark_screenshots_as_also_needing_attention(session):
             test_page = mediawiki_api_query.download_page_text_with_revision_data(page_title)
             if "{{unknown" in test_page['page_text'].lower():
                 continue
+            if "{" in test_page['page_text']:
+                if is_marked_with_template_declaring_licensing_status(test_page['page_text']):
+                    continue
+                else:
+                    print("has template, without declaring licensing status!")
             print(page_title)
-            time.sleep(1)
             text = test_page['page_text'] + "\n" + "{{Unknown}}"
             shared.edit_page_and_show_diff(session, page_title, text, "what is the license here? (I have no idea what is the answer to that)", test_page['rev_id'], test_page['timestamp'])
+            limit -= 1
+            print("remaining limit:", limit)
+            if limit <= 0:
+                return
+            shared.make_delay_after_edit()
 
 def uncategorized_images_skipping_some_initial_ones():
     skip = random.randrange(0, 10000)
