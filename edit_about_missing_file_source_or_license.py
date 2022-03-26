@@ -5,6 +5,7 @@ import mediawiki_api_login_and_editing
 import datetime
 import random
 import time
+import mwparserfromhell
 
 # TODO: scan recently uploaded
 # TODO: scan all problematic from specific user
@@ -614,9 +615,12 @@ def is_skipped_file_type(page_title):
     return False
 
 def is_marked_with_template_declaring_licensing_status(page_text):
-    for template in valid_licencing_templates():
-        if template.lower() in page_text.lower():
-            return True
+    wikicode = mwparserfromhell.parse(page_text)
+    templates = wikicode.filter_templates()
+    for template in templates:
+        for valid in valid_licencing_templates():
+            if template.name.strip().lower() == valid.lower().replace("{", "").replace("}", ""):
+                return True
     return False
 
 def notification_on_user_talk(image_name):
