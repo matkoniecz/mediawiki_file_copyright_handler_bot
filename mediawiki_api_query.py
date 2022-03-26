@@ -18,6 +18,11 @@ def deletion_history(file, URL="https://wiki.openstreetmap.org/w/api.php"):
 def file_upload_history(file, URL="https://wiki.openstreetmap.org/w/api.php", debug=False):
     call_url = URL + "?action=query&titles=" + shared.escape_parameter(file) + "&prop=imageinfo&iilimit=50&format=json"
     response = requests.post(call_url, headers={'Content-type': 'text'})
+    if 'error' in response.json():
+        print(response.json())
+        raise
+    if 'query' not in response.json():
+        print(response.json())
     key = list(response.json()['query']['pages'].keys())[0]
     upload_history = response.json()['query']['pages'][key]
     if "imageinfo" not in upload_history:
@@ -172,6 +177,11 @@ def uploads_by_username_generator(user):
         response = requests.post(url)
         #print(json.dumps(response.json(), indent=4))
         #print(url)
+        if 'error' in response.json():
+            print(response.json())
+            raise
+        if 'query' not in response.json():
+            print(response.json())
         file_list = response.json()['query']['allimages']
         returned = []
         for file in file_list:
@@ -188,6 +198,11 @@ def download_page_text_with_revision_data(page_title):
     # https://wiki.openstreetmap.org/w/api.php?action=query&prop=revisions&rvlimit=1&rvprop=content|timestamp|ids&format=json&titles=Sandbox
     url = "https://wiki.openstreetmap.org/w/api.php?action=query&prop=revisions&rvlimit=1&rvprop=content|timestamp|ids&format=json&titles=" + shared.escape_parameter(page_title)
     response = requests.post(url)
+    if 'error' in response.json():
+        print(response.json())
+        raise
+    if 'query' not in response.json():
+        print(response.json())
     key = list(response.json()['query']['pages'].keys())[0]
     versions = response.json()['query']['pages'][key]
     if "revisions" not in versions:
@@ -203,6 +218,11 @@ def download_page_text(page_title):
     url = "https://wiki.openstreetmap.org/w/api.php?action=query&prop=revisions&rvlimit=1&rvprop=content&format=json&titles=" + shared.escape_parameter(page_title)
     response = requests.post(url)
     #print(json.dumps(response.json(), indent=4))
+    if 'error' in response.json():
+        print(response.json())
+        raise
+    if 'query' not in response.json():
+        print(response.json())
     key = list(response.json()['query']['pages'].keys())[0]
     versions = response.json()['query']['pages'][key]
     if "revisions" not in versions:
@@ -222,6 +242,11 @@ def pages_where_file_is_used_as_image(page_title):
         if continue_code != None:
             url += "&" + continue_parameter + "=" + continue_code
         response = requests.post(url)
+        if 'error' in response.json():
+            print(response.json())
+            raise
+        if 'query' not in response.json():
+            print(response.json())
         key = list(response.json()['query']['pages'].keys())[0]
         entry = response.json()['query']['pages'][key]
         if "fileusage" not in entry:
@@ -239,6 +264,11 @@ def is_file_used_as_image(page_title):
     url = "https://wiki.openstreetmap.org/w/api.php?action=query&titles=" + shared.escape_parameter(page_title) + "&prop=fileusage&format=json"
     response = requests.post(url)
     #print(json.dumps(response.json(), indent=4))
+    if 'error' in response.json():
+        print(response.json())
+        raise
+    if 'query' not in response.json():
+        print(response.json())
     key = list(response.json()['query']['pages'].keys())[0]
     #print("-=--------------")
     #print(json.dumps(response.json(), indent=4))
