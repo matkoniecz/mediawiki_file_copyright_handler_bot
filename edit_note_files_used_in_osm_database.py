@@ -42,5 +42,6 @@ for value in taginfo.query.values_of_key(key):
             continue
         print(file)
         text = text + "\n" + added
-        shared.edit_page_and_show_diff(session, file, text, "adding [[Template:Used outside the Wiki]]", test_page['rev_id'], test_page['timestamp'])
+        # use shared.edit_page_and_show_diff in testing
+        shared.edit_page(session, file, text, "adding [[Template:Used outside the Wiki]]", test_page['rev_id'], test_page['timestamp'], mark_as_bot_edit=True)
         shared.make_delay_after_edit()
