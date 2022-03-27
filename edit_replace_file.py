@@ -119,7 +119,7 @@ def file_used_and_only_on_pages_where_no_editing_allowed(page_title):
     return used
 
 def check_is_replacement_ok(old_file, new_file):
-    webbrowser.open("https://wiki.openstreetmap.org/wiki/"+old_file.replace(" ", "_"), new=2)
+    webbrowser.open(shared.osm_wiki_page_link(old_file), new=2)
     webbrowser.open("https://commons.wikimedia.org/wiki/"+new_file.replace(" ", "_"), new=2)
     print("replace that image?")
     shared.pause()
