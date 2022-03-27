@@ -53,6 +53,7 @@ def is_logged_out_error_here(DATA):
     if 'error' in DATA:
         if DATA['error']['code'] == 'permissiondenied':
             return True
+    return False
 
 def create_page(S, page_title, page_text, edit_summary, URL="https://wiki.openstreetmap.org/w/api.php"):
     # Step 4: POST request to edit a page
