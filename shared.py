@@ -39,19 +39,27 @@ def show_latest_diff_on_page(page_title):
     difflink = osm_wiki_diff_link(data['parent_id'], data['rev_id'])
     webbrowser.open(difflink, new=2)
 
-def edit_page_and_show_diff(S, page_title, page_text, edit_summary, rev_id, timestamp):
-    returned = edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp)
-    show_latest_diff_on_page(page_title)
-    return returned
+def edit_page_and_show_diff(S, page_title, page_text, edit_summary, rev_id, timestamp, sleep_time = None, mark_as_bot_edit=False):
+    if sleep_time != None:
+        return edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, sleep_time, mark_as_bot_edit=mark_as_bot_edit)
+    return edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, mark_as_bot_edit=mark_as_bot_edit)
 
-def edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp):
-     return mediawiki_api_login_and_editing.edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp)
+def edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, sleep_time = None, mark_as_bot_edit=False):
+    if sleep_time != None:
+        return mediawiki_api_login_and_editing.edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, sleep_time=sleep_time, mark_as_bot_edit=mark_as_bot_edit)
+    return mediawiki_api_login_and_editing.edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, mark_as_bot_edit=mark_as_bot_edit)
 
-def create_page(S, page_title, page_text, edit_summary):
-    return mediawiki_api_login_and_editing.create_page(S, page_title, page_text, edit_summary)
+def create_page(S, page_title, page_text, edit_summary, sleep_time = None, mark_as_bot_edit=False):
+    if sleep_time != None:
+        return mediawiki_api_login_and_editing.create_page(S, page_title, page_text, edit_summary, sleep_time=sleep_time, mark_as_bot_edit=mark_as_bot_edit)
+    return mediawiki_api_login_and_editing.create_page(S, page_title, page_text, edit_summary, mark_as_bot_edit=mark_as_bot_edit)
 
-def create_page_and_show_diff(S, page_title, page_text, edit_summary):
-    returned = mediawiki_api_login_and_editing.create_page(S, page_title, page_text, edit_summary)
+def create_page_and_show_diff(S, page_title, page_text, edit_summary, sleep_time = None, mark_as_bot_edit=False):
+    returned = None
+    if sleep_time != None:
+        returned = mediawiki_api_login_and_editing.create_page(S, page_title, page_text, edit_summary, sleep_time=sleep_time, mark_as_bot_edit=mark_as_bot_edit)
+    else:
+        returned = mediawiki_api_login_and_editing.create_page(S, page_title, page_text, edit_summary, mark_as_bot_edit=mark_as_bot_edit)
     show_latest_diff_on_page(page_title)
     return returned
 

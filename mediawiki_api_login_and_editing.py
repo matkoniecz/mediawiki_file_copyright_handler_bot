@@ -55,7 +55,7 @@ def is_logged_out_error_here(DATA):
             return True
     return False
 
-def create_page(S, page_title, page_text, edit_summary, URL="https://wiki.openstreetmap.org/w/api.php"):
+def create_page(S, page_title, page_text, edit_summary, URL="https://wiki.openstreetmap.org/w/api.php", sleep_time=0.4):
     # Step 4: POST request to edit a page
     PARAMS_3 = {
         "action": "edit",
@@ -78,9 +78,10 @@ def create_page(S, page_title, page_text, edit_summary, URL="https://wiki.openst
         create_page(S, page_title, page_text, edit_summary, URL)
     time.sleep(sleep_time)
 
-def edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, URL="https://wiki.openstreetmap.org/w/api.php"):
+def edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, URL="https://wiki.openstreetmap.org/w/api.php", sleep_time=0.4, mark_as_bot_edit=False):
+    # https://www.mediawiki.org/wiki/API:Edit
     # Step 4: POST request to edit a page
-    PARAMS_3 = {
+    params = {
         "action": "edit",
         "title": page_title,
         "token": obtain_csrf_token(S, URL),
@@ -91,8 +92,10 @@ def edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, URL="ht
         "basetimestamp": timestamp,
         "nocreate": "1",
     }
+    if mark_as_bot_edit:
+        params["bot"] = "yes"
 
-    R = S.post(URL, data=PARAMS_3)
+    R = S.post(URL, data=params)
     DATA = R.json()
 
     print(DATA)
