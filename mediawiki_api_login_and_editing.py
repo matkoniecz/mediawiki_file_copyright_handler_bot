@@ -55,9 +55,9 @@ def is_logged_out_error_here(DATA):
             return True
     return False
 
-def create_page(S, page_title, page_text, edit_summary, URL="https://wiki.openstreetmap.org/w/api.php", sleep_time=0.4):
+def create_page(S, page_title, page_text, edit_summary, URL="https://wiki.openstreetmap.org/w/api.php", sleep_time=0.4, mark_as_bot_edit=False):
     # Step 4: POST request to edit a page
-    PARAMS_3 = {
+    params = {
         "action": "edit",
         "title": page_title,
         "token": obtain_csrf_token(S, URL),
@@ -66,8 +66,10 @@ def create_page(S, page_title, page_text, edit_summary, URL="https://wiki.openst
         "summary": edit_summary,
         "createonly": "1",
     }
+    if mark_as_bot_edit:
+        params["bot"] = "yes"
 
-    R = S.post(URL, data=PARAMS_3)
+    R = S.post(URL, data=params)
     DATA = R.json()
 
     print(DATA)
