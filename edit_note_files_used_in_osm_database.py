@@ -32,6 +32,10 @@ for value in taginfo.query.values_of_key(key):
                 print("* [[:" + file + "]]")
     else:
         test_page = mediawiki_api_query.download_page_text_with_revision_data(file)
+        if test_page == None:
+            commons_page = mediawiki_api_query.download_page_text_with_revision_data(file, URL="https://commons.wikimedia.org/w/api.php")
+            if commons_page != None:
+                continue
         added = "{{Used outside the Wiki|description=It is used as a value of {{Tag|wiki:symbol}} and this file is linked by some relations in the OSM database. See https://taginfo.openstreetmap.org/tags/?key=wiki%3Asymbol&value=" + value["value"].replace(" ", "%20") + "}}"
         text = test_page['page_text']
         if added in text:
