@@ -203,7 +203,7 @@ def migrate_file(old_file, new_file, reasons_list, only_safe, got_migration_perm
         delete_request = "{{delete|uses replaced with Wikimedia commons alternative, this file is not needed anymore. And it has licensing issues.}}"
         text += delete_request
         edit_summary = delete_request
-        shared.edit_page_and_show_diff(session, old_file, text, edit_summary, data['rev_id'], data['timestamp'])
+        shared.edit_page_and_show_diff(session, old_file, text, edit_summary, data['rev_id'], data['timestamp'], sleep_time=0)
 
 def valid_image_transforms(main_form, new_file):
     returned = [
