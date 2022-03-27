@@ -41,6 +41,13 @@ def login_with_login_token(S, username, password, LOGIN_TOKEN, URL):
     # TODO - handle failure?
     return S
 
+def is_rate_limit_error_here(DATA):
+    #{'error': {'code': 'ratelimited', 'info': 'As an anti-abuse measure, you are limited from performing this action too many times in a short space of time, and you have exceeded this limit. Please try again in a few minutes.', '*': 'See https://wiki.openstreetmap.org/w/api.php for API usage. Subscribe to the mediawiki-api-announce mailing list at &lt;https://lists.wikimedia.org/mailman/listinfo/mediawiki-api-announce&gt; for notice of API deprecations and breaking changes.'}}
+    if 'error' in DATA:
+        if DATA['error']['code'] == 'ratelimited':
+            return True
+    return False
+
 def is_logged_out_error_here(DATA):
     #{'error': {'code': 'permissiondenied', 'info': 'The action you have requested is limited to users in the group: [[Wiki:Users|Users]].' ...
     if 'error' in DATA:
@@ -65,6 +72,10 @@ def create_page(S, page_title, page_text, edit_summary, URL="https://wiki.openst
     print(DATA)
     if is_logged_out_error_here(DATA):
         raise NoEditPermissionException("likely automatically logged out")
+    if is_rate_limit_error_here(DATA):
+        time.sleep(60)
+        create_page(S, page_title, page_text, edit_summary, URL)
+    time.sleep(sleep_time)
 
 def edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, URL="https://wiki.openstreetmap.org/w/api.php"):
     # Step 4: POST request to edit a page
@@ -86,6 +97,10 @@ def edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, URL="ht
     print(DATA)
     if is_logged_out_error_here(DATA):
         raise NoEditPermissionException("likely automatically logged out")
+    if is_rate_limit_error_here(DATA):
+        time.sleep(60)
+        edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, URL)
+    time.sleep(sleep_time)
 
 def obtain_csrf_token(S, URL):
     try:
