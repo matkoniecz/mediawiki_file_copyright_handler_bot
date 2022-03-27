@@ -76,7 +76,9 @@ def create_page(S, page_title, page_text, edit_summary, URL="https://wiki.openst
     if is_logged_out_error_here(DATA):
         raise NoEditPermissionException("likely automatically logged out")
     if is_rate_limit_error_here(DATA):
+        print("rate limit error, will retry after sleeeping")
         time.sleep(60)
+        print("rate limit error, sleep finished, will retry")
         create_page(S, page_title, page_text, edit_summary, URL)
     time.sleep(sleep_time)
 
@@ -104,7 +106,9 @@ def edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, URL="ht
     if is_logged_out_error_here(DATA):
         raise NoEditPermissionException("likely automatically logged out")
     if is_rate_limit_error_here(DATA):
+        print("rate limit error, will retry after sleeeping")
         time.sleep(60)
+        print("rate limit error, sleep finished, will retry")
         edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, URL)
     time.sleep(sleep_time)
 
