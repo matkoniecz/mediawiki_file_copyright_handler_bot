@@ -15,11 +15,10 @@ import mwparserfromhell
 
 def selftest():
     text = """{{unknown}}
-{{openstreetmap trademark}}
 [[category:Images]]
 """
     if skip_image_based_on_text_on_presence_of_keywords_in_description("dummy", text) != False:
-        return True
+        raise Exception("wrong classification")
     if skip_image_based_on_text_on_its_description("dummy", text) != False:
         raise Exception("wrong classification")
     text = "{{delete|unused duplicate of https://wiki.openstreetmap.org/wiki/File:Rotwein.png}}"
