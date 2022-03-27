@@ -59,6 +59,9 @@ def mark_file_as_migrated(session, page_title):
         shared.edit_page_and_show_diff(session, page_title, text, "request deletion of duplicate", test_page['rev_id'], test_page['timestamp'])
 
 def has_tricky_templating_situation(page_text):
+    if page_text.find("{{delete|") != -1:
+        print("deletion requested already")
+        return True
     if page_text.count("{") != 2 or page_text.count("}") != 2:
         print("complex situation, skipping")
         return True
