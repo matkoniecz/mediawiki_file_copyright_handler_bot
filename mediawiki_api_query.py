@@ -232,6 +232,11 @@ def download_page_text(page_title, URL="https://wiki.openstreetmap.org/w/api.php
     #print(page_text)
     return page_text
 
+def is_used_as_image_anywhere(page_title, URL="https://wiki.openstreetmap.org/w/api.php"):
+    for page_title in pages_where_file_is_used_as_image(page_title, URL):
+        return True
+    return False
+
 def pages_where_file_is_used_as_image(page_title, URL="https://wiki.openstreetmap.org/w/api.php"):
     continue_code = None
     continue_parameter = "fucontinue"
