@@ -16,9 +16,10 @@ import mwparserfromhell
 def selftest():
     text = """{{unknown}}
 {{openstreetmap trademark}}
-[[category:plots and charts]]
-
-[[category:statistics]]"""
+[[category:Images]]
+"""
+    if skip_image_based_on_text_on_presence_of_keywords_in_description("dummy", text) != False:
+        return True
     if skip_image_based_on_text_on_its_description("dummy", text) != False:
         raise Exception("wrong classification")
     text = "{{delete|unused duplicate of https://wiki.openstreetmap.org/wiki/File:Rotwein.png}}"
@@ -523,6 +524,9 @@ def skip_image_based_on_text_on_its_description(page_title, page_text):
     if "{" in cleaned_text.strip() != "":
         #TODO stop skipping here
         return True
+    return skip_image_based_on_text_on_presence_of_keywords_in_description(page_title, page_text)
+
+def skip_image_based_on_text_on_presence_of_keywords_in_description(page_title, cleaned_text):
     keywords = screeshot_categories() + [
     # unlikely to be photos
     "SoTM", #"mapping", "OSM", "OpenStreetMap", "HOT",
@@ -530,7 +534,7 @@ def skip_image_based_on_text_on_its_description(page_title, page_text):
     "[[Category:Logos]]", # likely {{trademarked}} is missing which would cause skip anyway
     "JOSM", # likely {{JOSM screenshot without imagery}} or one for with imagery
     "OSM picture", "Rendered OSM data", "Category:Maps of places", "Map of", "OSM-Daten",
-    "taghistory", "chart", "graph",
+    "taghistory", "chart", "graph", "Category:Statistics",
     "slippy map", "map",
 
     # partially explains the source
@@ -568,7 +572,7 @@ def skip_image_based_on_text_on_its_description(page_title, page_text):
     "OSM Coverage",
 
     # https://wiki.openstreetmap.org/wiki/Talk:Drafts/Media_file_license_chart#More_likely_layers%3A_CyclOSM
-    "mapquest", "osmarender", "Render cycle", "Render transport", "CyclOSM", "OpenCycleMap", # arghhhhhhhhhh, licensing of one more thingy https://wiki.openstreetmap.org/wiki/File:Render_cycle_leisure_playground_node.png https://wiki.openstreetmap.org/wiki/File:Render_transport_leisure_playground_area.png https://wiki.openstreetmap.org/wiki/File:Render_mapquest_leisure_playground_area.png 
+    "mapquest", "osmarender", "Render cycle", "Render transport", "CyclOSM", "OpenCycleMap", "ÖPNVkarte", # arghhhhhhhhhh, licensing of one more thingy https://wiki.openstreetmap.org/wiki/File:Render_cycle_leisure_playground_node.png https://wiki.openstreetmap.org/wiki/File:Render_transport_leisure_playground_area.png https://wiki.openstreetmap.org/wiki/File:Render_mapquest_leisure_playground_area.png 
     "Potlatch", # licensing of https://wiki.openstreetmap.org/wiki/File:Connected_Ways_in_Potlatch.png
     "freemap", # https://github.com/FreemapSlovakia/freemap-mapnik/issues/237 https://wiki.openstreetmap.org/wiki/File:OSM-Bratislava-2014-08-18.png https://github.com/matkoniecz/mediawiki_file_copyright_handler_bot/commit/d2cf743317a6c7878c5f3c71141b47d28e19d035
     "collage", "Comparing", # handle in the second wave after other images are processed TODO
