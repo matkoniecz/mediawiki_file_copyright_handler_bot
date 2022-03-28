@@ -534,11 +534,12 @@ def skip_image_based_on_text_on_presence_of_keywords_in_description(page_title, 
     "JOSM", # likely {{JOSM screenshot without imagery}} or one for with imagery
     "OSM picture", "Rendered OSM data", "Category:Maps of places", "Map of", "OSM-Daten",
     "taghistory", "chart", "graph", "Category:Statistics",
-    "slippy map", "map",
+    "slippy map", "map", "mapping party",
 
     # partially explains the source
     "http",
-    "selbst", "own work", "taken by me", "self made", "self-made", "I made", "by author", 
+    "selbst", "own work", "taken by me", "self made", "self-made", "I made", "by author",
+    "Photo by", "image by", 
     "non-free", "image search", "copied from", "unfree",
     "CC-BY-SA", "public domain",
     "copyright",
@@ -574,10 +575,11 @@ def skip_image_based_on_text_on_presence_of_keywords_in_description(page_title, 
     "mapquest", "osmarender", "Render cycle", "Render transport", "CyclOSM", "OpenCycleMap", "ÖPNVkarte", # arghhhhhhhhhh, licensing of one more thingy https://wiki.openstreetmap.org/wiki/File:Render_cycle_leisure_playground_node.png https://wiki.openstreetmap.org/wiki/File:Render_transport_leisure_playground_area.png https://wiki.openstreetmap.org/wiki/File:Render_mapquest_leisure_playground_area.png 
     "Potlatch", # licensing of https://wiki.openstreetmap.org/wiki/File:Connected_Ways_in_Potlatch.png
     "freemap", # https://github.com/FreemapSlovakia/freemap-mapnik/issues/237 https://wiki.openstreetmap.org/wiki/File:OSM-Bratislava-2014-08-18.png https://github.com/matkoniecz/mediawiki_file_copyright_handler_bot/commit/d2cf743317a6c7878c5f3c71141b47d28e19d035
-    "collage", "Comparing", # handle in the second wave after other images are processed TODO
+    "collage", "Comparing", "based on", # handle in the second wave after other images are processed TODO
     "osmfr", "openstreetmap.fr", "french-style", "french style", # https://github.com/cquest/osmfr-cartocss https://wiki.openstreetmap.org/wiki/File:Mont-Blanc-french-style.png https://wiki.openstreetmap.org/wiki/Drafts/Media_file_license_chart
+    "[[Category:Yahoo! Aerial Imagery]]",
 
-    # sheduled for deletion
+    # sheduled for deletion anyway
     "should be replaced with",
     ]
 
