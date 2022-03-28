@@ -81,7 +81,7 @@ def main():
         days_of_inactive_talk_page = 40
         if 'days_of_inactive_talk_page' in source:
             days_of_inactive_talk_page = source['days_of_inactive_talk_page']
-        complain_about_missing_file_source_or_license(files_to_find=51, extra_files_to_preview=53, files_for_processing=source["files"], banned_users=skipped_users, source_description=source["description"], days_of_inactive_talk_page=days_of_inactive_talk_page)
+        complain_about_missing_file_source_or_license(files_to_find=21, extra_files_to_preview=23, files_for_processing=source["files"], banned_users=skipped_users, source_description=source["description"], days_of_inactive_talk_page=days_of_inactive_talk_page)
     for user in skipped_users + refresh_users:
         returned = make_page_listing_problematic_uploads_by_user(session, user)
         session = returned['session']
