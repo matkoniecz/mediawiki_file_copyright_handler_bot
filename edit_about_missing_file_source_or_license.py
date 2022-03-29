@@ -274,6 +274,7 @@ def show_overview_page(session, generated_data, show_page, break_after, hint):
         except mediawiki_api_login_and_editing.NoEditPermissionException:
             # Recreate session, may be needed after long processing
             session = shared.create_login_session()
+    raise "unexpected"
 
 def complain_about_missing_file_source_or_license(files_to_find, extra_files_to_preview, files_for_processing, banned_users, source_description, days_of_inactive_talk_page):
     session = shared.create_login_session()
