@@ -43,7 +43,7 @@ def main():
 
     skipped_users = shared.users_dropped_from_regular_processing()
     refresh_users = [
-    "PanierAvide", "Segubi", # got link with their file listing, lets keep it updates
+    "PanierAvide", "Segubi", "Reneman", "marek kleciak" # got link with their file listing, lets keep it updates
     ]
 
     screenshot_only_uploads_remaining = [
