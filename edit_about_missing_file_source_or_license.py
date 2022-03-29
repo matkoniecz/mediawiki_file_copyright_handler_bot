@@ -290,9 +290,12 @@ def complain_about_missing_file_source_or_license(files_to_find, extra_files_to_
 <br>
 <nowiki>{{JOSM screenshot with imagery|}}</nowiki>
 <br>
-<nowiki>{{OSM Carto screenshot}}
-
-{{OSM Carto screenshot||old_license}}
+<nowiki>{{OSM Carto screenshot}}</nowiki>
+<br>
+<nowiki>
+{{OSM Carto screenshot||old_license}}</nowiki>
+<br>
+<nowiki>
 {{CC-BY-SA-2.0 OpenStreetMap}} (uploaded before September 12, 2012)
 </nowiki>\n\nsource of files: """ + source_description + "\n\n"
     session = show_overview_page(session, generated_data, show_page, files_to_find, hint)
