@@ -42,8 +42,10 @@ def show_latest_diff_on_page(page_title):
 
 def edit_page_and_show_diff(S, page_title, page_text, edit_summary, rev_id, timestamp, sleep_time = None, mark_as_bot_edit=False):
     if sleep_time != None:
-        return edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, sleep_time, mark_as_bot_edit=mark_as_bot_edit)
-    return edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, mark_as_bot_edit=mark_as_bot_edit)
+        returned = edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, sleep_time, mark_as_bot_edit=mark_as_bot_edit)
+    returned = edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, mark_as_bot_edit=mark_as_bot_edit)
+    show_latest_diff_on_page(page_title)
+    return returned
 
 def edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, sleep_time = None, mark_as_bot_edit=False):
     if sleep_time != None:
