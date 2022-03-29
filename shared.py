@@ -23,6 +23,7 @@ def users_dropped_from_regular_processing():
     "Ulfm", "Abunai", # murdered - https://wiki.openstreetmap.org/w/index.php?title=User_talk%3AMateusz_Konieczny&type=revision&diff=2282967&oldid=2282571
     "Malenki", # dead - https://wiki.openstreetmap.org/wiki/User_talk:Malenki
     "Bmwiedemann", # tricky https://wiki.openstreetmap.org/wiki/File:Luftbild-2-originalprojektion-unscaled.png
+    "Reneman", # most of files are not actually theirs - see descriptions
     ]
 
 def create_login_session(index = 'api_password'):
