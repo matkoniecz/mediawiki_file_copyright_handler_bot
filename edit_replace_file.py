@@ -39,8 +39,14 @@ def main():
     for page_title in mediawiki_api_query.pages_from_category("Category:Image superseded by Wikimedia Commons"):
         index += 1
         print(page_title, index)
-        try_to_migrate_as_superseded_by_commons_template_indicated(session, page_title, only_safe)
-        mark_file_as_migrated(session, page_title)
+        while True:
+            try:
+                try_to_migrate_as_superseded_by_commons_template_indicated(session, page_title, only_safe, sleeping_after_edit=False)
+                mark_file_as_migrated(session, page_title)
+                break
+            except mediawiki_api_login_and_editing.NoEditPermissionException:
+                # Recreate session, may be needed after long processing
+                session = shared.create_login_session()
 
 def mark_file_as_migrated(session, page_title):
     not_used = True
