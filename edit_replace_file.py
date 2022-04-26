@@ -67,12 +67,15 @@ def mark_file_as_migrated(session, page_title):
 def has_tricky_templating_situation(page_text):
     if page_text.find("{{delete|") != -1 or page_text.find("{{Delete|") != -1:
         print("deletion requested already")
+        print()
         return True
     if page_text.count("{") != 2 or page_text.count("}") != 2:
         print("complex situation, skipping")
+        print()
         return True
     if page_text.count("|") != 1:
         print("complex situation, skipping")
+        print()
         return True
     return False
 
