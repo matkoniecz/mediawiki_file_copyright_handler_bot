@@ -146,9 +146,11 @@ def pause():
     input()
 
 def make_delay_after_edit():
-    time.sleep(random.randrange(1, 6))
     if random.randrange(1, 100) > 90:
-        time.sleep(random.randrange(400, 600))
+        sleep_time += random.randrange(400, 600) 
+    print("make_delay_after_edit (" + sleep_time + ") <-start")
+    time.sleep(sleep_time)
+    print("make_delay_after_edit end->")
 
 def get_uploader_of_file_or_none_if_not_clear(page_title):
     upload_history = mediawiki_api_query.file_upload_history(page_title)
