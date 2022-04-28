@@ -251,6 +251,8 @@ def mark_all_unmarked_files_by_user(session, username, marker):
             shared.edit_page_and_show_diff(session, page_title, text, edit_summary, test_page['rev_id'], test_page['timestamp'])
 
 def make_page_listing_problematic_uploads_by_user(session, username, limit=10000, minimum=2):
+    if session == None:
+        raise Exception("session cannot be None")
     files_for_processing = mediawiki_api_query.uploads_by_username_generator(username)
     generated_data = detect_images_with_missing_licences(limit, files_for_processing, notify_uploaders_once=False, notify_recently_notified=True)
     page_name = "User:" + mediawiki_api_login_and_editing.password_data.username() + "/notify uploaders/" + username
@@ -259,6 +261,8 @@ def make_page_listing_problematic_uploads_by_user(session, username, limit=10000
     return {"page_name": page_name, "problematic_image_data": generated_data, 'session': session}
 
 def show_overview_page(session, generated_data, show_page, break_after, hint):
+    if session == None:
+        raise Exception("session cannot be None")
     test_page = mediawiki_api_query.download_page_text_with_revision_data(show_page)
     table_for_confirmation = shared.generate_table_showing_image_data_for_review(generated_data, break_after=break_after)
     text = hint + "\n" + table_for_confirmation
@@ -278,6 +282,8 @@ def show_overview_page(session, generated_data, show_page, break_after, hint):
 
 def complain_about_missing_file_source_or_license(files_to_find, extra_files_to_preview, files_for_processing, banned_users, source_description, days_of_inactive_talk_page):
     session = shared.create_login_session()
+    if session == None:
+        raise Exception("session cannot be None")
     generated_data = detect_images_with_missing_licences(files_to_find + extra_files_to_preview, files_for_processing, banned_users, notify_uploaders_once=True, days_of_inactive_talk_page=days_of_inactive_talk_page)
     create_category_for_the_current_month_if_missing(session)
 
@@ -314,6 +320,8 @@ def complain_about_missing_file_source_or_license(files_to_find, extra_files_to_
         
 # use returned session, it could be renewed
 def create_overview_pages_for_users_with_more_problematic_uploads(session, generated_data):
+    if session == None:
+        raise Exception("session cannot be None")
     for entry in generated_data:
         print("listing requested for", entry["uploader"])
         info = make_page_listing_problematic_uploads_by_user(session, entry["uploader"], limit=10000, minimum=2)
@@ -321,6 +329,8 @@ def create_overview_pages_for_users_with_more_problematic_uploads(session, gener
         if len(info["problematic_image_data"]) > 1:
             print("user", entry["uploader"], "has more problematic images")
         entry['more_problematic_images'] = info["problematic_image_data"]
+    if session == None:
+        raise Exception("session cannot be None")
     return session, generated_data
 
 # use returned session, it could be renewed
