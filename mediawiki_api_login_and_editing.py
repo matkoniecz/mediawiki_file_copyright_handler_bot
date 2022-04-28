@@ -2,6 +2,8 @@
 
 import password_data
 import requests
+import simplejson
+
 import time
 
 class NoEditPermissionException(Exception):
@@ -125,10 +127,16 @@ def obtain_csrf_token(S, URL):
         }
 
         R = S.get(url=URL, params=PARAMS_2)
-        DATA = R.json()
-
-        CSRF_TOKEN = DATA['query']['tokens']['csrftoken']
-        return CSRF_TOKEN
+        try:
+            DATA = R.json()
+            CSRF_TOKEN = DATA['query']['tokens']['csrftoken']
+            return CSRF_TOKEN
+        except simplejson.errors.JSONDecodeError:
+            print(R)
+            print(R.status_code)
+            print(R.content)
+            print(R.text)
+            raise
     except requests.exceptions.ConnectionError as e:
         print("ERROR HAPPENED")
         print(e)
@@ -145,7 +153,14 @@ def obtain_login_token(S, URL):
     }
 
     R = S.get(url=URL, params=PARAMS_0)
-    DATA = R.json()
-
-    LOGIN_TOKEN = DATA['query']['tokens']['logintoken']
-    return LOGIN_TOKEN
+    try:
+        DATA = R.json()
+        LOGIN_TOKEN = DATA['query']['tokens']['logintoken']
+        return LOGIN_TOKEN
+    except simplejson.errors.JSONDecodeError:
+        print(R)
+        print(R.status_code)
+        print(R.content)
+        print(R.text)
+        print("JSON decoding failed")
+        return None
