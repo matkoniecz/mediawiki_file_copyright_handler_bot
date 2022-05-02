@@ -493,7 +493,7 @@ def detect_images_with_missing_licences_process_page(page_title, banned_users):
             return None
 
         upload_history = mediawiki_api_query.file_upload_history(page_title)
-        uploader = shared.get_uploader_from_upload_history_or_none_if_not_clear(upload_history, page_title)
+        uploader = shared.get_uploader_from_upload_history_or_none_if_not_clear(upload_history, page_title, log_when_returned_none_due_to_multiple_uploaders=True)
         if uploader == None:
             return None
         if uploader in banned_users:

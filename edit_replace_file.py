@@ -87,7 +87,7 @@ def extract_replacement_filename_from_templated_page(text, page_title):
         print(text)
     return m.group(1)
 
-def try_to_migrate_as_superseded_by_commons_template_indicated(session, page_title, only_safe):
+def try_to_migrate_as_superseded_by_commons_template_indicated(session, page_title, only_safe, sleeping_after_edit):
     for used in mediawiki_api_query.pages_where_file_is_used_as_image(page_title):
         print("IN USE!")
     test_page = mediawiki_api_query.download_page_text_with_revision_data(page_title)
@@ -103,7 +103,7 @@ def try_to_migrate_as_superseded_by_commons_template_indicated(session, page_tit
         print()
         return
 
-    migrate_file(page_title, replacement, [], only_safe)
+    migrate_file(page_title, replacement, [], only_safe, sleeping_after_edit=sleeping_after_edit)
 
 
 def run_hardcoded_file_migrations(only_safe):
@@ -137,7 +137,7 @@ def check_is_replacement_ok(old_file, new_file):
     shared.pause()
     return True
 
-def migrate_file(old_file, new_file, reasons_list, only_safe, got_migration_permission=False):
+def migrate_file(old_file, new_file, reasons_list, only_safe, got_migration_permission=False, sleeping_after_edit=True):
     session = shared.create_login_session()
     edit_summary = "file replacement ( " + old_file + " -> " + new_file + " ). It is on Wikimedia commons"
     edit_summary = (", ").join([edit_summary] + reasons_list)
