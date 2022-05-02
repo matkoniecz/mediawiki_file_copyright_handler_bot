@@ -80,7 +80,7 @@ def has_tricky_templating_situation(page_text):
     return False
 
 def extract_replacement_filename_from_templated_page(text, page_title):
-    p = re.compile('\{\{Superseded by Commons\|([^\}]+)\}\}')
+    p = re.compile('\{\{[sS]uperseded by Commons\|([^\}]+)\}\}')
     m = p.search(text)
     if m == None:
         print("failed on", page_title)
