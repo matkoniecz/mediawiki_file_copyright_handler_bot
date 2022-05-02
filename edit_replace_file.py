@@ -89,7 +89,12 @@ def extract_replacement_filename_from_templated_page(text, page_title):
         print()
         print()
         print("failed on", page_title)
+        print()
+        print("----------------")
         print(text)
+        print("----------------")
+        print()
+        return None
     return m.group(1)
 
 def try_to_migrate_as_superseded_by_commons_template_indicated(session, page_title, only_safe, sleeping_after_edit):
