@@ -122,10 +122,8 @@ def try_to_migrate_as_superseded_by_commons_template_indicated(session, page_tit
 
 def run_hardcoded_file_migrations(only_safe):
     # first I need to tag used ones...
-    """
-    migrate_file("File:Symbol E10.png", "File:Balken-gruen.png", [], only_safe, got_migration_permission=True)
-    migrate_file("File:Blue bar.png", "File:Balken-blau.png", [], only_safe, got_migration_permission=True) # lowercasing MESS
-    """
+     
+    migrate_file("File:Surfergirl.jpg", "File:Eisbach Surfer2.JPG", ["removing file with 'all rights reserved' in the source"], only_safe, got_migration_permission=True)
     
 def skip_editing_on_this_page(page_title):
     if "User:Mateusz Konieczny/" in page_title:
