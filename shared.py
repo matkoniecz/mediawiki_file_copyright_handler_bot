@@ -48,6 +48,8 @@ def edit_page_and_show_diff(S, page_title, page_text, edit_summary, rev_id, time
     return returned
 
 def edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, sleep_time = None, mark_as_bot_edit=False):
+    if S == None:
+        raise "Session must not be None"
     if sleep_time != None:
         return mediawiki_api_login_and_editing.edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, sleep_time=sleep_time, mark_as_bot_edit=mark_as_bot_edit)
     return mediawiki_api_login_and_editing.edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, mark_as_bot_edit=mark_as_bot_edit)

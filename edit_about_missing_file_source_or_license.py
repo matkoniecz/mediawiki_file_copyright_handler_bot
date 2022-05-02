@@ -256,14 +256,18 @@ def make_page_listing_problematic_uploads_by_user(session, username, limit=10000
     files_for_processing = mediawiki_api_query.uploads_by_username_generator(username)
     generated_data = detect_images_with_missing_licences(limit, files_for_processing, notify_uploaders_once=False, notify_recently_notified=True)
     page_name = "User:" + mediawiki_api_login_and_editing.password_data.username() + "/notify uploaders/" + username
-    if len(generated_data) >= minimum:
-        session = show_overview_page(session, generated_data, page_name, limit, username + " [[Drafts/Media file license chart]]")
+    session = show_overview_page(session, generated_data, page_name, limit, username + " [[Drafts/Media file license chart]]", minimum_for_new_page=2)
+    if session == None:
+        raise Exception("session cannot be None")
     return {"page_name": page_name, "problematic_image_data": generated_data, 'session': session}
 
-def show_overview_page(session, generated_data, show_page, break_after, hint):
+def show_overview_page(session, generated_data, show_page, break_after, hint, minimum_for_new_page):
     if session == None:
         raise Exception("session cannot be None")
     test_page = mediawiki_api_query.download_page_text_with_revision_data(show_page)
+    if test_page == None:
+        if len(generated_data) < minimum_for_new_page:
+            return session
     table_for_confirmation = shared.generate_table_showing_image_data_for_review(generated_data, break_after=break_after)
     text = hint + "\n" + table_for_confirmation
     edit_summary = "copyright review"
