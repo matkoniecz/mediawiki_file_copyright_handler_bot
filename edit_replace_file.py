@@ -41,27 +41,31 @@ def main():
         print(page_title, index)
         while True:
             try:
-                try_to_migrate_as_superseded_by_commons_template_indicated(session, page_title, only_safe, sleeping_after_edit=False)
-                mark_file_as_migrated(session, page_title)
+                print("BEFORE")
+                replacement = try_to_migrate_as_superseded_by_commons_template_indicated(session, page_title, only_safe, sleeping_after_edit=False)
+                print("REPLACEMENT FOUND", replacement)
+                mark_file_as_migrated(session, page_title, replacement)
                 break
             except mediawiki_api_login_and_editing.NoEditPermissionException:
                 # Recreate session, may be needed after long processing
                 session = shared.create_login_session()
 
-def mark_file_as_migrated(session, page_title):
+def mark_file_as_migrated(session, page_title, replacement):
     not_used = True
     for used in mediawiki_api_query.pages_where_file_is_used_as_image(page_title):
         not_used = False
         print("still used on", used)
         break
     if not_used:
+        
         print(page_title, "is not used")
         test_page = mediawiki_api_query.download_page_text_with_revision_data(page_title)
 
         if has_tricky_templating_situation(test_page['page_text']):
             return
 
-        text = test_page['page_text'] + "\n" + "{{delete|unused duplicate of Wikimedia Commons file}}"
+        message = "unused duplicate of Wikimedia Commons file [[:" + replacement  + "]]"
+        text = test_page['page_text'] + "\n" + "{{delete|" + message + "}}"
         shared.edit_page_and_show_diff(session, page_title, text, "request deletion of duplicate", test_page['rev_id'], test_page['timestamp'])
 
 def has_tricky_templating_situation(page_text):
@@ -83,6 +87,8 @@ def extract_replacement_filename_from_templated_page(text, page_title):
     p = re.compile('\{\{[sS]uperseded by Commons\|([^\}]+)\}\}')
     m = p.search(text)
     if m == None:
+        print()
+        print()
         print("failed on", page_title)
         print(text)
     return m.group(1)
@@ -93,17 +99,18 @@ def try_to_migrate_as_superseded_by_commons_template_indicated(session, page_tit
     test_page = mediawiki_api_query.download_page_text_with_revision_data(page_title)
     if test_page == None:
         print(page_title)
-    if has_tricky_templating_situation(test_page['page_text']):
-        return
 
     replacement = extract_replacement_filename_from_templated_page(test_page['page_text'], page_title)
+    if has_tricky_templating_situation(test_page['page_text']):
+        return replacement
 
     if file_used_and_only_on_pages_where_no_editing_allowed(page_title):
         print("used only on pages exempt from editing like talk pages")
         print()
-        return
+        return replacement
 
     migrate_file(page_title, replacement, [], only_safe, sleeping_after_edit=sleeping_after_edit)
+    return replacement
 
 
 def run_hardcoded_file_migrations(only_safe):
@@ -138,6 +145,10 @@ def check_is_replacement_ok(old_file, new_file):
     return True
 
 def migrate_file(old_file, new_file, reasons_list, only_safe, got_migration_permission=False, sleeping_after_edit=True):
+    # https://commons.wikimedia.org/wiki/Commons:Deletion_requests/File:RU_road_sign_7.18.svg
+    # this needs to be resolved
+    if old_file == "File:7.18 (Road sing).gif":
+        return
     session = shared.create_login_session()
     edit_summary = "file replacement ( " + old_file + " -> " + new_file + " ). It is on Wikimedia commons"
     edit_summary = (", ").join([edit_summary] + reasons_list)
@@ -181,10 +192,11 @@ def migrate_file(old_file, new_file, reasons_list, only_safe, got_migration_perm
                     return
                 got_migration_permission = True
             shared.edit_page_and_show_diff(session, page_title, text, edit_summary, data['rev_id'], data['timestamp'])
-            shared.make_delay_after_edit()
             if unsafe_changes:
                 print("EDIT COULD BE UNSAFE, VERIFY PLS")
                 shared.pause()
+            if sleeping_after_edit:
+                shared.make_delay_after_edit()
         else:
             print("Failed to find this file within " + page_title + " - length of page was", len(text))
     for page_title in mediawiki_api_query.pages_where_file_is_used_as_image(old_file):
@@ -212,7 +224,7 @@ def migrate_file(old_file, new_file, reasons_list, only_safe, got_migration_perm
             got_migration_permission = True
         if text.strip() != "":
             text += "\n"
-        delete_request = "{{delete|uses replaced with Wikimedia commons alternative, this file is not needed anymore. And it has licensing issues.}}"
+        delete_request = "{{delete|uses replaced with Wikimedia commons alternative ([[:" + new_file + "]]), this file is not needed anymore. And it has licensing issues.}}"
         text += delete_request
         edit_summary = delete_request
         shared.edit_page_and_show_diff(session, old_file, text, edit_summary, data['rev_id'], data['timestamp'], sleep_time=0)
