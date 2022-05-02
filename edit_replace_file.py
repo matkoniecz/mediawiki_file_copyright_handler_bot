@@ -41,10 +41,7 @@ def main():
         print(page_title, index)
         while True:
             try:
-                print("BEFORE")
                 replacement = try_to_migrate_as_superseded_by_commons_template_indicated(session, page_title, only_safe, sleeping_after_edit=False)
-                print("REPLACEMENT FOUND", replacement)
-                mark_file_as_migrated(session, page_title, replacement)
                 break
             except mediawiki_api_login_and_editing.NoEditPermissionException:
                 # Recreate session, may be needed after long processing
