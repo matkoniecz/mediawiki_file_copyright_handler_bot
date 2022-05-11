@@ -14,10 +14,11 @@ def is_invalid_value(value):
 
 session = shared.create_login_session('image_bot')
 key = "wiki:symbol"
+link_info = " - see https://taginfo.openstreetmap.org/keys/" + key + "#values"
 for value in taginfo.query.values_of_key(key):
     #print(key, "=", value)
     if is_invalid_value(value["value"]):
-        print("skipping")
+        print("skipping invalid value, not processing it further" + link_info)
         print(value["value"])
         continue
     file = value["value"]
@@ -29,7 +30,7 @@ for value in taginfo.query.values_of_key(key):
         if commons_history == None:
             deletion_log = mediawiki_api_query.deletion_history(file)
             if deletion_log != None and len(deletion_log) > 0:
-                print("* [[:" + file + "]]")
+                print("* [[:" + file + "]]" + link_info)
     else:
         test_page = mediawiki_api_query.download_page_text_with_revision_data(file)
         if test_page == None:
