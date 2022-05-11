@@ -376,7 +376,7 @@ def edit_talk_page_to_mark_uploader_as_notified(session, page_title, page_text, 
     shared.edit_page_and_show_diff(session, page_title, page_text, edit_summary, rev_id, timestamp)
 
 def create_category_for_the_current_month_if_missing(session):
-    category_name = category_for_given_month_name()
+    category_name = entire_category_name()
     category_text = category_for_given_month_page_text()
     data = mediawiki_api_query.download_page_text_with_revision_data(category_name)
     if data == None:
@@ -384,17 +384,17 @@ def create_category_for_the_current_month_if_missing(session):
     elif data['page_text'] != category_text:
         shared.edit_page_and_show_diff(session, category_name, category_text, "reset category for holding files awaiting response", test_page['rev_id'], data['timestamp'])
 
-def file_template_about_missing_license():
+def subcategory_selectable_name_part():
     mydate = datetime.datetime.now()
     current_month = mydate.strftime("%B")
     current_year = mydate.strftime("%Y")
-    return "{{Unknown|subcategory=uploader notified " + current_month + " " + current_year + "}}"
+    return "uploader notified " + current_year + ", " + current_month
 
-def category_for_given_month_name():
-    mydate = datetime.datetime.now()
-    current_month = mydate.strftime("%B")
-    current_year = mydate.strftime("%Y")
-    return "Category:Media without a license - uploader notified " + current_month + " " + current_year
+def file_template_about_missing_license():
+    return "{{Unknown|subcategory=" + subcategory_selectable_name_part() + "}}"
+
+def entire_category_name():
+    return "Category:Media without a license - " + subcategory_selectable_name_part()
 
 def category_for_given_month_page_text():
     return """Use <pre>""" + file_template_about_missing_license() + """</pre>to put file here.
