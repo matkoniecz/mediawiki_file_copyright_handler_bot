@@ -72,11 +72,12 @@ def has_tricky_templating_situation(page_text):
         print("deletion requested already")
         print()
         return True
-    if page_text.count("{") != 2 or page_text.count("}") != 2:
+    page_with_cleaned_allowed_templates = page_text.lower().replace("{{unknown|", "")
+    if page_with_cleaned_allowed_templates.count("{") != 2:
         print("complex situation, skipping")
         print()
         return True
-    if page_text.count("|") != 1:
+    if page_with_cleaned_allowed_templates.count("|") != 1:
         print("complex situation, skipping")
         print()
         return True
