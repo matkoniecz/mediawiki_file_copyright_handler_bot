@@ -18,8 +18,8 @@ link_info = " - see https://taginfo.openstreetmap.org/keys/" + key + "#values"
 for value in taginfo.query.values_of_key(key):
     #print(key, "=", value)
     if is_invalid_value(value["value"]):
-        print("skipping invalid value, not processing it further" + link_info)
-        print(value["value"])
+        #print("skipping invalid value, not processing it further" + link_info)
+        #print(value["value"])
         continue
     file = value["value"]
     if "File:".lower() not in file.lower():
