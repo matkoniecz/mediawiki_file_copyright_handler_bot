@@ -520,7 +520,8 @@ def nonlicensing_wikicode():
     "{{Tag|", "{{Key|", "{{Tagvalue|", # link tags
     "{{itas|", # pointless templates to link external sites
     "{{Information|", # does not link by itself
-    "{{unknown}}", # replacing it is implemented
+    "== License ==\n{{Unknown}}", # replacing {{unknown}} is implemented
+    "{{unknown}}", # replacing {{unknown}} is implemented
     # "{{Trademarked}}" - requires fair use policy
     "{{bing image portions}}", # not a license by itself I think
     "{{featured date", "{{featured_date",
