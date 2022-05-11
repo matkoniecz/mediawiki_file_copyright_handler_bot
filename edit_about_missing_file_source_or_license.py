@@ -555,15 +555,13 @@ def skip_image_based_on_text_on_presence_of_keywords_in_description(page_title, 
     "slippy map", "map", "mapping party",
 
     # partially explains the source
+    ] + shared.description_keywords_that_may_indicate_that_author_is_specified() + [
     "http",
-    "selbst", "own work", "taken by me", "self made", "self-made", "I made", "by author",
-    "Photo by", "image by", 
     "non-free", "image search", "copied from", "unfree",
     "CC-BY-SA", "public domain",
     "copyright",
-    "Based on OSM data", "Based on", "OSM data",
-    "licence", "license", "permission", "flickr", "source", "Openfietsmap", "OSM contributors",
-    "commons", "wikipedia", "0px-", "px-",
+    "Photo by", "image by", 
+    "licence", "license", "permission", "flickr", "Openfietsmap",
     # commons, wikipedia, 0px- covers cases like
     # https://wiki.openstreetmap.org/wiki/File:120px-Zusatzzeichen_1020-12.svg.png https://commons.wikimedia.org/w/index.php?title=File:Zusatzzeichen_1020-12.svg&redirect=no
     # where bothering uploader is not needed and matches can be automatically found

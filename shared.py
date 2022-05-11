@@ -6,6 +6,12 @@ import password_data
 import time
 import random
 
+def description_keywords_that_may_indicate_that_author_is_specified():
+    return ["selbst", "own work", "taken by me", "self made", "self-made", "I made", "by author",
+    "image by", "picture by",
+    "Based on OSM data", "Based on", "OSM data", "source", "OSM contributors", "Openstreetmap contributors",
+    "commons", "wikipedia", "0px-", "px-", "author"]
+
 def users_dropped_from_regular_processing():
     return [
     "Malcolmh", # many PD-shape images and basically only that - see https://wiki.openstreetmap.org/wiki/User:Mateusz_Konieczny/notify_uploaders/Malcolmh
