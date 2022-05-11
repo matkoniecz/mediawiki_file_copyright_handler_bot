@@ -236,44 +236,58 @@ def migrate_file(old_file, new_file, reasons_list, only_safe, got_migration_perm
         shared.edit_page_and_show_diff(session, old_file, text, edit_summary, data['rev_id'], data['timestamp'], sleep_time=0)
 
 def valid_image_transforms(main_form, new_file):
-    returned = [
-        {'from': "[[" + main_form + "|",
-        'to': "[[" + new_file + "|",
-        'description': 'basic form, safe replacement',
-        'safe': True,
-        },
-    ]
-    for pre in range(0, 10):
-        for post in range(0, 3):
-            # infoboxes with varying space count
-            returned.append(
-                {'from': "image" + (" " * pre) + "=" + (" " * post) + main_form,
-                'to': "image = " + new_file,
-                'description': 'used in template (quite safe)',
-                'safe': True,
-                }
-            )
+    if main_form.find("File:") != 0:
+        raise
+    without_prefix = main_form.replace("File:", "")
+    lowercase_first_letter = "File:" + without_prefix[0].lower() + without_prefix[1:]
+    forms = [main_form, lowercase_first_letter]
+    for form in forms:
+        returned = [
+            {'from': "[[" + form + "|",
+            'to': "[[" + new_file + "|",
+            'description': 'basic form, safe replacement',
+            'safe': True,
+            },
+        ]
+        
+        for pre in range(0, 10):
+            for post in range(0, 3):
+                # infoboxes with varying space count
+                returned.append(
+                    {'from': "image" + (" " * pre) + "=" + (" " * post) + form,
+                    'to': "image = " + new_file,
+                    'description': 'used in template (quite safe)',
+                    'safe': True,
+                    }
+                )
 
-            # https://wiki.openstreetmap.org/w/index.php?title=IT:Aeroways&diff=2294021&oldid=2216766
-            returned.append(
-                {'from': "image" + (" " * pre) + "=" + (" " * post) + main_form.replace("File:", ""),
-                'to': "image = " + new_file.replace("File:", ""),
-                'description': 'used in template (quite safe)',
-                'safe': True,
-                }
-            )
-    returned = returned + [
-        {'from': main_form,
-        'to': new_file,
-        'description': 'basic form',
-        'safe': False,
-        },
-        {'from': main_form.replace("File:", ""),
-        'to': new_file.replace("File:", ""),
-        'description': 'used in template or mentioned',
-        'safe': False,
-        },
-    ]
+                # https://wiki.openstreetmap.org/w/index.php?title=IT:Aeroways&diff=2294021&oldid=2216766
+                returned.append(
+                    {'from': "image" + (" " * pre) + "=" + (" " * post) + form.replace("File:", ""),
+                    'to': "image = " + new_file.replace("File:", ""),
+                    'description': 'used in template (quite safe)',
+                    'safe': True,
+                    }
+                )
+                returned.append(
+                    {'from': "image" + (" " * pre) + "=" + (" " * post) + form.replace("File:", ""),
+                    'to': "image = " + new_file.replace("File:", ""),
+                    'description': 'used in template (quite safe)',
+                    'safe': True,
+                    }
+                )
+        returned = returned + [
+            {'from': form,
+            'to': new_file,
+            'description': 'basic form',
+            'safe': False,
+            },
+            {'from': form.replace("File:", ""),
+            'to': new_file.replace("File:", ""),
+            'description': 'used in template or mentioned',
+            'safe': False,
+            },
+        ]
     return returned
 
 main()
