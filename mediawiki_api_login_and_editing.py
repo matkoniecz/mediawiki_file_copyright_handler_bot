@@ -52,10 +52,19 @@ def is_rate_limit_error_here(DATA):
 
 def is_logged_out_error_here(DATA):
     #{'error': {'code': 'permissiondenied', 'info': 'The action you have requested is limited to users in the group: [[Wiki:Users|Users]].' ...
+    # triggered by attempting to edit
+    #
+    # notloggedin is triggered when attempting to watchlist
     if 'error' in DATA:
-        if DATA['error']['code'] == 'permissiondenied':
+        if DATA['error']['code'] in ['notloggedin', 'permissiondenied']:
             return True
     return False
+
+def is_error_here(DATA):
+    if 'error' in DATA:
+        return True
+    return False
+
 
 def create_page(S, page_title, page_text, edit_summary, URL="https://wiki.openstreetmap.org/w/api.php", sleep_time=0.4, mark_as_bot_edit=False):
     # Step 4: POST request to edit a page
@@ -113,6 +122,37 @@ def edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, URL="ht
         print("rate limit error, sleep finished, will retry")
         edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, URL)
     time.sleep(sleep_time)
+
+def watchlist_page(S, page_title, URL="https://wiki.openstreetmap.org/w/api.php"):
+    # https://www.mediawiki.org/wiki/API:Watch
+
+    PARAMS_FOR_TOKEN = {
+        "action": "query",
+        "meta": "tokens",
+        "type": "watch",
+        "format": "json"
+    }
+    R = S.get(url=URL, params=PARAMS_FOR_TOKEN)
+    DATA = R.json()
+    CSRF_TOKEN = DATA["query"]["tokens"]["watchtoken"]
+
+    PARAMS = {
+        "action": "watch",
+        "titles": page_title,
+        "format": "json",
+        "token": CSRF_TOKEN,
+    }
+
+    R = S.post(URL, data=PARAMS)
+    DATA = R.json()
+    if is_logged_out_error_here(DATA):
+        raise NoEditPermissionException("likely automatically logged out")
+    elif is_error_here(DATA):
+        print(R)
+        print(R.status_code)
+        print(R.content)
+        print(R.text)
+        raise
 
 def obtain_csrf_token(S, URL):
     try:
