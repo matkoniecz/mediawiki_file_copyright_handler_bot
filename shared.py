@@ -8,7 +8,7 @@ import random
 
 def description_keywords_that_may_indicate_that_author_is_specified():
     return ["selbst", "own work", "taken by me", "self made", "self-made", "I made", "by author",
-    "image by", "picture by",
+    "image by", "picture by", "taken by", "photograph by", "photo by", "photograph taken"
     "Based on OSM data", "Based on", "OSM data", "source", "OSM contributors", "Openstreetmap contributors",
     "commons", "wikipedia", "0px-", "px-", "author"]
 
