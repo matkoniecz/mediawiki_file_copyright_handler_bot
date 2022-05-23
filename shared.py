@@ -21,8 +21,6 @@ def users_dropped_from_regular_processing():
     "VIPINDAS K", # problematic: copyvios related to OSM
     "Dmgroom", # handle https://wiki.openstreetmap.org/wiki/File:Baghdad-210207.png first
     "Emmanuel BAMA", # handle PD-text like from https://wiki.openstreetmap.org/wiki/User:Mateusz_Konieczny/notify_uploaders/Emmanuel_BAMA
-    "Michael Montani", "SimonPoole", # many charts: https://commons.wikimedia.org/wiki/Commons:Village_pump/Copyright#Is_chart_qualifying_for_PD-shape?
-    "Bk", "Nordpfeil", "Mateusz Konieczny", # has chart (search fir chart below)
     "Skippern", #PD-shape spam, some more complex (posted on the talk page 2022-01-30)
     "Gkai", # https://wiki.openstreetmap.org/wiki/User:Mateusz_Konieczny/notify_uploaders/Gkai OSM Carto icons ("should be replaced with")
     "Fkv", # mark their image for deletion on or after 2022-09-08 https://wiki.openstreetmap.org/w/index.php?title=File:Kremszwickel_signpost.jpg&oldid=prev&diff=2279417 https://wiki.openstreetmap.org/w/index.php?title=User_talk:Fkv&curid=112308&diff=2279452&oldid=2279273 https://wiki.openstreetmap.org/w/index.php?title=User_talk:Fkv&diff=2279476&oldid=2279452 https://wiki.openstreetmap.org/w/index.php?title=File:Kremszwickel_signpost.jpg&diff=prev&oldid=2279473
@@ -30,6 +28,9 @@ def users_dropped_from_regular_processing():
     "Malenki", # dead - https://wiki.openstreetmap.org/wiki/User_talk:Malenki
     "Bmwiedemann", # tricky https://wiki.openstreetmap.org/wiki/File:Luftbild-2-originalprojektion-unscaled.png
     "Reneman", # most of files are not actually theirs - see descriptions of files, see also https://wiki.openstreetmap.org/wiki/User:Mateusz_Konieczny/notify_uploaders/Reneman
+
+    #"Michael Montani", "SimonPoole", # https://commons.wikimedia.org/w/index.php?title=Commons:Village_pump/Copyright&oldid=654324910#Is_this_chart_qualifying_for_PD-shape?
+    #"Bk", "Nordpfeil", "Mateusz Konieczny", # has chart (search for chart below)
     ]
 
 def create_login_session(index = 'api_password'):
