@@ -758,6 +758,7 @@ def valid_licencing_template_names():
         "Licence Ouverte 2",
 
         # This can be a crayon license :(
+        # TODO: investigate!
         "Attribution",
 
         # This templates should be eliminated
