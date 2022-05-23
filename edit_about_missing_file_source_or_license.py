@@ -87,8 +87,8 @@ def main():
         session = returned['session']
     show_retaggable_images(session)
 
-    mark_categories_as_also_needing_attention(session, screeshot_categories(), limit=3)
-    mark_categories_as_also_needing_attention(session, map_categories(), limit=3)
+    mark_categories_as_also_needing_attention(session, screeshot_categories(), limit=90)
+    mark_categories_as_also_needing_attention(session, map_categories(), limit=90)
     #for cat in all_subcategories(session, "Category:Maps of places by continent"):
     #    print("        \"" + cat + "\",")
 
