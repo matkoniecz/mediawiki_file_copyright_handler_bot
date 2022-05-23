@@ -174,23 +174,23 @@ def migrate_file(old_file, new_file, reasons_list, only_safe, got_migration_perm
         data = mediawiki_api_query.download_page_text_with_revision_data(page_title)
         text = data["page_text"]
         unsafe_changes = False
-        for main_form in [old_file, old_file.replace(" ", "_")]:
-            for form in valid_image_transforms(main_form, new_file):
-                if only_safe:
-                    if form['safe'] == False:
-                        continue
-                if form['from'] in text:
-                    print("FOUND, as", form['description'], "-", form['from'])
-                    text = text.replace(form['from'], form['to'])
-                    if form['safe'] == False:
-                        unsafe_changes = True
-                from_form = form['from'].replace("File:", "Image:")
-                description = "(in Image: variant)"
-                if from_form in text:
-                    print("FOUND " + description + ", as", form['description'], "-", from_form)
-                    text = text.replace(from_form, form['to'])
-                    if form['safe'] == False:
-                        unsafe_changes = True
+        for form in valid_image_transforms(old_file, new_file):
+            print(form)
+            if only_safe:
+                if form['safe'] == False:
+                    continue
+            if form['from'] in text:
+                print("FOUND, as", form['description'], "-", form['from'])
+                text = text.replace(form['from'], form['to'])
+                if form['safe'] == False:
+                    unsafe_changes = True
+            from_form = form['from'].replace("File:", "Image:")
+            description = "(in Image: variant)"
+            if from_form in text:
+                print("FOUND " + description + ", as", form['description'], "-", from_form)
+                text = text.replace(from_form, form['to'])
+                if form['safe'] == False:
+                    unsafe_changes = True
                         
         if text != data["page_text"]:
             if got_migration_permission == False:
@@ -240,7 +240,7 @@ def valid_image_transforms(main_form, new_file):
         raise
     without_prefix = main_form.replace("File:", "")
     lowercase_first_letter = "File:" + without_prefix[0].lower() + without_prefix[1:]
-    forms = [main_form, lowercase_first_letter]
+    forms = [main_form, main_form.replace(" ", "_"), lowercase_first_letter, lowercase_first_letter.replace(" ", "_")]
     for form in forms:
         returned = [
             {'from': "[[" + form + "|",
