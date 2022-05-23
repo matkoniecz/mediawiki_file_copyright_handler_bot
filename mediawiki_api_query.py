@@ -178,6 +178,11 @@ def uploads_by_username_generator(user, URL="https://wiki.openstreetmap.org/w/ap
         #print(json.dumps(response.json(), indent=4))
         #print(url)
         if 'error' in response.json():
+            print()
+            print()
+            print()
+            print("---------------------")
+            print(user)
             print(response.json())
             raise
         if 'query' not in response.json():
