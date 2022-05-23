@@ -219,7 +219,7 @@ def mark_categories_as_also_needing_attention(session, processed_categories, lim
                     print("has template, without declaring licensing status!")
             print(page_title)
             text = test_page['page_text'] + "\n" + "{{Unknown}}"
-            shared.edit_page_and_show_diff(session, page_title, text, "what is the license here? (I have no idea what is the answer to that)", test_page['rev_id'], test_page['timestamp'])
+            shared.edit_page_and_show_diff(session, page_title, text, "what is the license here? (please fill it if you know it or you are author and can license it! [[Wiki:Media file license chart]] may be helpful)", test_page['rev_id'], test_page['timestamp'])
             limit -= 1
             print("remaining limit:", limit)
             if limit <= 0:
