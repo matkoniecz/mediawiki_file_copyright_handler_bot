@@ -642,8 +642,8 @@ def is_marked_with_template_declaring_licensing_status(page_text):
     wikicode = mwparserfromhell.parse(page_text)
     templates = wikicode.filter_templates()
     for template in templates:
-        for valid in valid_licencing_templates():
-            if template.name.strip().lower() == valid.lower().replace("{", "").replace("}", ""):
+        for valid in valid_licencing_template_names():
+            if template.name.strip().lower() == valid.lower():
                 return True
     return False
 
@@ -710,61 +710,62 @@ If you are interested in wider discussion about handling licencing at OSM Wiki, 
 
 """
 
-def valid_licencing_templates():
+def valid_licencing_template_names():
     return [
-        "{{PD}}", # in far future it may be worth replacing
-        "{{PD-self}}",
-        "{{delete", # active deletion request waiting for processing means that page is processed for now
-        "{{Superseded by Commons", # special deletion variant
-        "{{PD-shape}}",
-        "{{PD-text}}",
-        "{{PD-textlogo}}",
-        "{{CC0}}",
-        "{{CC0-self}}",
-        "{{CC-BY-2.0}}",
-        "{{CC-BY-2.0-self}}",
-        "{{CC-BY-2.5}}",
-        "{{CC-BY-2.5-self}}",
-        "{{CC-BY-3.0}}",
-        "{{CC-BY-3.0-self}}",
-        "{{CC-BY-4.0}}",
-        "{{CC-BY-4.0-self}}",
-        "{{CC-BY-SA-2.0}}",
-        "{{CC-BY-SA-2.0-self}}",
-        "{{CC-BY-SA-2.5}}",
-        "{{CC-BY-SA-2.5-self}}",
-        "{{CC-BY-SA-3.0}}",
-        "{{CC-BY-SA-3.0-self}}",
-        "{{CC-BY-SA-4.0}}",
-        "{{CC-BY-SA-4.0-self}}",
-        "{{CC-BY-SA-2.0 OpenStreetMap}}",
-        "{{Geograph}}",
-        "{{GFDL}}",
-        "{{GPL}}",
-        "{{ISC}}",
-        "{{iD screenshot}}",
-        "{{iD screenshot without imagery}}",
-        "{{Bing image}}",
-        "{{JOSM screenshot without imagery}}",
-        "{{JOSM screenshot with imagery",
-        "{{ODbL OpenStreetMap}}",
-        "{{OSM Carto screenshot||old_license}}",
-        "{{OSM Carto screenshot}}",
-        "{{Tiles@Home screenshot}}",
-        "{{PD-PRC-Road Traffic Signs}}",
-        "{{WTFPL}}",
-        "{{WTFPL-self}}",
-        "{{Licence Ouverte 2}}",
+        "PD", # in far future it may be worth replacing
+        "PD-self",
+        "PD-creator",
+        "delete", # active deletion request waiting for processing means that page is processed for now
+        "Superseded by Commons", # special deletion variant
+        "PD-shape",
+        "PD-text",
+        "PD-textlogo",
+        "CC0",
+        "CC0-self",
+        "CC-BY-2.0",
+        "CC-BY-2.0-self",
+        "CC-BY-2.5",
+        "CC-BY-2.5-self",
+        "CC-BY-3.0",
+        "CC-BY-3.0-self",
+        "CC-BY-4.0",
+        "CC-BY-4.0-self",
+        "CC-BY-SA-2.0",
+        "CC-BY-SA-2.0-self",
+        "CC-BY-SA-2.5",
+        "CC-BY-SA-2.5-self",
+        "CC-BY-SA-3.0",
+        "CC-BY-SA-3.0-self",
+        "CC-BY-SA-4.0",
+        "CC-BY-SA-4.0-self",
+        "CC-BY-SA-2.0 OpenStreetMap",
+        "Geograph",
+        "GFDL",
+        "GPL",
+        "ISC",
+        "iD screenshot",
+        "iD screenshot without imagery",
+        "Bing image",
+        "JOSM screenshot without imagery",
+        "JOSM screenshot with imagery",
+        "ODbL OpenStreetMap",
+        "OSM Carto screenshot||old_license",
+        "OSM Carto screenshot",
+        "Tiles@Home screenshot",
+        "PD-PRC-Road Traffic Signs",
+        "WTFPL",
+        "WTFPL-self",
+        "Licence Ouverte 2",
 
         # This can be a crayon license :(
-        "{{Attribution}}",
+        "Attribution",
 
         # This templates should be eliminated
-        "{{CC-BY-NC-ND-4.0}}",
-        "{{CC-BY-NC-SA-3.0}}",
+        "CC-BY-NC-ND-4.0",
+        "CC-BY-NC-SA-3.0",
 
         # likely problematic, but at less well defined state
-        "{{Bing image}}",
+        "Bing image",
 
         # https://wiki.openstreetmap.org/wiki/Category:Media_license_templates
     ]
