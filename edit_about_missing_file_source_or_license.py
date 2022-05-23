@@ -45,6 +45,8 @@ def main():
     refresh_users = [
     "PanierAvide", "Segubi", "Reneman", "marek kleciak" # got link with their file listing, lets keep it updates
     ]
+    mark_categories_as_also_needing_attention(session, screeshot_categories(), limit=300)
+    mark_categories_as_also_needing_attention(session, map_categories(), limit=300)
 
     screenshot_only_uploads_remaining = [
     ]
