@@ -756,6 +756,7 @@ def valid_licencing_template_names():
         "WTFPL",
         "WTFPL-self",
         "Licence Ouverte 2",
+        "Mapbox image credit",
 
         # This can be a crayon license :(
         # TODO: investigate!
@@ -767,6 +768,8 @@ def valid_licencing_template_names():
 
         # likely problematic, but at less well defined state
         "Bing image",
+
+        "mapof", # misleading nowadays: TODO: eliminate it from wiki or retitle or something
 
         # https://wiki.openstreetmap.org/wiki/Category:Media_license_templates
     ]
