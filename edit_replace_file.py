@@ -20,6 +20,18 @@ Note: This only applies to works of the Federal Government and not to the work o
 """
     if extract_replacement_filename_from_templated_page(page, "test") != "File:Baghdad International Airport (October 2003).jpg":
         raise
+    page =  """{{Superseded image|File:Beverages-14.svg}}"""
+    if extract_replacement_filename_from_templated_page(page, "test") != "File:Beverages-14.svg":
+        raise
+    page =  """{{Superseded image|File:Beverages-14.svg|reason=jdjdjdsjsissjifijsf}}"""
+    if extract_replacement_filename_from_templated_page(page, "test") != "File:Beverages-14.svg":
+        raise
+    page =  """{{Superseded image|File:Beverages-14.svg|reason=jd jdjdsj sis sj if  ijsf}}"""
+    if extract_replacement_filename_from_templated_page(page, "test") != "File:Beverages-14.svg":
+        raise
+    page =  """{{Superseded image|File:Beverages-14.svg|reason=duplicate of [[:File:Beverages-14.svg]]. See also [https://wiki.openstreetmap.org/wiki/User_talk:Immaculate_Mwanja#Duplicate_icons]}}"""
+    if extract_replacement_filename_from_templated_page(page, "test") != "File:Beverages-14.svg":
+        raise
 
 def main():
     selftest()
@@ -36,17 +48,17 @@ def main():
     only_safe = True
     session = shared.create_login_session()
     index = 0
-    for page_title in mediawiki_api_query.pages_from_category("Category:Image superseded by Wikimedia Commons"):
-        index += 1
-        print(page_title, index)
-        while True:
-            try:
-                replacement = try_to_migrate_as_superseded_by_commons_template_indicated(session, page_title, only_safe, sleeping_after_edit=False)
-                break
-            except mediawiki_api_login_and_editing.NoEditPermissionException:
-                # Recreate session, may be needed after long processing
-                session = shared.create_login_session()
-
+    for category in ["Category:Image superseded by another image", "Category:Image superseded by Wikimedia Commons"]:
+        for page_title in mediawiki_api_query.pages_from_category(category):
+            index += 1
+            print(page_title, index)
+            while True:
+                try:
+                    replacement = try_to_migrate_as_superseded_template_indicated(session, page_title, only_safe, sleeping_after_edit=False)
+                    break
+                except mediawiki_api_login_and_editing.NoEditPermissionException:
+                    # Recreate session, may be needed after long processing
+                    session = shared.create_login_session()
 
 def has_tricky_templating_situation(page_text):
     if page_text.find("{{delete|") != -1 or page_text.find("{{Delete|") != -1:
@@ -65,21 +77,27 @@ def has_tricky_templating_situation(page_text):
     return False
 
 def extract_replacement_filename_from_templated_page(text, page_title):
-    p = re.compile('\{\{[sS]uperseded by Commons\|([^\}]+)\}\}')
+    p = re.compile('\{\{[sS]uperseded by Commons\|([^\}|]+)\}\}')
     m = p.search(text)
-    if m == None:
-        print()
-        print()
-        print("failed on", page_title)
-        print()
-        print("----------------")
-        print(text)
-        print("----------------")
-        print()
-        return None
-    return m.group(1)
 
-def try_to_migrate_as_superseded_by_commons_template_indicated(session, page_title, only_safe, sleeping_after_edit):
+    p_superseded = re.compile('\{\{[sS]uperseded image\|([^\}|]+)(|\|reason\s*=\s*.*)\}\}')
+    m_superseded = p_superseded.search(text)
+
+    if m != None:
+        return m.group(1)
+    if m_superseded != None:
+        return m_superseded.group(1)
+    print()
+    print()
+    print("failed on", page_title)
+    print()
+    print("----------------")
+    print(text)
+    print("----------------")
+    print()
+    return None
+
+def try_to_migrate_as_superseded_template_indicated(session, page_title, only_safe, sleeping_after_edit):
     for used in mediawiki_api_query.pages_where_file_is_used_as_image(page_title):
         print("IN USE!")
     test_page = mediawiki_api_query.download_page_text_with_revision_data(page_title)
