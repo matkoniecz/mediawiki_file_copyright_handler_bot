@@ -47,25 +47,6 @@ def main():
                 # Recreate session, may be needed after long processing
                 session = shared.create_login_session()
 
-def mark_file_as_migrated(session, page_title, replacement):
-    used = False
-    for used in mediawiki_api_query.pages_where_file_is_used_as_image(page_title):
-        used = True
-        print("still used on", used)
-    if used:
-        return False
-    else:
-        print(page_title, "is not used")
-        test_page = mediawiki_api_query.download_page_text_with_revision_data(page_title)
-
-        if has_tricky_templating_situation(test_page['page_text']):
-            return False
-
-        message = "unused duplicate of Wikimedia Commons file [[:" + replacement  + "]]"
-        text = test_page['page_text'] + "\n" + "{{delete|" + message + "}}"
-        shared.edit_page_and_show_diff(session, page_title, text, "request deletion of duplicate", test_page['rev_id'], test_page['timestamp'])
-        return True
-    raise
 
 def has_tricky_templating_situation(page_text):
     if page_text.find("{{delete|") != -1 or page_text.find("{{Delete|") != -1:
