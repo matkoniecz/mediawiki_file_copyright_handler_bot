@@ -155,9 +155,11 @@ def pause():
     input()
 
 def make_delay_after_edit():
-    sleep_time = 0.5
-    if random.randrange(1, 100) > 90:
-        sleep_time += random.randrange(400, 600) 
+    sleep_time = 0
+    if random.randrange(1, 100) > 80:
+        sleep_time += random.randrange(0, 5) 
+    if random.randrange(1, 100) > 95:
+        sleep_time += random.randrange(800, 1200) 
     print("make_delay_after_edit (", sleep_time ,") <-start")
     time.sleep(sleep_time)
     print("make_delay_after_edit end->")
