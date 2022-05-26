@@ -106,7 +106,10 @@ def try_to_migrate_as_superseded_template_indicated(session, page_title, only_sa
 
     replacement = extract_replacement_filename_from_templated_page(test_page['page_text'], page_title)
     if replacement == None:
+        print()
+        print(page_title)
         print("something broken, no replacement specified")
+        print()
         return None
     if has_tricky_templating_situation(test_page['page_text']):
         return replacement
