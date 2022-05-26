@@ -80,7 +80,7 @@ def extract_replacement_filename_from_templated_page(text, page_title):
     p = re.compile('\{\{[sS]uperseded by Commons\|([^\}|]+)\}\}')
     m = p.search(text)
 
-    p_superseded = re.compile('\{\{[sS]uperseded image\|([^\}|]+)(|\|reason\s*=\s*.*)\}\}')
+    p_superseded = re.compile('\{\{[sS]uperseded image\|([^\}|]+)(|\|(|reason\s*=)\s*.*)\}\}')
     m_superseded = p_superseded.search(text)
 
     if m != None:
