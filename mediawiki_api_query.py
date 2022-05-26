@@ -165,6 +165,9 @@ def images_by_date(date_string):
             break
 
 
+class InvalidUsername(Exception):
+   """Raised when mediawiki api claims that username is malformed"""
+
 def uploads_by_username_generator(user, URL="https://wiki.openstreetmap.org/w/api.php"):
     continue_code = None
     continue_parameter = "aicontinue"
@@ -178,6 +181,8 @@ def uploads_by_username_generator(user, URL="https://wiki.openstreetmap.org/w/ap
         #print(json.dumps(response.json(), indent=4))
         #print(url)
         if 'error' in response.json():
+            if 'baduser' == response.json()['error']['code']:
+                raise InvalidUsername(user + " claimed to be invalid username")
             print()
             print()
             print()
