@@ -37,7 +37,13 @@ def main():
                 continue
             print(text)
             print(data['page_text'])
-            shared.edit_page_and_show_diff(session, page_title, text, "add attribution directly to the template", data['rev_id'], data['timestamp'])
+            while True:
+                try:
+                    shared.edit_page_and_show_diff(session, page_title, text, "add attribution directly to the template", data['rev_id'], data['timestamp'])
+                    break
+                except mediawiki_api_login_and_editing.NoEditPermissionException:
+                    # Recreate session, may be needed after long processing
+                    session = shared.create_login_session()
 
 def add_uploader_info(text, uploader):
     wikicode = mwparserfromhell.parse(text)
