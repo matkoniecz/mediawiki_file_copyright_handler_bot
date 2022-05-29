@@ -14,6 +14,29 @@ import mwparserfromhell
 # https://wiki.openstreetmap.org/w/api.php?action=query&list=logevents&letype=upload&lelimit=500&leuser=Marek%20kleciak
 
 def selftest():
+    missing_licences = False
+    for page_title in mediawiki_api_query.pages_from_category("Category:Media license templates"):
+        name = page_title.replace("Template:", "")
+        if name in ["Self-made-image", "Panoramafreiheit", "Personality rights",
+                    "OpenStreetMap trademark", "Trademarked", "Free media",
+                    "Free screenshot"]:
+            # building blocks, not actual license
+            continue
+        if name in ["Bing image portions"]:
+            # insufficient by itself
+            continue
+        if name in ["Unknown"]:
+            # warns about lack of license
+            continue
+        if name in ["Wiki:Media file license chart"]:
+            # likely should not be there, as well...
+            continue
+        if name not in valid_licencing_template_names():
+            print(name)
+            missing_licences = True
+    if missing_licences:
+        raise
+
     text = """{{unknown}}
 [[category:Images]]
 """
@@ -723,7 +746,10 @@ def valid_licencing_template_names():
         "PD-text",
         "PD-textlogo",
         "CC0",
+        "OSM Carto icon", # CC0 with extra info about source
+        "OpenCampingMapIcons", # CC0 with extra info about source
         "CC0-self",
+        "CC-SA-1.0",
         "CC-BY-2.0",
         "CC-BY-2.0-self",
         "CC-BY-2.5",
@@ -745,33 +771,53 @@ def valid_licencing_template_names():
         "GFDL",
         "GPL",
         "ISC",
-        "iD screenshot",
-        "iD screenshot without imagery",
+        "ID screenshot", # typically formatted "iD screenshot"
+        "ID screenshot without imagery",
         "Bing image",
+        "JOSM Icon license",
         "JOSM screenshot without imagery",
         "JOSM screenshot with imagery",
         "ODbL OpenStreetMap",
         "OSM Carto screenshot||old_license",
         "OSM Carto screenshot",
+        "OSM Humanitarian screenshot",
+        "ODbL",
         "Tiles@Home screenshot",
         "PD-PRC-Road Traffic Signs",
         "WTFPL",
         "WTFPL-self",
         "Licence Ouverte 2",
         "Mapbox image credit",
+        "Maxar image",
+        "Esri image",
+        "Apache",
+        "Apache license 2.0",
+        "AGPL",
+        "LGPL",
+        "MIT",
+        "MPL",
+        "Open Government Licence 2.0 Canada",
+        "PD-B-road-sign", # try to get rid of it by migration
+        "PD-CAGov",
+        "PD-old",
+        "PD-RU-exempt",
+        "PD-USGov",
+        "OpenSeaMap symbol", # TODO: recheck its state https://wiki.openstreetmap.org/w/index.php?title=Template:OpenSeaMap_symbol&action=history
 
         # This can be a crayon license :(
         # TODO: investigate!
         "Attribution",
 
-        # This templates should be eliminated
+        # This templates should be eliminated (TODO HACK)
+        "CC-BY-NC-ND-2.0",
         "CC-BY-NC-ND-4.0",
         "CC-BY-NC-SA-3.0",
 
         # likely problematic, but at less well defined state
         "Bing image",
 
-        "mapof", # misleading nowadays: TODO: eliminate it from wiki or retitle or something
+        "Mapof", # misleading nowadays: TODO: eliminate it from wiki or retitle or something
+        "OSM Carto example", # badly named one... TODO: rename
 
         # https://wiki.openstreetmap.org/wiki/Category:Media_license_templates
     ]
