@@ -105,7 +105,7 @@ def main():
     random.shuffle(sources)
     for source in sources:
         print(source["description"])
-        days_of_inactive_talk_page = 40
+        days_of_inactive_talk_page = 20
         if 'days_of_inactive_talk_page' in source:
             days_of_inactive_talk_page = source['days_of_inactive_talk_page']
         complain_about_missing_file_source_or_license(files_to_find=21, extra_files_to_preview=23, files_for_processing=source["files"], banned_users=skipped_users, source_description=source["description"], days_of_inactive_talk_page=days_of_inactive_talk_page)
