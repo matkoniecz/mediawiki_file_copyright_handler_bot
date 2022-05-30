@@ -755,11 +755,13 @@ If you are interested in wider discussion about handling licencing at OSM Wiki, 
 
 def valid_licencing_template_names():
     return [
+        # not strictly licenses, but as long as these are present license processing is not needed
+        "delete", # active deletion request waiting for processing means that page is processed for now
+        "Superseded by Commons", # special deletion variant
+
         "PD", # in far future it may be worth replacing
         "PD-self",
         "PD-creator",
-        "delete", # active deletion request waiting for processing means that page is processed for now
-        "Superseded by Commons", # special deletion variant
         "PD-shape",
         "PD-text",
         "PD-textlogo",
@@ -790,13 +792,12 @@ def valid_licencing_template_names():
         "GPL",
         "ISC",
         "ID screenshot", # typically formatted "iD screenshot"
-        "ID screenshot without imagery",
+        #"ID screenshot without imagery", not existing maybe it should TODO
         "Bing image",
         "JOSM Icon license",
         "JOSM screenshot without imagery",
         "JOSM screenshot with imagery",
         "ODbL OpenStreetMap",
-        "OSM Carto screenshot||old_license",
         "OSM Carto screenshot",
         "OSM Humanitarian screenshot",
         "ODbL",
