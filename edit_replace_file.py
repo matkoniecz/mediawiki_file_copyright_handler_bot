@@ -9,6 +9,13 @@ import webbrowser
 import re
 
 def selftest():
+    match_found = False
+    for form in valid_image_transforms("File:CalshotLF.png", "File:Roaring Middle light float - geograph.org.uk - 638833.jpg"):
+        if form["from"] == "[[File:CalshotLF.png|":
+            match_found = True
+    if match_found == False:
+        raise
+
     if extract_replacement_filename_from_templated_page("{{Superseded by Commons|File:Baghdad International Airport (October 2003).jpg}}", "test") != "File:Baghdad International Airport (October 2003).jpg":
         raise
     page = """This work is in the public domain in the United States because it is a work of the United States Federal Government under the terms of Title 17, Chapter 1, Section 105 of the US Code. See Copyright.
@@ -32,6 +39,10 @@ Note: This only applies to works of the Federal Government and not to the work o
     page =  """{{Superseded image|File:Beverages-14.svg|reason=duplicate of [[:File:Beverages-14.svg]]. See also [https://wiki.openstreetmap.org/wiki/User_talk:Immaculate_Mwanja#Duplicate_icons]}}"""
     if extract_replacement_filename_from_templated_page(page, "test") != "File:Beverages-14.svg":
         raise
+    page =  """{{Superseded image|File:BoatSharingIcon.svg|SVG available}}"""
+    if extract_replacement_filename_from_templated_page(page, "test") != "File:BoatSharingIcon.svg":
+        raise
+        
 
 def main():
     only_safe = True
@@ -254,14 +265,15 @@ def valid_image_transforms(main_form, new_file):
     without_prefix = main_form.replace("File:", "")
     lowercase_first_letter = "File:" + without_prefix[0].lower() + without_prefix[1:]
     forms = [main_form, main_form.replace(" ", "_"), lowercase_first_letter, lowercase_first_letter.replace(" ", "_")]
+    returned = []
     for form in forms:
-        returned = [
+        returned.append(
             {'from': "[[" + form + "|",
             'to': "[[" + new_file + "|",
             'description': 'basic form, safe replacement',
             'safe': True,
             },
-        ]
+        )
         
         for pre in range(0, 10):
             for post in range(0, 3):
