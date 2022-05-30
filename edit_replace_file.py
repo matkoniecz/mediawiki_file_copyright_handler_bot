@@ -34,8 +34,6 @@ Note: This only applies to works of the Federal Government and not to the work o
         raise
 
 def main():
-    selftest()
-
     only_safe = True
     run_hardcoded_file_migrations(only_safe)
     only_safe = False
@@ -292,4 +290,5 @@ def valid_image_transforms(main_form, new_file):
         ]
     return returned
 
+selftest()
 main()
