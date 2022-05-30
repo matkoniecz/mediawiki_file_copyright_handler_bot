@@ -378,6 +378,7 @@ def create_overview_pages_for_users_with_more_problematic_uploads(session, gener
         if len(info["problematic_image_data"]) > 1:
             print("user", entry["uploader"], "has more problematic images")
         entry['more_problematic_images'] = info["problematic_image_data"]
+        print("listing completed for", entry["uploader"])
     if session == None:
         raise Exception("session cannot be None")
     return session, generated_data
