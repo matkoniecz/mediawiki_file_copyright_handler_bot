@@ -103,31 +103,36 @@ def generate_table_showing_image_data_for_review(data, break_after=None):
         if 'upload_time' in entry:
             upload_timestamp = str(entry['upload_time'])
         generated_summary_parts.append("[[" + page_title + "|thumb| ["+ osm_wiki_page_edit_link(page_title) + " (EEEEEEEEEEEEEEEEEEEEEEEDIIIIIIIIIIIIIIIIIIIIIIIIIIIIIT EEEEEEEEEEEEEEEEEEEEEEEDIIIIIIIIIIIIIIIIIIIIIIIIIIIIIT EEEEEEEEEEEEEEEEEEEEEEEDIIIIIIIIIIIIIIIIIIIIIIIIIIIIIT EEEEEEEEEEEEEEEEEEEEEEEDIIIIIIIIIIIIIIIIIIIIIIIIIIIIIT EEEEEEEEEEEEEEEEEEEEEEEDIIIIIIIIIIIIIIIIIIIIIIIIIIIIIT EEEEEEEEEEEEEEEEEEEEEEEDIIIIIIIIIIIIIIIIIIIIIIIIIIIIIT EEEEEEEEEEEEEEEEEEEEEEEDIIIIIIIIIIIIIIIIIIIIIIIIIIIIIT)] [[:" + page_title + "]] text on page: <<nowiki>" + page_text + "</nowiki>> upload timestamp: " + upload_timestamp + "]]\n")
+        if break_after != None:
+            if len(generated_summary_parts) == break_after:
+                generated_summary_parts.append("BREAK requested after " + str(break_after) + " images\n")
+    return generate_matrix_array(generated_summary_parts, break_after)
+
+def generate_matrix_array(displayed_parts, break_after):
     columns = 3
-    output = '{| class="wikitable"\n'
+    split_into_rows = []
+    new_row = []
     index = 0
-    table_index = 0
-    row_data = ""
-    while index < len(generated_summary_parts):
-        if (table_index % columns) == 0:
-            output += row_data
-            output += "|-\n"
-            output += "| "
-            row_data = ""
-        if row_data != "":
-            row_data += " || "
-        if index == break_after and index == table_index:
-            row_data += "BREAK requested after " + str(break_after) + " images\n"
-            table_index += 1
-        else:
-            if index < len(generated_summary_parts):
-                row_data += generated_summary_parts[index]
-            index += 1
-            table_index += 1
-    if row_data != "":
-        output += row_data
-        row_data = ""
-    output += "\n|}\n"
+
+    while index < len(displayed_parts):
+        if (index % columns) == 0:
+            if len(new_row) > 0:
+                split_into_rows.append(new_row)
+            new_row = []
+        new_row.append(displayed_parts[index])
+        index += 1
+    if new_row != []:
+        split_into_rows.append(new_row)
+    return generate_array_wikicode(split_into_rows)
+
+def generate_array_wikicode(split_into_rows):
+    # split_into_rows - list of lists (list of row, each represented by a list)
+
+    output = '{| class="wikitable"\n'
+    for row in split_into_rows:
+        output += "|-\n"
+        output += "| " + " || ".join(row) + "\n"
+    output += "|}\n"
     return output
 
 def osm_wiki_diff_link(old_page_id, current_page_id):
