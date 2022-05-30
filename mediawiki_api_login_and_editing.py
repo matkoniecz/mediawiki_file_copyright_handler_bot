@@ -110,7 +110,32 @@ def edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, URL="ht
     if mark_as_bot_edit:
         params["bot"] = "yes"
 
-    R = S.post(URL, data=params)
+    try:
+        R = S.post(URL, data=params)
+    except requests.exceptions.ConnectionError as e:
+        print("requests.exceptions.ConnectionError")
+        print("requests.exceptions.ConnectionError")
+        print("requests.exceptions.ConnectionError")
+        print("requests.exceptions.ConnectionError")
+        print("requests.exceptions.ConnectionError")
+        print("requests.exceptions.ConnectionError")
+        print("requests.exceptions.ConnectionError")
+        print("requests.exceptions.ConnectionError")
+        print("requests.exceptions.ConnectionError")
+        print("requests.exceptions.ConnectionError")
+        print(e)
+        print(S)
+        print(page_title)
+        print(page_text)
+        print(edit_summary)
+        print(rev_id)
+        print(timestamp)
+        print(URL)
+        print(sleep_time)
+        print(mark_as_bot_edit)
+        print("sleeping and retrying, WTF")
+        time.sleep(60)
+        return edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, URL, sleep_time, mark_as_bot_edit)
     DATA = R.json()
 
     print(DATA)
