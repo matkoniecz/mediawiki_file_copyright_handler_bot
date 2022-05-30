@@ -15,7 +15,12 @@ import mwparserfromhell
 
 def selftest():
     missing_licences = False
-    for page_title in mediawiki_api_query.pages_from_category("Category:Media license templates"):
+    license_on_wiki = mediawiki_api_query.pages_from_category("Category:Media license templates")
+    licenses_on_wiki_list = []
+    for page_title in license_on_wiki:
+        licenses_on_wiki_list.append(page_title)
+
+    for page_title in licenses_on_wiki_list:
         name = page_title.replace("Template:", "")
         if name in ["Self-made-image", "Panoramafreiheit", "Personality rights",
                     "OpenStreetMap trademark", "Trademarked", "Free media",
@@ -36,6 +41,19 @@ def selftest():
             missing_licences = True
     if missing_licences:
         raise
+    
+    print(licenses_on_wiki_list)
+    for licence in valid_licencing_template_names():
+        if licence in ["delete", "Superseded by Commons"]:
+            # warns about terminal lack of license
+            continue
+        if licence in ["PD-text", "PD-textlogo", "Apache"]:
+            # redirect
+            continue
+        if ("Template:" + licence) not in licenses_on_wiki_list:
+            print(licence, "is missing on OSM Wiki list")
+            #raise Exception(licence + " is missing on wiki in its category")
+            #TODO - wait for caching to keep up
 
     text = """{{unknown}}
 [[category:Images]]
