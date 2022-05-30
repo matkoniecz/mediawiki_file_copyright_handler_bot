@@ -200,7 +200,6 @@ def migrate_file(old_file, new_file, reasons_list, only_safe, got_migration_perm
         text = data["page_text"]
         unsafe_changes = False
         for form in valid_image_transforms(old_file, new_file):
-            print(form)
             if only_safe:
                 if form['safe'] == False:
                     continue
