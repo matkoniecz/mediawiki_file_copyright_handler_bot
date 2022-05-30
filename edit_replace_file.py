@@ -138,7 +138,8 @@ def try_to_migrate_as_superseded_template_indicated(session, page_title, only_sa
 def run_hardcoded_file_migrations(only_safe):
     # first I need to tag used ones...
      
-    migrate_file("File:Surfergirl.jpg", "File:Eisbach Surfer2.JPG", ["removing file with 'all rights reserved' in the source"], only_safe, got_migration_permission=True)
+    #migrate_file("File:Surfergirl.jpg", "File:Eisbach Surfer2.JPG", ["removing file with 'all rights reserved' in the source"], only_safe, got_migration_permission=True)
+    pass
     
 def skip_editing_on_this_page(page_title):
     if "User:Mateusz Konieczny/" in page_title:
