@@ -14,8 +14,13 @@ def deletion_history(file, URL="https://wiki.openstreetmap.org/w/api.php"):
         return None
     return response.json()["query"]["logevents"]
 
-
 def file_upload_history(file, URL="https://wiki.openstreetmap.org/w/api.php", debug=False):
+    """
+    how it works with uploaded but deleted files?
+    appears to be returning None
+    https://wiki.openstreetmap.org/w/index.php?title=File:Video_OSM.png&action=edit&redlink=1
+    print(mediawiki_api_query.file_upload_history("File:Video OSM.png"))
+    """
     call_url = URL + "?action=query&titles=" + shared.escape_parameter(file) + "&prop=imageinfo&iilimit=50&format=json"
     response = requests.post(call_url, headers={'Content-type': 'text'})
     if 'error' in response.json():
