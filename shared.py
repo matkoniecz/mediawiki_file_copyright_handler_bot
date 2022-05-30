@@ -31,6 +31,8 @@ def users_dropped_from_regular_processing():
 
     #"Michael Montani", "SimonPoole", # https://commons.wikimedia.org/w/index.php?title=Commons:Village_pump/Copyright&oldid=654324910#Is_this_chart_qualifying_for_PD-shape?
     #"Bk", "Nordpfeil", "Mateusz Konieczny", # has chart (search for chart below)
+
+    "Tallguy", # bunch of tricky screenshots, see https://wiki.openstreetmap.org/wiki/User_talk:Tallguy
     ]
 
 def create_login_session(index = 'api_password'):
