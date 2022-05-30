@@ -48,11 +48,14 @@ def main():
     index = 0
     for category in ["Category:Image superseded by another image", "Category:Image superseded by Wikimedia Commons"]:
         for page_title in mediawiki_api_query.pages_from_category(category):
+            extra_comment = ""
+            if category == "Category:Image superseded by Wikimedia Commons":
+                extra_comment = " It is on Wikimedia commons"
             index += 1
             print(page_title, index)
             while True:
                 try:
-                    replacement = try_to_migrate_as_superseded_template_indicated(session, page_title, only_safe, sleeping_after_edit=False)
+                    replacement = try_to_migrate_as_superseded_template_indicated(session, page_title, only_safe, sleeping_after_edit=False, extra_comment=extra_comment)
                     break
                 except mediawiki_api_login_and_editing.NoEditPermissionException:
                     # Recreate session, may be needed after long processing
@@ -95,7 +98,7 @@ def extract_replacement_filename_from_templated_page(text, page_title):
     print()
     return None
 
-def try_to_migrate_as_superseded_template_indicated(session, page_title, only_safe, sleeping_after_edit):
+def try_to_migrate_as_superseded_template_indicated(session, page_title, only_safe, sleeping_after_edit, extra_comment):
     for used in mediawiki_api_query.pages_where_file_is_used_as_image(page_title):
         print("IN USE!")
     test_page = mediawiki_api_query.download_page_text_with_revision_data(page_title)
@@ -117,7 +120,7 @@ def try_to_migrate_as_superseded_template_indicated(session, page_title, only_sa
         print()
         return replacement
 
-    migrate_file(page_title, replacement, [], only_safe, sleeping_after_edit=sleeping_after_edit)
+    migrate_file(page_title, replacement, [], only_safe, sleeping_after_edit=sleeping_after_edit, extra_comment=extra_comment)
     return replacement
 
 
@@ -145,18 +148,28 @@ def file_used_and_only_on_pages_where_no_editing_allowed(page_title):
 
 def check_is_replacement_ok(old_file, new_file):
     webbrowser.open(shared.osm_wiki_page_link(old_file), new=2)
-    webbrowser.open("https://commons.wikimedia.org/wiki/"+new_file.replace(" ", "_"), new=2)
+    replacement_is_from_commons = False
+    if old_file == new_file:
+        replacement_is_from_commons = True
+    if mediawiki_api_query.file_upload_history(new_file) == None:
+        replacement_is_from_commons = True
+    if replacement_is_from_commons:
+        webbrowser.open("https://commons.wikimedia.org/wiki/"+new_file.replace(" ", "_"), new=2)
+    else:
+        webbrowser.open("https://wiki.openstreetmap.org/wiki/"+new_file.replace(" ", "_"), new=2)
     print("replace that image?")
     shared.pause()
     return True
 
-def migrate_file(old_file, new_file, reasons_list, only_safe, got_migration_permission=False, sleeping_after_edit=True):
+def migrate_file(old_file, new_file, reasons_list, only_safe, got_migration_permission=False, sleeping_after_edit=True, extra_comment=""):
     # https://commons.wikimedia.org/wiki/Commons:Deletion_requests/File:RU_road_sign_7.18.svg
     # this needs to be resolved
     if old_file == "File:7.18 (Road sing).gif":
         return
     session = shared.create_login_session()
-    edit_summary = "file replacement ( " + old_file + " -> " + new_file + " ). It is on Wikimedia commons"
+    if extra_comment != "":
+        extra_comment = " " + extra_comment
+    edit_summary = "file replacement ( " + old_file + " -> " + new_file + " )" + extra_comment + "."
     edit_summary = (", ").join([edit_summary] + reasons_list)
     edit_summary += "."
     print(edit_summary)
