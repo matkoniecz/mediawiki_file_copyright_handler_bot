@@ -37,6 +37,10 @@ def selftest():
         if name in ["Wiki:Media file license chart"]:
             # likely should not be there, as well...
             continue
+        if "File:" in name:
+            print(name)
+            print("FILE in category with licensing TEMPLATES - something went wrong")
+            continue
         if name not in valid_licencing_template_names():
             print(name)
             missing_licences = True
