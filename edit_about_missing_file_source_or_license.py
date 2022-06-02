@@ -15,7 +15,8 @@ import mwparserfromhell
 
 def selftest():
     missing_licences = False
-    license_on_wiki = mediawiki_api_query.pages_from_category("Category:Media license templates")
+    category_with_license_templates = "Category:Media license templates"
+    license_on_wiki = mediawiki_api_query.pages_from_category(category_with_license_templates)
     licenses_on_wiki_list = []
     for page_title in license_on_wiki:
         licenses_on_wiki_list.append(page_title)
@@ -40,7 +41,7 @@ def selftest():
             print(name)
             missing_licences = True
     if missing_licences:
-        raise
+        raise Exception("there are entries in " + category_with_license_templates + " but not listed as licences in this script")
     
     print(licenses_on_wiki_list)
     for licence in valid_licencing_template_names():
