@@ -642,6 +642,7 @@ def skip_image_based_on_text_on_presence_of_keywords_in_description(page_title, 
     "freemap", # https://github.com/FreemapSlovakia/freemap-mapnik/issues/237 https://wiki.openstreetmap.org/wiki/File:OSM-Bratislava-2014-08-18.png https://github.com/matkoniecz/mediawiki_file_copyright_handler_bot/commit/d2cf743317a6c7878c5f3c71141b47d28e19d035
     "collage", "Comparing", "based on", # handle in the second wave after other images are processed TODO
     "osmfr", "openstreetmap.fr", "french-style", "french style", # https://github.com/cquest/osmfr-cartocss https://wiki.openstreetmap.org/wiki/File:Mont-Blanc-french-style.png https://wiki.openstreetmap.org/wiki/Drafts/Media_file_license_chart
+    "tiles@home", "OSM Carto", "Carto",
     "[[Category:Yahoo! Aerial Imagery]]",
 
     # sheduled for deletion anyway
