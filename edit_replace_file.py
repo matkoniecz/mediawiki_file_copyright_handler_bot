@@ -162,18 +162,23 @@ def file_used_and_only_on_pages_where_no_editing_allowed(page_title):
 
 def check_is_replacement_ok(old_file, new_file):
     webbrowser.open(shared.osm_wiki_page_link(old_file), new=2)
-    replacement_is_from_commons = False
-    if old_file == new_file:
-        replacement_is_from_commons = True
-    if mediawiki_api_query.file_upload_history(new_file) == None:
-        replacement_is_from_commons = True
-    if replacement_is_from_commons:
+    if is_replacement_from_commons(old_file, new_file):
         webbrowser.open("https://commons.wikimedia.org/wiki/"+new_file.replace(" ", "_"), new=2)
     else:
         webbrowser.open("https://wiki.openstreetmap.org/wiki/"+new_file.replace(" ", "_"), new=2)
     print("replace that image?")
     shared.pause()
     return True
+
+def is_replacement_from_commons(old_file, new_file):
+    if old_file == new_file:
+        # in such case it makes sense only if local file will be deleted
+        # though it will fail in some degenerate cases and assumes lack of garbage input
+        return True
+    if mediawiki_api_query.file_upload_history(new_file) == None:
+        # again, existence of Wikimedia Commons file is not checked!
+        return True
+    return False
 
 def migrate_file(old_file, new_file, reasons_list, only_safe, got_migration_permission=False, sleeping_after_edit=True, extra_comment=""):
     # https://commons.wikimedia.org/wiki/Commons:Deletion_requests/File:RU_road_sign_7.18.svg
