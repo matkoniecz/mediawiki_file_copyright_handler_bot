@@ -239,5 +239,5 @@ def obtain_login_token(S, URL):
         print(R.status_code)
         print(R.content)
         print(R.text)
-        print("JSON decoding failed")
-        return None
+        raise Exception("JSON decoding failed while obtaining login token")
+        
