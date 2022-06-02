@@ -261,7 +261,12 @@ def migrate_file(old_file, new_file, reasons_list, only_safe, got_migration_perm
             got_migration_permission = True
         if text.strip() != "":
             text += "\n"
-        delete_request = "{{delete|uses replaced with Wikimedia commons alternative ([[:" + new_file + "]]), this file is not needed anymore. And it has licensing issues.}}"
+        target = ""
+        if is_replacement_from_commons(old_file, new_file):
+            target = "Wikimedia Commons"
+        else:
+            target = "local file"
+        delete_request = "{{delete|uses replaced with " + target + " alternative ([[:" + new_file + "]]), this file is not needed anymore.}}"
         text += delete_request
         edit_summary = delete_request
         shared.edit_page_and_show_diff(session, old_file, text, edit_summary, data['rev_id'], data['timestamp'], sleep_time=0)
