@@ -47,7 +47,6 @@ def selftest():
     if missing_licences:
         raise Exception("there are entries in " + category_with_license_templates + " but not listed as licences in this script")
     
-    print(licenses_on_wiki_list)
     for licence in valid_licencing_template_names():
         if licence in ["delete", "Superseded by Commons"]:
             # warns about terminal lack of license
