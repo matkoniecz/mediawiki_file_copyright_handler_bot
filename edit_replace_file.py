@@ -59,6 +59,8 @@ def main():
     index = 0
     for category in ["Category:Image superseded by another image", "Category:Image superseded by Wikimedia Commons"]:
         for page_title in mediawiki_api_query.pages_from_category(category):
+            if page_title in ["Category:Image superseded by Wikimedia Commons"]:
+                continue
             extra_comment = ""
             if category == "Category:Image superseded by Wikimedia Commons":
                 extra_comment = " It is on Wikimedia commons"
