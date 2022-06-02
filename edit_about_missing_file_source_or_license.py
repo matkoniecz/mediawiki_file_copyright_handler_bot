@@ -55,9 +55,7 @@ def selftest():
             # redirect
             continue
         if ("Template:" + licence) not in licenses_on_wiki_list:
-            print(licence, "is missing on OSM Wiki list")
-            #raise Exception(licence + " is missing on wiki in its category")
-            #TODO - wait for caching to keep up
+            raise Exception(licence + " is missing on wiki in its category (make null edits on template and /doc subpage if it should appear in category but does not)")
 
     text = """{{unknown}}
 [[category:Images]]
