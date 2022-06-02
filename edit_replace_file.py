@@ -81,11 +81,11 @@ def has_tricky_templating_situation(page_text):
         return True
     page_with_cleaned_allowed_templates = page_text.lower().replace("{{unknown|", "")
     if page_with_cleaned_allowed_templates.count("{") != 2:
-        print("complex situation, skipping")
+        print("there is some other template, treated as a complex situation, skipping")
         print()
         return True
     if page_with_cleaned_allowed_templates.count("|") != 1:
-        print("complex situation, skipping")
+        print("there is some other template, treated as a complex situation, skipping")
         print()
         return True
     return False
