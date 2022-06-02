@@ -41,6 +41,8 @@ def login_with_login_token(S, username, password, LOGIN_TOKEN, URL):
     R = S.post(URL, data=PARAMS_1)
     DATA = R.json()
     # TODO - handle failure?
+    if is_error_here(DATA):
+        raise
     return S
 
 def is_rate_limit_error_here(DATA):
@@ -91,6 +93,8 @@ def create_page(S, page_title, page_text, edit_summary, URL="https://wiki.openst
         time.sleep(60)
         print("rate limit error, sleep finished, will retry")
         create_page(S, page_title, page_text, edit_summary, URL)
+    if is_error_here(DATA):
+        raise
     time.sleep(sleep_time)
 
 def edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, URL="https://wiki.openstreetmap.org/w/api.php", sleep_time=0.4, mark_as_bot_edit=False):
@@ -146,6 +150,8 @@ def edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, URL="ht
         time.sleep(60)
         print("rate limit error, sleep finished, will retry")
         edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, URL)
+    if is_error_here(DATA):
+        raise
     time.sleep(sleep_time)
 
 def watchlist_page(S, page_title, URL="https://wiki.openstreetmap.org/w/api.php"):
@@ -178,6 +184,8 @@ def watchlist_page(S, page_title, URL="https://wiki.openstreetmap.org/w/api.php"
         print(R.content)
         print(R.text)
         raise
+    if is_error_here(DATA):
+        raise
 
 def obtain_csrf_token(S, URL):
     try:
@@ -194,6 +202,8 @@ def obtain_csrf_token(S, URL):
         R = S.get(url=URL, params=PARAMS_2)
         try:
             DATA = R.json()
+            if is_error_here(DATA):
+                raise
             CSRF_TOKEN = DATA['query']['tokens']['csrftoken']
             return CSRF_TOKEN
         except simplejson.errors.JSONDecodeError:
@@ -220,6 +230,8 @@ def obtain_login_token(S, URL):
     R = S.get(url=URL, params=PARAMS_0)
     try:
         DATA = R.json()
+        if is_error_here(DATA):
+            raise
         LOGIN_TOKEN = DATA['query']['tokens']['logintoken']
         return LOGIN_TOKEN
     except simplejson.errors.JSONDecodeError:
