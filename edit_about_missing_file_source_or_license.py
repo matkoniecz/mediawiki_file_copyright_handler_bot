@@ -51,8 +51,15 @@ def selftest():
         if licence in ["PD-text", "PD-textlogo", "Apache"]:
             # redirect
             continue
-        if ("Template:" + licence) not in licenses_on_wiki_list:
-            raise Exception(licence + " is missing on wiki in its category (make null edits on template and /doc subpage if it should appear in category but does not)")
+        template_page = "Template:" + licence
+        template_doc_page = template_page + "/doc"
+        if template_page not in licenses_on_wiki_list:
+            session = shared.create_login_session()
+            shared.null_edit(session, template_doc_page)
+            shared.null_edit(session, template_page)
+            licenses_on_wiki_list = list(mediawiki_api_query.pages_from_category(category_with_license_templates))
+            if template_page not in licenses_on_wiki_list:
+                raise Exception(licence + " is missing on wiki in its category (usually making null edits on template and /doc subpage fixes problem, but it was tried already here)")
 
     text = """{{unknown}}
 [[category:Images]]
