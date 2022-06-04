@@ -76,18 +76,6 @@ def main():
     selftest()
     session = shared.create_login_session()
 
-    # imagery source missing:
-    # https://wiki.openstreetmap.org/wiki/File:2-Lane-Roundabout-Winston-Salem-NC-With-Numbers.png https://wiki.openstreetmap.org/wiki/User_talk:LeifRasmussen#Imagery_source
-    # https://wiki.openstreetmap.org/wiki/File:Farmland_Tea1.JPG https://wiki.openstreetmap.org/wiki/File:CADToolsE3.jpg https://wiki.openstreetmap.org/wiki/File:CADToolsE1.jpg https://wiki.openstreetmap.org/wiki/File:CADToolsE3.jpg https://wiki.openstreetmap.org/wiki/File:CADToolsE4.jpg https://wiki.openstreetmap.org/wiki/File:CADToolsE5.jpg https://wiki.openstreetmap.org/wiki/File:CADToolsE6.jpg https://wiki.openstreetmap.org/wiki/File:CADToolsE7.jpg https://wiki.openstreetmap.org/wiki/File:Example_of_bad_mapping_Ilam.JPG https://wiki.openstreetmap.org/wiki/File:Scrub2.JPG https://wiki.openstreetmap.org/wiki/File:NepalSchoolTypicalAerialImage.JPG https://wiki.openstreetmap.org/wiki/File:Terraced_Farmland1.JPG
-
-    # unlisted:
-    # https://wiki.openstreetmap.org/wiki/File:MarekYjunction.jpg
-    # https://wiki.openstreetmap.org/wiki/File:MarekdDoubleXjunction.jpg
-    # https://wiki.openstreetmap.org/wiki/File:MarekOandTjunction.jpg
-    # https://wiki.openstreetmap.org/wiki/File:MarekXjunction.jpg
-    # https://wiki.openstreetmap.org/wiki/File:MarekdDoubleXjunctionWithGrassInTheMiddle.jpg
-    # see more https://wiki.openstreetmap.org/w/index.php?title=Special:ListFiles&offset=20150817161600%7CMarekMockupHamburgBurgstrasse.jpg&user=Marek+kleciak
-
     skipped_users = shared.users_dropped_from_regular_processing()
     refresh_users = [
     "PanierAvide", "Segubi", "Reneman", "marek kleciak" # got link with their file listing, lets keep it updates
