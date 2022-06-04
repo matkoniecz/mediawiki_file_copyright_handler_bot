@@ -14,53 +14,7 @@ import mwparserfromhell
 # https://wiki.openstreetmap.org/w/api.php?action=query&list=logevents&letype=upload&lelimit=500&leuser=Marek%20kleciak
 
 def selftest():
-    missing_licences = False
-    category_with_license_templates = "Category:Media license templates"
-    licenses_on_wiki_list = list(mediawiki_api_query.pages_from_category(category_with_license_templates))
-
-    for page_title in licenses_on_wiki_list:
-        name = page_title.replace("Template:", "")
-        if name in ["Self-made-image", "Panoramafreiheit", "Personality rights",
-                    "OpenStreetMap trademark", "Trademarked", "Free media",
-                    "Free screenshot"]:
-            # building blocks, not actual license
-            continue
-        if name in ["Bing image portions"]:
-            # insufficient by itself
-            continue
-        if name in ["Unknown"]:
-            # warns about lack of license
-            continue
-        if name in ["Wiki:Media file license chart"]:
-            # likely should not be there, as well...
-            continue
-        if "File:" in name:
-            print(name)
-            print("FILE in category with licensing TEMPLATES - something went wrong")
-            continue
-        if name not in valid_licencing_template_names():
-            print(name)
-            missing_licences = True
-    if missing_licences:
-        raise Exception("there are entries in " + category_with_license_templates + " but not listed as licences in this script")
-    
-    for licence in valid_licencing_template_names():
-        if licence in ["delete", "Superseded by Commons"]:
-            # warns about terminal lack of license
-            continue
-        if licence in ["PD-text", "PD-textlogo", "Apache"]:
-            # redirect
-            continue
-        template_page = "Template:" + licence
-        template_doc_page = template_page + "/doc"
-        if template_page not in licenses_on_wiki_list:
-            session = shared.create_login_session()
-            shared.null_edit(session, template_doc_page)
-            shared.null_edit(session, template_page)
-            licenses_on_wiki_list = list(mediawiki_api_query.pages_from_category(category_with_license_templates))
-            if template_page not in licenses_on_wiki_list:
-                raise Exception(licence + " is missing on wiki in its category (usually making null edits on template and /doc subpage fixes problem, but it was tried already here)")
-
+    license_selfcheck()
     text = """{{unknown}}
 [[category:Images]]
 """
@@ -133,6 +87,54 @@ def main():
 
     # for 6+month old and marked as waiting for action for uploader
     # {{delete|unused image, no evidence of free licensing, unused so not qualifying for fair use}}
+
+def license_selfcheck():
+    missing_licences = False
+    category_with_license_templates = "Category:Media license templates"
+    licenses_on_wiki_list = list(mediawiki_api_query.pages_from_category(category_with_license_templates))
+
+    for page_title in licenses_on_wiki_list:
+        name = page_title.replace("Template:", "")
+        if name in ["Self-made-image", "Panoramafreiheit", "Personality rights",
+                    "OpenStreetMap trademark", "Trademarked", "Free media",
+                    "Free screenshot"]:
+            # building blocks, not actual license
+            continue
+        if name in ["Bing image portions"]:
+            # insufficient by itself
+            continue
+        if name in ["Unknown"]:
+            # warns about lack of license
+            continue
+        if name in ["Wiki:Media file license chart"]:
+            # likely should not be there, as well...
+            continue
+        if "File:" in name:
+            print(name)
+            print("FILE in category with licensing TEMPLATES - something went wrong")
+            continue
+        if name not in valid_licencing_template_names():
+            print(name)
+            missing_licences = True
+    if missing_licences:
+        raise Exception("there are entries in " + category_with_license_templates + " but not listed as licences in this script")
+    
+    for licence in valid_licencing_template_names():
+        if licence in ["delete", "Superseded by Commons"]:
+            # warns about terminal lack of license
+            continue
+        if licence in ["PD-text", "PD-textlogo", "Apache"]:
+            # redirect
+            continue
+        template_page = "Template:" + licence
+        template_doc_page = template_page + "/doc"
+        if template_page not in licenses_on_wiki_list:
+            session = shared.create_login_session()
+            shared.null_edit(session, template_doc_page)
+            shared.null_edit(session, template_page)
+            licenses_on_wiki_list = list(mediawiki_api_query.pages_from_category(category_with_license_templates))
+            if template_page not in licenses_on_wiki_list:
+                raise Exception(licence + " is missing on wiki in its category (usually making null edits on template and /doc subpage fixes problem, but it was tried already here)")
 
 def screeshot_categories():
     return [
