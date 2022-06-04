@@ -16,10 +16,7 @@ import mwparserfromhell
 def selftest():
     missing_licences = False
     category_with_license_templates = "Category:Media license templates"
-    license_on_wiki = mediawiki_api_query.pages_from_category(category_with_license_templates)
-    licenses_on_wiki_list = []
-    for page_title in license_on_wiki:
-        licenses_on_wiki_list.append(page_title)
+    licenses_on_wiki_list = list(mediawiki_api_query.pages_from_category(category_with_license_templates))
 
     for page_title in licenses_on_wiki_list:
         name = page_title.replace("Template:", "")
