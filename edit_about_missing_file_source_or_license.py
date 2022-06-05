@@ -60,6 +60,19 @@ def main():
     """
     #shared.pause()
     
+    detect_images_to_complain_about(skipped_users)
+
+    show_retaggable_images(session)
+
+    mark_categories_as_also_needing_attention(session, screeshot_categories(), limit=90)
+    mark_categories_as_also_needing_attention(session, map_categories(), limit=90)
+    #for cat in all_subcategories(session, "Category:Maps of places by continent"):
+    #    print("        \"" + cat + "\",")
+
+    # for 6+month old and marked as waiting for action for uploader
+    # {{delete|unused image, no evidence of free licensing, unused so not qualifying for fair use}}
+
+def sources_of_images_for_checking():
     sources = []
     sources.append({"description": "has {{unknown}}", "files": mediawiki_api_query.pages_from_category("Category:Media without a license - without subcategory")})
     sources.append({"description": "without any category", "files": uncategorized_images_skipping_some_initial_ones()})
@@ -72,6 +85,11 @@ def main():
         "days_of_inactive_talk_page": 0,
         })
     random.shuffle(sources)
+    return sources
+
+def detect_images_to_complain_about(skipped_users):
+    session = shared.create_login_session()
+    sources = sources_of_images_for_checking()
     for source in sources:
         print(source["description"])
         days_of_inactive_talk_page = 20
@@ -81,15 +99,6 @@ def main():
     for user in skipped_users + refresh_users:
         returned = make_page_listing_problematic_uploads_by_user(session, user)
         session = returned['session']
-    show_retaggable_images(session)
-
-    mark_categories_as_also_needing_attention(session, screeshot_categories(), limit=90)
-    mark_categories_as_also_needing_attention(session, map_categories(), limit=90)
-    #for cat in all_subcategories(session, "Category:Maps of places by continent"):
-    #    print("        \"" + cat + "\",")
-
-    # for 6+month old and marked as waiting for action for uploader
-    # {{delete|unused image, no evidence of free licensing, unused so not qualifying for fair use}}
 
 def license_selfcheck():
     missing_licences = False
