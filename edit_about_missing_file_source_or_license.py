@@ -67,7 +67,6 @@ def main():
         text = test_page['page_text'] + "\n" + added
         shared.edit_page_and_show_diff(session, page_title, text, "", test_page['rev_id'], test_page['timestamp'])
     """
-    #shared.pause()
     
     detect_images_to_complain_about(skipped_users)
 
