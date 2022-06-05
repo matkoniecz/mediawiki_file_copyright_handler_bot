@@ -62,7 +62,9 @@ def main():
     index = 0
     for category in ["Category:Image superseded by another image", "Category:Image superseded by Wikimedia Commons"]:
         for page_title in mediawiki_api_query.pages_from_category(category):
-            if page_title in ["Category:Image superseded by Wikimedia Commons"]:
+            if page_title in ["Category:Image superseded by Wikimedia Commons",
+                              "File:Pharmacyno20.png" # TODO https://wiki.openstreetmap.org/wiki/File%3APharmacyno20.png https://wiki.openstreetmap.org/wiki/User:DieterTD/Kosmos_Bunker - requires page blankings or fixing dead Kosmos rulesets
+                              ]:
                 continue
             extra_comment = ""
             if category == "Category:Image superseded by Wikimedia Commons":
