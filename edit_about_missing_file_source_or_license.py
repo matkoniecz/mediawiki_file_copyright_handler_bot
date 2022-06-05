@@ -49,7 +49,6 @@ def main():
     mark_all_unmarked_files_by_user(session, "ThomasKlosa", "{{Unknown|subcategory=uploader notified March 2022}}")
     mark_all_unmarked_files_by_user(session, "Berteun", "[[Category:Screenshots]]\n{{unknown}}")
     mark_all_unmarked_files_by_user(session, "Davalv", "[[Category:Maps]]\n{{unknown}}")
-    
     mark_all_unmarked_files_by_user(session, "R0uzic", "{{PD-shape}}")
 
     returned = make_page_listing_problematic_uploads_by_user(session, "Lalali") #PD-shape spam
