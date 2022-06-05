@@ -108,6 +108,14 @@ def pages_from_category(category, URL="https://wiki.openstreetmap.org/w/api.php"
         print()
         response = retrying_connection.post(url)
         if 'error' in response.json():
+            if 'invalidcategory' == response.json()['error']['code']:
+                print("requested listing of pages in category")
+                print(category)
+                print("on wiki")
+                print(URL)
+                print("This category was listed as nonexisting")
+                raise
+        if 'error' in response.json():
             print(response.json())
             raise
         if "query" not in response.json():
