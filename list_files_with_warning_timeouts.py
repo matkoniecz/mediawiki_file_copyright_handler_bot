@@ -4,6 +4,8 @@ import shared
 import mwparserfromhell
 import datetime
 
+print("TODO: check for https://wiki.openstreetmap.org/wiki/Template:User_username on user page")
+
 
 def main():
     split_into_rows = []
