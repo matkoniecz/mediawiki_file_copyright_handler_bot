@@ -41,6 +41,10 @@ def main():
     ]
     for user in screenshot_only_uploads_remaining:
         mark_all_unmarked_files_by_user(session, user, "{{unknown}}\n[[Category:Screenshots]]")
+    maps_only_uploads_remaining = [
+    ]
+    for user in maps_only_uploads_remaining:
+        mark_all_unmarked_files_by_user(session, user, "{{unknown}}\n[[Category:Maps]]")
     """
     mark_all_unmarked_files_by_user(session, "ThomasKlosa", "{{Unknown|subcategory=uploader notified March 2022}}")
     mark_all_unmarked_files_by_user(session, "Berteun", "[[Category:Screenshots]]\n{{unknown}}")
