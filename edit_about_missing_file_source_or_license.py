@@ -358,6 +358,7 @@ def complain_about_missing_file_source_or_license(files_to_find, extra_files_to_
         return
 
     shared.show_latest_diff_on_page(show_page)
+    print("Launch marking of files, as presented on", show_page, "?")
     shared.pause()
     for data in generated_data[:files_to_find]:
         page_title = data['page_title']
