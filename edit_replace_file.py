@@ -180,7 +180,7 @@ def check_is_replacement_ok(old_file, new_file):
         webbrowser.open("https://commons.wikimedia.org/wiki/"+new_file.replace(" ", "_"), new=2)
     else:
         webbrowser.open("https://wiki.openstreetmap.org/wiki/"+new_file.replace(" ", "_"), new=2)
-    print("replace that image?")
+    print("replace that image (comparison tabs opened)?")
     shared.pause()
     return True
 
