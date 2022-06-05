@@ -57,6 +57,15 @@ def main():
 
     days_of_inactive_talk_page = 40
     complain_about_missing_file_source_or_license(files_to_find=77, extra_files_to_preview=88, files_for_processing=['File:Rotwein.png'], banned_users=skipped_users, source_description="single file", days_of_inactive_talk_page=0)
+
+    added = "{{PD-shape}}"
+    category = "Category:Openfietskaart Icon"
+    for page_title in mediawiki_api_query.pages_from_category(category):
+        test_page = mediawiki_api_query.download_page_text_with_revision_data(page_title)
+        if is_marked_with_template_declaring_licensing_status(test_page['page_text']):
+            continue
+        text = test_page['page_text'] + "\n" + added
+        shared.edit_page_and_show_diff(session, page_title, text, "", test_page['rev_id'], test_page['timestamp'])
     """
     #shared.pause()
     
