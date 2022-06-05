@@ -714,7 +714,7 @@ Doing this would be already very useful.
 === Licensing - photos ===
 In case that you are the author of the image: Would you agree to open licensing of this image, allowing its use by anyone (similarly to your OSM edits)?
 
-In case where it is a photo you (except relatively rare cases) author can make it available under a specific free license.
+In case where it is a photo you have taken then you can make it available under a specific free license (except some cases, like photos of modern sculptures in coutries without freedom of panorama or taking photo of copyrighted artwork).
 
 Would you be OK with CC0 (it allows use without attribution or any other requirement)?
 
