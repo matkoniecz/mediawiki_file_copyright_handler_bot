@@ -189,10 +189,18 @@ def is_replacement_from_commons(old_file, new_file):
         # in such case it makes sense only if local file will be deleted
         # though it will fail in some degenerate cases and assumes lack of garbage input
         return True
-    if mediawiki_api_query.file_upload_history(new_file) == None:
-        # again, existence of Wikimedia Commons file is not checked!
-        return True
-    return False
+    file_upload_history = mediawiki_api_query.file_upload_history(new_file)
+    for entry in file_upload_history:
+        print(entry["user"])
+        if entry["user"].find("wikimediacommons>") == 0:
+            # local file does not shadow Wikimedia Commons file
+            return True
+        else:
+            return False
+    print("-----------------------")
+    print(file_upload_history)
+    print("-----------------------")
+    raise
 
 def migrate_file(old_file, new_file, reasons_list, only_safe, got_migration_permission=False, sleeping_after_edit=True, extra_comment=""):
     # https://commons.wikimedia.org/wiki/Commons:Deletion_requests/File:RU_road_sign_7.18.svg
