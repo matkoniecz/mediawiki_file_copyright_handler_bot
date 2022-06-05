@@ -42,6 +42,9 @@ Note: This only applies to works of the Federal Government and not to the work o
     page =  """{{Superseded image|File:BoatSharingIcon.svg|SVG available}}"""
     if extract_replacement_filename_from_templated_page(page, "test") != "File:BoatSharingIcon.svg":
         raise
+    page =  """{{Superseded image|Pharmacy nondispensing.png|Visually identical with higher resolution}}"""
+    if extract_replacement_filename_from_templated_page(page, "test") != "File:Pharmacy nondispensing.png":
+        raise Exception("failed to support missing File: prefix")
         
 
 def main():
@@ -97,10 +100,24 @@ def extract_replacement_filename_from_templated_page(text, page_title):
     p_superseded = re.compile('\{\{[sS]uperseded image\|([^\}|]+)(|\|(|reason\s*=)\s*.*)\}\}')
     m_superseded = p_superseded.search(text)
 
+    found = None
     if m != None:
-        return m.group(1)
-    if m_superseded != None:
-        return m_superseded.group(1)
+        found = m.group(1)
+    elif m_superseded != None:
+        found = m_superseded.group(1)
+    if found != None:
+        p = re.compile('(.*):')
+        m = p.search(found)
+        prefix = None
+        if m != None:
+            prefix = m.group(1)
+        if prefix == "File":
+            return found
+        if prefix == "Image":
+            return found.replace("Image:", "File:")
+        if prefix == None:
+            return "File:" + found
+        raise Exception("unexpected prefix " + prefix + " in " + found)
     print()
     print()
     print("failed on", page_title)
