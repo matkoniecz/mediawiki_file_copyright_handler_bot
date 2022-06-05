@@ -397,6 +397,10 @@ def create_overview_pages_for_users_with_more_problematic_uploads(session, gener
 # use returned session, it could be renewed
 def mark_file_as_without_copyright_info_and_notify_user(session, data_about_affected_page, edit_summary):
     data = data_about_affected_page
+    current_data = mediawiki_api_query.download_page_text_with_revision_data(data['page_title'])
+    if data['page_text'] != current_data['page_text']:
+        print(data['page_title'], "contents were changed in meantime, skipping")
+        return session
     try:
         notify_user_about_missing_copyright_data(session, data['uploader'], data['page_title'], edit_summary)
     except mediawiki_api_login_and_editing.NoEditPermissionException:
