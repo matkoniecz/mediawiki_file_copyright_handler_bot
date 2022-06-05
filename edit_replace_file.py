@@ -7,6 +7,7 @@ import random
 import time
 import webbrowser
 import re
+import mwparserfromhell
 
 def selftest():
     match_found = False
@@ -80,19 +81,13 @@ def main():
                     session = shared.create_login_session()
 
 def has_tricky_templating_situation(page_text):
-    if page_text.find("{{delete|") != -1 or page_text.find("{{Delete|") != -1:
-        print("deletion requested already")
-        print()
-        return True
-    page_with_cleaned_allowed_templates = page_text.lower().replace("{{unknown|", "")
-    if page_with_cleaned_allowed_templates.count("{") != 2:
-        print("there is some other template, treated as a complex situation, skipping")
-        print()
-        return True
-    if page_with_cleaned_allowed_templates.count("|") != 1:
-        print("there is some other template, treated as a complex situation, skipping")
-        print()
-        return True
+    wikicode = mwparserfromhell.parse(page_text)
+    templates = wikicode.filter_templates()
+    for template in templates:
+        if template.name.strip().lower() == "delete":
+            print("deletion requested already with delete template")
+            print()
+            return True
     return False
 
 def extract_replacement_filename_from_templated_page(text, page_title):
