@@ -118,7 +118,6 @@ def license_selfcheck():
             missing_licences = True
     if missing_licences:
         raise Exception("there are entries in " + category_with_license_templates + " but not listed as licences in this script")
-    
     for licence in valid_licencing_template_names():
         if licence in ["delete", "Superseded by Commons"]:
             # warns about terminal lack of license
@@ -220,7 +219,7 @@ def map_categories():
         "Category:Maps of places in Vlaams-Brabant",
         "Category:Maps of places in West-Vlaanderen",
         "Category:Maps of places in Lebanon",
-        "Category:Maps of places in Pakistan",        
+        "Category:Maps of places in Pakistan",
     ]
 
 def all_subcategories(session, root_category, found=None):
@@ -365,7 +364,7 @@ def complain_about_missing_file_source_or_license(files_to_find, extra_files_to_
         print("page title:", page_title)
         edit_summary = "please, specify missing information about file that would allow keeping it on OSM Wiki"
         session = mark_file_as_without_copyright_info_and_notify_user(session, data, edit_summary)
-        
+
 # use returned session, it could be renewed
 def create_overview_pages_for_users_with_more_problematic_uploads(session, generated_data):
     if session == None:
@@ -533,7 +532,6 @@ def detect_images_with_missing_licences_process_page(page_title, banned_users):
             print(page_title)
             return None
 
-        
         if skip_image_based_on_text_on_its_description(page_title, page_text):
             return None
 
