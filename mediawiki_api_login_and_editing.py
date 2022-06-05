@@ -3,6 +3,7 @@
 import password_data
 import requests
 import simplejson
+import retrying_connection
 
 import time
 
@@ -38,7 +39,7 @@ def login_with_login_token(S, username, password, LOGIN_TOKEN, URL):
         'format':"json"
     }
 
-    R = S.post(URL, data=PARAMS_1)
+    R = retrying_connection.post(URL, PARAMS_1, session=S)
     DATA = R.json()
     # TODO - handle failure?
     if is_error_here(DATA):
@@ -70,7 +71,7 @@ def is_error_here(DATA):
 
 def create_page(S, page_title, page_text, edit_summary, URL="https://wiki.openstreetmap.org/w/api.php", sleep_time=0.4, mark_as_bot_edit=False):
     # Step 4: POST request to edit a page
-    params = {
+    PARAMS = {
         "action": "edit",
         "title": page_title,
         "token": obtain_csrf_token(S, URL),
@@ -82,7 +83,7 @@ def create_page(S, page_title, page_text, edit_summary, URL="https://wiki.openst
     if mark_as_bot_edit:
         params["bot"] = "yes"
 
-    R = S.post(URL, data=params)
+    R = retrying_connection.post(URL, PARAMS, session=S)
     DATA = R.json()
 
     print(DATA)
@@ -114,34 +115,8 @@ def edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, URL="ht
     if mark_as_bot_edit:
         params["bot"] = "yes"
 
-    try:
-        R = S.post(URL, data=params)
-    except requests.exceptions.ConnectionError as e:
-        print("requests.exceptions.ConnectionError")
-        print("requests.exceptions.ConnectionError")
-        print("requests.exceptions.ConnectionError")
-        print("requests.exceptions.ConnectionError")
-        print("requests.exceptions.ConnectionError")
-        print("requests.exceptions.ConnectionError")
-        print("requests.exceptions.ConnectionError")
-        print("requests.exceptions.ConnectionError")
-        print("requests.exceptions.ConnectionError")
-        print("requests.exceptions.ConnectionError")
-        print(e)
-        print(S)
-        print(page_title)
-        print(page_text)
-        print(edit_summary)
-        print(rev_id)
-        print(timestamp)
-        print(URL)
-        print(sleep_time)
-        print(mark_as_bot_edit)
-        print("sleeping and retrying, WTF")
-        time.sleep(60)
-        return edit_page(S, page_title, page_text, edit_summary, rev_id, timestamp, URL, sleep_time, mark_as_bot_edit)
+    R = retrying_connection.post(URL, params, session=S)
     DATA = R.json()
-
     print(DATA)
     if is_logged_out_error_here(DATA):
         raise NoEditPermissionException("likely automatically logged out")
@@ -163,7 +138,7 @@ def watchlist_page(S, page_title, URL="https://wiki.openstreetmap.org/w/api.php"
         "type": "watch",
         "format": "json"
     }
-    R = S.get(url=URL, params=PARAMS_FOR_TOKEN)
+    R = retrying_connection.get(URL, params=PARAMS_FOR_TOKEN, session=S)
     DATA = R.json()
     CSRF_TOKEN = DATA["query"]["tokens"]["watchtoken"]
 
@@ -174,7 +149,7 @@ def watchlist_page(S, page_title, URL="https://wiki.openstreetmap.org/w/api.php"
         "token": CSRF_TOKEN,
     }
 
-    R = S.post(URL, data=PARAMS)
+    R = retrying_connection.post(URL, PARAMS, session=S)
     DATA = R.json()
     if is_logged_out_error_here(DATA):
         raise NoEditPermissionException("likely automatically logged out")
@@ -193,13 +168,13 @@ def obtain_csrf_token(S, URL):
         # AKA, additional complexity because some people are evil
 
         # GET request to fetch CSRF token
-        PARAMS_2 = {
+        PARAMS = {
             "action": "query",
             "meta": "tokens",
             "format": "json"
         }
 
-        R = S.get(url=URL, params=PARAMS_2)
+        R = retrying_connection.get(URL, params=PARAMS, session=S)
         try:
             DATA = R.json()
             if is_error_here(DATA):
@@ -227,7 +202,8 @@ def obtain_login_token(S, URL):
         'format':"json"
     }
 
-    R = S.get(url=URL, params=PARAMS_0)
+    #R = S.get(url=URL, params=PARAMS_0, timeout=120)
+    R = retrying_connection.get(URL, params=PARAMS_0, session=S)
     try:
         DATA = R.json()
         if is_error_here(DATA):

@@ -2,12 +2,13 @@ import requests
 import shared
 import json
 import datetime
+import retrying_connection
 
 def deletion_history(file, URL="https://wiki.openstreetmap.org/w/api.php"):
     # https://wiki.openstreetmap.org/w/api.php?action=query&list=logevents&lelimit=3&format=json&leaction=delete/delete&letitle=File:Wanderwegsymbol_Naturpark_Vorderer_Bayerischer_Wald.PNG
     # https://wiki.openstreetmap.org/w/api.php?action=query&list=logevents&lelimit=3&format=json&leaction=delete/delete&letitle=File:Wandearwegsymbol_Naturpark_Vorderer_Bayerischer_Wald.PNG
-    call_url = URL + "?action=query&list=logevents&lelimit=3&format=json&leaction=delete/delete&letitle=" + shared.escape_parameter(file) + "&prop=imageinfo&iilimit=50&format=json"
-    response = requests.post(call_url, headers={'Content-type': 'text'})
+    url = URL + "?action=query&list=logevents&lelimit=3&format=json&leaction=delete/delete&letitle=" + shared.escape_parameter(file) + "&prop=imageinfo&iilimit=50&format=json"
+    response = retrying_connection.post(url, headers={'Content-type': 'text'})
     if "query" not in response.json():
         print(response.json())
     if 'error' in response.json():
@@ -22,7 +23,7 @@ def file_upload_history(file, URL="https://wiki.openstreetmap.org/w/api.php", de
     print(mediawiki_api_query.file_upload_history("File:Video OSM.png"))
     """
     call_url = URL + "?action=query&titles=" + shared.escape_parameter(file) + "&prop=imageinfo&iilimit=50&format=json"
-    response = requests.post(call_url, headers={'Content-type': 'text'})
+    response = retrying_connection.post(call_url, headers={'Content-type': 'text'})
     if 'error' in response.json():
         print(response.json())
         raise
@@ -57,11 +58,11 @@ def debug_api():
         file = file.replace(" ", "%20")
         # versions of file itself
         url = "https://wiki.openstreetmap.org/w/api.php?action=query&titles=" + shared.escape_parameter(file) + "&prop=imageinfo&iilimit=50&format=json"
-        response = requests.post(url) # , data=data
+        response = retrying_connection.post(url) # , data=data
         print(json.dumps(response.json(), indent=4))
         # versions of file page
         url = "https://wiki.openstreetmap.org/w/api.php?action=query&prop=revisions&titles=" + shared.escape_parameter(file) + "&rvlimit=5&rvprop=timestamp|user|comment&format=json"
-        response = requests.post(url) # , data=data
+        response = retrying_connection.post(url) # , data=data
         print(response)
         print(json.dumps(response.json(), indent=4))
         print()
@@ -81,7 +82,7 @@ def all_pages(URL="https://wiki.openstreetmap.org/w/api.php"):
             url += "&" + continue_parameter + "=" + continue_code
         print(url)
         print()
-        response = requests.post(url)
+        response = retrying_connection.post(url)
 
         data = response.json()["query"]["allpages"]
         for entry in data:
@@ -105,7 +106,7 @@ def pages_from_category(category, URL="https://wiki.openstreetmap.org/w/api.php"
             url += "&" + continue_parameter + "=" + continue_code
         print(url)
         print()
-        response = requests.post(url)
+        response = retrying_connection.post(url)
         if 'error' in response.json():
             print(response.json())
             raise
@@ -128,7 +129,7 @@ def uncategorized_images(offset, group_count, URL="https://wiki.openstreetmap.or
     # example:
     # https://wiki.openstreetmap.org/w/api.php?action=query&format=json&list=querypage&utf8=1&qppage=Uncategorizedimages&qplimit=10&qpoffset=0
     url = URL + "?action=query&format=json&list=querypage&utf8=1&qppage=Uncategorizedimages&qplimit=" + str(group_count) + "&qpoffset=" + str(offset)
-    response = requests.post(url)
+    response = retrying_connection.post(url)
     #print(json.dumps(response.json(), indent=4))
     file_list = response.json()['query']['querypage']['results']
     returned = []
@@ -182,7 +183,7 @@ def uploads_by_username_generator(user, URL="https://wiki.openstreetmap.org/w/ap
         url = URL + "?action=query&list=allimages&aisort=timestamp&aiuser=" + user + "&format=json"
         if continue_code != None:
             url += "&" + continue_parameter + "=" + continue_code
-        response = requests.post(url)
+        response = retrying_connection.post(url)
         #print(json.dumps(response.json(), indent=4))
         #print(url)
         if 'error' in response.json():
@@ -212,7 +213,7 @@ def download_page_text_with_revision_data(page_title, URL="https://wiki.openstre
         raise Exception("None passed as a title")
     # https://wiki.openstreetmap.org/w/api.php?action=query&prop=revisions&rvlimit=1&rvprop=content|timestamp|ids&format=json&titles=Sandbox
     url = URL + "?action=query&prop=revisions&rvlimit=1&rvprop=content|timestamp|ids&format=json&titles=" + shared.escape_parameter(page_title)
-    response = requests.post(url)
+    response = retrying_connection.post(url)
     if 'error' in response.json():
         print(response.json())
         raise
@@ -231,7 +232,7 @@ def download_page_text_with_revision_data(page_title, URL="https://wiki.openstre
 
 def download_page_text(page_title, URL="https://wiki.openstreetmap.org/w/api.php"):
     url = URL + "?action=query&prop=revisions&rvlimit=1&rvprop=content&format=json&titles=" + shared.escape_parameter(page_title)
-    response = requests.post(url)
+    response = retrying_connection.post(url)
     #print(json.dumps(response.json(), indent=4))
     if 'error' in response.json():
         print(response.json())
@@ -261,7 +262,7 @@ def pages_where_file_is_used_as_image(page_title, URL="https://wiki.openstreetma
         url = URL + "?action=query&titles=" + shared.escape_parameter(page_title) + "&prop=fileusage&format=json"
         if continue_code != None:
             url += "&" + continue_parameter + "=" + continue_code
-        response = requests.post(url)
+        response = retrying_connection.post(url)
         if 'error' in response.json():
             print(response.json())
             raise
@@ -282,7 +283,7 @@ def pages_where_file_is_used_as_image(page_title, URL="https://wiki.openstreetma
 
 def is_file_used_as_image(page_title, URL="https://wiki.openstreetmap.org/w/api.php"):
     url = URL + "?action=query&titles=" + shared.escape_parameter(page_title) + "&prop=fileusage&format=json"
-    response = requests.post(url)
+    response = retrying_connection.post(url)
     #print(json.dumps(response.json(), indent=4))
     if 'error' in response.json():
         print(response.json())
