@@ -59,21 +59,24 @@ def detect_files_where_attribution_complaint_is_missing_and_required():
                 print(uploader, "is apparently fully notified, also for", page_title, "which triggered checks")
                 continue # notified already
 
+            print("===========================================")
+            print("============START<=========================")
+            print("===========================================")
             likely_editable = False
             for file_data in files:
                 file = file_data['filename']
                 file_page = mediawiki_api_query.download_page_text_with_revision_data(file)
                 text = file_page['page_text']
+                print()
+                print()
+                print("======================================")
+                print()
+                print()
+                print(shared.osm_wiki_page_link(file))
+                print(file_page['page_text'])
+                print()
                 for keyword in shared.description_keywords_that_may_indicate_that_author_is_specified():
                     if keyword.lower() in text.lower():
-                        print()
-                        print()
-                        print("======================================")
-                        print()
-                        print()
-                        print(shared.osm_wiki_page_link(file))
-                        print(file_page['page_text'])
-                        print()
                         likely_editable = True
 
             if likely_editable:
@@ -85,7 +88,7 @@ def detect_files_where_attribution_complaint_is_missing_and_required():
                 print()
                 continue # notified already
 
-            print(uploader)
+            print(uploader, "-", "notify them about problems?")
             shared.pause()
             session = notify_user_on_their_talk_page(session, uploader, files)
             for file_data in files:
