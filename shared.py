@@ -33,6 +33,7 @@ def users_dropped_from_regular_processing():
     #"Bk", "Nordpfeil", "Mateusz Konieczny", # has chart (search for chart below)
 
     "Tallguy", # bunch of tricky screenshots, see https://wiki.openstreetmap.org/wiki/User_talk:Tallguy
+    "Jharvey", # Screenshot mess
     ]
 
 def create_login_session(index = 'api_password'):
