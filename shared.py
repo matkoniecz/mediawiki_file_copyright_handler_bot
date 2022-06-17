@@ -34,6 +34,8 @@ def users_dropped_from_regular_processing():
 
     "Tallguy", # bunch of tricky screenshots, see https://wiki.openstreetmap.org/wiki/User_talk:Tallguy
     "Jharvey", # Screenshot mess
+    "Amᵃᵖanda", # Tricky issues with OSMF logo - and they got already message about it
+    "Amunizp", # lets skip it for now, too confusing
     ]
 
 def create_login_session(index = 'api_password'):
