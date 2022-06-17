@@ -301,7 +301,7 @@ def uncategorized_images_skipping_some_initial_ones():
     skip = random.randrange(0, 10000)
     print("skipping", skip)
     skipped = []
-    for file in uncategorized_images():
+    for file in mediawiki_api_query.uncategorized_images():
         if len(skipped) < skip:
             skipped.append(file)
         else:
@@ -689,21 +689,6 @@ def skip_image_based_on_text_on_presence_of_keywords_in_description(page_title, 
             return True
     return False
 
-def uncategorized_images():
-    # many are categorized but still without licences
-    group = 0
-    while True:
-        images = mediawiki_api_query.uncategorized_images(group * 500, 500)
-        if len(images) == 0:
-            return
-        for image in images:
-            yield image
-        group += 1
-
-    titles = pages_from_category("Category:Media without a license - without subcategory")
-    for title in titles:
-        yield title
- 
 def is_skipped_file_type(page_title):
     if ".doc" in page_title.lower():
         return True # TODO, enable
