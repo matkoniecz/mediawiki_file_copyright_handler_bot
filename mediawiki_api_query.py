@@ -12,6 +12,12 @@ def deletion_history(file, URL="https://wiki.openstreetmap.org/w/api.php"):
     if "query" not in response.json():
         print(response.json())
     if 'error' in response.json():
+        if 'invalidtitle' == response.json()['error']['code']:
+            print("requested listing of deletion history of")
+            print(file)
+            print("on wiki")
+            print(URL)
+            print("This file name was listed as invalid")
         return None
     return response.json()["query"]["logevents"]
 
